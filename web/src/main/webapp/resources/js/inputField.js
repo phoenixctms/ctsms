@@ -96,6 +96,14 @@ function handleUpdateInputFieldTabTitles(xhr, status, args) {
 
 }
 
+// localization tab: an editor created in a hidden tab has no size until it is refreshed
+function refreshInputFieldL10nEditor(index) {
+	var editor = window['widget_tabView_inputfieldl10n_form_l10nbundletabs_l10ntext_' + index];
+	if (editor && editor.instance) {
+		editor.instance.refresh();
+	}
+}
+
 // sketch selection set values: the regions sketch and its JSON editor follow each other while editing
 
 var SELECTION_SET_VALUE_REGIONS_JSON_DELAY = 300;

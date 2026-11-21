@@ -127,6 +127,10 @@ public class InputFieldL10nBean extends ManagedBeanBase {
 		return bundle != null ? Messages.getString(MessageCodes.INPUT_FIELD_L10N_BUNDLE_LABEL_PREFIX + bundle.name().toLowerCase()) : "";
 	}
 
+	public String getBundleTabTitle(InputFieldL10nBundle bundle) {
+		return bundle != null ? Messages.getString(MessageCodes.INPUT_FIELD_L10N_BUNDLE_TAB_TITLE_PREFIX + bundle.name().toLowerCase()) : "";
+	}
+
 	public ArrayList<L10nTextEditor> getEditors() {
 		return editors;
 	}
