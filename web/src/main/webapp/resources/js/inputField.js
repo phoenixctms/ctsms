@@ -30,11 +30,11 @@ function handleInputFieldTabChange(index) {
 		break;
 
 	case 2:
-		changeDummy();
+		changeInputFieldL10n();
 		break;
 
 	case 3:
-		changeInputFieldL10n();
+		changeDummy();
 		break;
 
 	case 4:
@@ -142,30 +142,62 @@ function clearInputFieldL10nMessages() {
 	$('[id="tabView:inputfieldl10n_form:l10nbundletabs"] .ui-messages').empty();
 }
 
-function copyInputFieldL10nKeyLine(button) {
-	var text = $(button).siblings('.ctsms-l10n-key-line').text();
-	if (navigator.clipboard && window.isSecureContext) {
-		navigator.clipboard.writeText(text);
-	} else {
-		// no clipboard API over plain http:
-		var textarea = $('<textarea readonly="readonly"></textarea>').val(text).css({
-			position : 'fixed',
-			top : 0,
-			left : 0,
-			opacity : 0
-		}).appendTo('body');
-		textarea[0].select();
-		try {
-			document.execCommand('copy');
-		} catch (e) {
-		}
-		textarea.remove();
+// a missing key to add once its editor tab is shown (a tab not shown before is loaded first):
+var _inputFieldL10nPendingKey = null;
+
+function addInputFieldL10nKey(index, button) {
+	var tabView = window.inputFieldL10nBundleTabView;
+	if (!tabView) {
+		return;
 	}
+	_inputFieldL10nPendingKey = {
+		index : index,
+		line : $(button).siblings('.ctsms-l10n-key-line').text()
+	};
+	tabView.select(index); // shows the tab again if it is the active one, so onTabShow always runs
+}
+
+function _addInputFieldL10nKeyLine(editor, line) {
+	// the escaped key followed by "=":
+	var key = line.substring(0, line.length - 1);
+	var lineCount = editor.lineCount();
+	for (var i = 0; i < lineCount; i++) {
+		var text = editor.getLine(i);
+		if (text.lastIndexOf(key, 0) === 0 && /^\s*([=:\s]|$)/.test(text.substring(key.length))) {
+			// already there (e.g. added before and not saved yet):
+			editor.focus();
+			editor.setCursor({
+				line : i,
+				ch : text.length
+			});
+			return;
+		}
+	}
+	var last = lineCount - 1;
+	var lastText = editor.getLine(last);
+	var insert = (lastText.length > 0 ? '\n' : '') + line;
+	editor.replaceRange(insert, {
+		line : last,
+		ch : lastText.length
+	});
+	editor.focus();
+	editor.setCursor({
+		line : editor.lineCount() - 1,
+		ch : editor.getLine(editor.lineCount() - 1).length
+	});
 }
 
 function refreshInputFieldL10nEditor(index) {
 	// an editor created in a hidden tab has no size until it is shown and refreshed:
 	sizeInputFieldL10nEditors();
+	var pending = _inputFieldL10nPendingKey;
+	_inputFieldL10nPendingKey = null;
+	if (pending != null && pending.index == index) {
+		var editor = _getInputFieldL10nEditor(index);
+		if (editor && !editor.getOption('readOnly')) {
+			_addInputFieldL10nKeyLine(editor, pending.line);
+		}
+	}
 }
 
 var _inputFieldL10nResizeTimer = null;
