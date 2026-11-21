@@ -293,7 +293,6 @@ public class InputFieldSelectionSetValueDaoImpl
 				field.removeSelectionSetValues(target);
 			}
 		}
-		target.setLocalized(false);
 		target.setNameL10nKey(source.getName());
 		if (copyIfNull || source.getRow() != null) {
 			target.setRowL10nKey(source.getRow());

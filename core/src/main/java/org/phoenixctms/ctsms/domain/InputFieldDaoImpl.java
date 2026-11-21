@@ -303,7 +303,6 @@ public class InputFieldDaoImpl
 			InputField target,
 			boolean copyIfNull) {
 		super.inputFieldInVOToEntity(source, target, copyIfNull);
-		target.setLocalized(false);
 		target.setTextPresetL10nKey(source.getTextPreset());
 		target.setNameL10nKey(source.getName());
 		target.setTitleL10nKey(source.getTitle());
