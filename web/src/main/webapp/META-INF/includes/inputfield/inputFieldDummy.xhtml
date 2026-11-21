@@ -43,8 +43,25 @@
 								value="#{dummyInputFieldValueBean.inputModel}" />
 						</ui:include>
 						<h:panelGrid rendered="#{dummyInputFieldValueBean.inputVisible}"
-							columns="6" cellpadding="2"
-							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+							columns="9" cellpadding="2"
+							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+							<h:outputLabel for="dummylocale"
+								value="#{inputfieldlabels.input_field_dummy_locale_label}" />
+							<h:panelGroup>
+								<p:selectOneMenu id="dummylocale" value="#{dummyInputFieldValueBean.locale}"
+									styleClass="ctsms-control">
+									<f:selectItems value="#{dummyInputFieldValueBean.locales}" />
+									<p:ajax process="@this" listener="#{dummyInputFieldValueBean.changeLocale}"
+										oncomplete="handleUpdateInputFieldTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
+										update="input_dummy_input" />
+								</p:selectOneMenu>
+								<p:tooltip rendered="#{enableTooltips}" for="dummylocale">
+									<h:outputText
+										value="#{inputfieldlabels.input_field_dummy_locale_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="dummylocale" />
 							<h:outputLabel for="dummyoptional"
 								value="#{inputfieldlabels.input_field_dummy_optional_label}" />
 							<h:panelGroup>

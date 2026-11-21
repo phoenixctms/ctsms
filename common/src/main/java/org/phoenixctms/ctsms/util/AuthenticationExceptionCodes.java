@@ -20,4 +20,5 @@ public interface AuthenticationExceptionCodes {
 	public final static String INVALID_JWT = "invalid_jwt";
 	public final static String INVALID_OTP = "invalid_otp";
 	public final static String API_2FA_NOT_SUPPORTED = "api_2fa_not_supported";
+	public final static String UNSUPPORTED_LOCALE = "unsupported_locale";
 }

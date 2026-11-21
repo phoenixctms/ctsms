@@ -211,6 +211,12 @@ public class Authenticator {
 			userContext.setRealm(auth.getRealm());
 			userContext.setMethodName(methodName);
 			userContext.setJwtAudience(jwtAudience);
+			if (!CommonUtil.isEmptyString(auth.getLocale())) {
+				if (!CoreUtil.checkSupportedLocale(auth.getLocale())) {
+					throw L10nUtil.initAuthenticationException(AuthenticationExceptionCodes.UNSUPPORTED_LOCALE, auth.getLocale());
+				}
+				userContext.setLocale(CommonUtil.localeFromString(auth.getLocale()));
+			}
 			if (user == null) {
 				throw L10nUtil.initAuthenticationException(AuthenticationExceptionCodes.UNKNOWN_USER, auth.getUsername());
 			}

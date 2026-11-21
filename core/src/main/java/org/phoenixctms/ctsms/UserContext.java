@@ -235,6 +235,15 @@ public class UserContext extends VOCacheContext {
 		isPublicKeySet = true;
 	}
 
+	/**
+	 * Localizes the results of this call in the given language instead of the user's own
+	 * (see AuthenticationVO.locale).
+	 */
+	public void setLocale(Locale locale) {
+		this.locale = locale;
+		isLocaleSet = true;
+	}
+
 	public void setMethodName(String methodName) {
 		this.methodName = methodName;
 	}
