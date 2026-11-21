@@ -137,6 +137,32 @@ function sizeInputFieldL10nEditors() {
 	}
 }
 
+function clearInputFieldL10nMessages() {
+	// as on other tab switches, the messages of the last action are gone when another editor tab is shown:
+	$('[id="tabView:inputfieldl10n_form:l10nbundletabs"] .ui-messages').empty();
+}
+
+function copyInputFieldL10nKeyLine(button) {
+	var text = $(button).siblings('.ctsms-l10n-key-line').text();
+	if (navigator.clipboard && window.isSecureContext) {
+		navigator.clipboard.writeText(text);
+	} else {
+		// no clipboard API over plain http:
+		var textarea = $('<textarea readonly="readonly"></textarea>').val(text).css({
+			position : 'fixed',
+			top : 0,
+			left : 0,
+			opacity : 0
+		}).appendTo('body');
+		textarea[0].select();
+		try {
+			document.execCommand('copy');
+		} catch (e) {
+		}
+		textarea.remove();
+	}
+}
+
 function refreshInputFieldL10nEditor(index) {
 	// an editor created in a hidden tab has no size until it is shown and refreshed:
 	sizeInputFieldL10nEditors();
