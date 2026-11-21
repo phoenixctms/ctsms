@@ -1747,6 +1747,11 @@ public class InputFieldServiceImpl
 		LinkedHashSet<InputFieldL10nMissingKeyVO> result = new LinkedHashSet<InputFieldL10nMissingKeyVO>();
 		HashMap<InputFieldL10nBundle, ResourceBundle> bundles = new HashMap<InputFieldL10nBundle, ResourceBundle>();
 		addMissingL10nKeys(result, bundles, locale, InputFieldL10nKeyUsage.getKeys(field), null);
+		if (!field.isLocalized()) {
+			// the usages of an input field that is not localized show their keys as they are, except for eCRF sections and inquiry categories,
+			// which are no matter of this input field:
+			return new ArrayList<InputFieldL10nMissingKeyVO>(result);
+		}
 		ECRFFieldDao ecrfFieldDao = this.getECRFFieldDao();
 		Iterator<ECRFField> ecrfFieldsIt = field.getEcrfFields().iterator();
 		while (ecrfFieldsIt.hasNext()) {
