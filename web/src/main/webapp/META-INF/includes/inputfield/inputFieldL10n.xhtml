@@ -68,9 +68,10 @@
 							<p:column style="width:32px;">
 								<h:outputText styleClass="ctsms-l10n-key-line" style="display:none;"
 									value="#{inputFieldL10nBean.getKeyLine(missingKey.l10nKey)}" />
-								<p:commandButton type="button" icon="ui-icon ui-icon-copy"
-									title="#{inputfieldlabels.input_field_l10n_copy_key_button_title}"
-									onclick="copyInputFieldL10nKeyLine(this);return false;" />
+								<p:commandButton type="button" icon="ui-icon ui-icon-plusthick"
+									title="#{inputFieldL10nBean.getAddKeyButtonTitle(missingKey.bundle)}"
+									disabled="#{!inputFieldL10nBean.created}"
+									onclick="addInputFieldL10nKey(#{inputFieldL10nBean.getEditorIndex(missingKey.bundle)}, this);return false;" />
 							</p:column>
 						</p:dataTable>
 					</p:fieldset>

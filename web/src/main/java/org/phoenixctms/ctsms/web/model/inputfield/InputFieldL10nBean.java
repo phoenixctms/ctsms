@@ -180,6 +180,19 @@ public class InputFieldL10nBean extends ManagedBeanBase {
 		return bundle != null ? Messages.getString(MessageCodes.INPUT_FIELD_L10N_BUNDLE_LABEL_PREFIX + bundle.name().toLowerCase()) : "";
 	}
 
+	public int getEditorIndex(InputFieldL10nBundle bundle) {
+		for (int i = 0; i < editors.size(); i++) {
+			if (editors.get(i).getBundle().equals(bundle)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	public String getAddKeyButtonTitle(InputFieldL10nBundle bundle) {
+		return Messages.getMessage(MessageCodes.INPUT_FIELD_L10N_ADD_KEY_BUTTON_TITLE, getBundleTabTitle(bundle));
+	}
+
 	public String getBundleEditorLabel(InputFieldL10nBundle bundle) {
 		return bundle != null ? Messages.getString(MessageCodes.INPUT_FIELD_L10N_BUNDLE_EDITOR_LABEL_PREFIX + bundle.name().toLowerCase()) : "";
 	}
