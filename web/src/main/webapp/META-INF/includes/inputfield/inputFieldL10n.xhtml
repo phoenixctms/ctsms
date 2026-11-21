@@ -60,6 +60,12 @@
 							</p:column>
 							<p:column headerText="#{inputfieldlabels.input_field_l10n_missing_key_key_column}">
 								<h:outputText value="#{missingKey.l10nKey}" />
+								<h:outputText styleClass="ctsms-l10n-key-line" style="display:none;"
+									value="#{inputFieldL10nBean.getKeyLine(missingKey.l10nKey)}" />
+								<p:commandButton type="button" icon="ui-icon ui-icon-copy"
+									title="#{inputfieldlabels.input_field_l10n_copy_key_button_title}"
+									onclick="copyInputFieldL10nKeyLine(this);return false;"
+									styleClass="ctsms-l10n-copy-key-button" />
 							</p:column>
 							<p:column headerText="#{inputfieldlabels.input_field_l10n_missing_key_usage_column}">
 								<h:outputText value="#{missingKey.usage}" />
@@ -67,7 +73,7 @@
 						</p:dataTable>
 					</p:fieldset>
 					<p:tabView id="l10nbundletabs" widgetVar="inputFieldL10nBundleTabView" dynamic="true" cache="true"
-						onTabShow="refreshInputFieldL10nEditor(index.index())"
+						onTabShow="clearInputFieldL10nMessages();refreshInputFieldL10nEditor(index.index())"
 						styleClass="ctsms-l10n-tabview">
 						<c:forEach items="#{inputFieldL10nBean.editors}" var="editor" varStatus="status">
 							<p:tab id="l10nbundletab_#{status.index}" title="#{inputFieldL10nBean.getBundleTabTitle(editor.bundle)}">

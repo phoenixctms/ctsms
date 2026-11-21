@@ -137,6 +137,45 @@ public class InputFieldL10nBean extends ManagedBeanBase {
 		appendRequestContextCallbackArgs(true);
 	}
 
+	/**
+	 * The key escaped as in a .properties text (whitespace, separators, comment characters and backslashes),
+	 * followed by "=", to paste as the start of a line into an editor.
+	 */
+	public String getKeyLine(String key) {
+		StringBuilder line = new StringBuilder();
+		if (key != null) {
+			for (int i = 0; i < key.length(); i++) {
+				char c = key.charAt(i);
+				switch (c) {
+					case '\t':
+						line.append("\\t");
+						break;
+					case '\n':
+						line.append("\\n");
+						break;
+					case '\r':
+						line.append("\\r");
+						break;
+					case '\f':
+						line.append("\\f");
+						break;
+					case ' ':
+					case '=':
+					case ':':
+					case '#':
+					case '!':
+					case '\\':
+						line.append('\\').append(c);
+						break;
+					default:
+						line.append(c);
+						break;
+				}
+			}
+		}
+		return line.append('=').toString();
+	}
+
 	public String getBundleLabel(InputFieldL10nBundle bundle) {
 		return bundle != null ? Messages.getString(MessageCodes.INPUT_FIELD_L10N_BUNDLE_LABEL_PREFIX + bundle.name().toLowerCase()) : "";
 	}
