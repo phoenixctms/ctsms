@@ -20,4 +20,7 @@ public interface AuditTrailExcelLabelCodes {
 	public static final String ECRF_FIELD_VALUE_HEAD = "ecrf_field_value_head";
 	public static final String CHECKBOX_UNCHECKED = "checkbox_unchecked";
 	public static final String CHECKBOX_CHECKED = "checkbox_checked";
+	public static final String L10N_TEXT_CHANGES_SPREADSHEET_NAME = "l10n_text_changes_spreadsheet_name";
+	public static final String L10N_TEXT_CHANGES_VO_FIELD_COLUMNS = "l10n_text_changes_vo_field_columns";
+	public static final String L10N_TEXT_CHANGES_DEFAULT_LOCALE = "l10n_text_changes_default_locale";
 }

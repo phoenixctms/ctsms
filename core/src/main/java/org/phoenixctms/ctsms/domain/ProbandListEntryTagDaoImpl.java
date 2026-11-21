@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import java.util.Set;
 import org.hibernate.Hibernate;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Criterion;
@@ -22,6 +23,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.phoenixctms.ctsms.compare.InputFieldSelectionSetValueComparator;
+import org.phoenixctms.ctsms.enumeration.InputFieldL10nBundle;
 import org.phoenixctms.ctsms.query.CategoryCriterion;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
@@ -102,6 +104,17 @@ public class ProbandListEntryTagDaoImpl
 		return listEntryTagCriteria;
 	}
 
+	/**
+	 * Usages of localized input fields that hold one of the keys as title or comment.
+	 */
+	@Override
+	protected Collection<ProbandListEntryTag> handleFindByL10nKeys(Set<String> keys) throws Exception {
+		org.hibernate.Criteria listEntryTagCriteria = createListEntryTagCriteria();
+		listEntryTagCriteria.createCriteria("field", "inputField0").add(Restrictions.eq("localized", true));
+		listEntryTagCriteria.add(CriteriaUtil.getL10nKeysInCriterion(keys, "titleL10nKey", "comment"));
+		return listEntryTagCriteria.list();
+	}
+
 	@Override
 	protected Collection<ProbandListEntryTag> handleFindAllSorted() throws Exception {
 		org.hibernate.Criteria listEntryTagCriteria = createListEntryTagCriteria();
@@ -123,6 +136,7 @@ public class ProbandListEntryTagDaoImpl
 			junction.add((new CategoryCriterion(nameInfix, "inputField.titleL10nKey", MatchMode.ANYWHERE)).getRestriction());
 			junction.add((new CategoryCriterion(nameInfix, "trial0.name", MatchMode.ANYWHERE)).getRestriction());
 			junction.add((new CategoryCriterion(nameInfix, "titleL10nKey", MatchMode.ANYWHERE)).getRestriction());
+			CriteriaUtil.addL10nNameInfixCriterions(junction, nameInfix, null, null);
 			addUniqueProbandListEntryTagNameMatchRestriction(junction, nameInfix);
 			listEntryTagCriteria.add(junction);
 		}
@@ -547,10 +561,14 @@ public class ProbandListEntryTagDaoImpl
 		Trial trial = source.getTrial();
 		User modifiedUser = source.getModifiedUser();
 		target.setTitle(source.getTitleL10nKey());
+		target.setCommentL10nKey(source.getComment());
 		if (field != null) {
 			target.setField(this.getInputFieldDao().toInputFieldOutVO(field));
 			if (field.isLocalized()) {
 				target.setTitle(L10nUtil.getInputFieldTitle(Locales.USER, source.getTitleL10nKey()));
+				if (!CommonUtil.isEmptyString(source.getComment())) {
+					target.setComment(L10nUtil.getInputFieldComment(Locales.USER, source.getComment()));
+				}
 			}
 		}
 		if (trial != null) {

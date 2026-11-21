@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>logon</code> of service <code>ToolsService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.shared.ToolsService#logon(org.phoenixctms.ctsms.vo.AuthenticationVO)
+ * @see org.phoenixctms.ctsms.service.shared.ToolsService#logon(org.phoenixctms.ctsms.vo.AuthenticationVO, boolean, java.lang.Long)
  */
 @Test(groups={"service","ToolsService"})
 public class ToolsService_logonTest extends ToolsServiceBaseTest {

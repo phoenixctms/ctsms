@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>addUpdateInquiries</code> of service <code>TrialService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.trial.TrialService#addUpdateInquiries(org.phoenixctms.ctsms.vo.AuthenticationVO, org.phoenixctms.ctsms.vo.InquiryInVO)
+ * @see org.phoenixctms.ctsms.service.trial.TrialService#addUpdateInquiries(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, org.phoenixctms.ctsms.vo.InquiryInVO)
  */
 @Test(groups={"service","TrialService"})
 public class TrialService_addUpdateInquiriesTest extends TrialServiceBaseTest {

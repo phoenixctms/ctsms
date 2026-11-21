@@ -79,6 +79,7 @@ public class InquiryValueDaoImpl
 			junction.add(Restrictions.and(
 					Restrictions.or(Restrictions.eq("externalId", ""), Restrictions.isNull("externalId")),
 					Restrictions.ilike("inputField0.externalId", fieldQuery, MatchMode.ANYWHERE)));
+			CriteriaUtil.addL10nFieldQueryCriterions(junction, fieldQuery);
 			inquiryCriteria.add(junction);
 		}
 	}
@@ -641,6 +642,7 @@ public class InquiryValueDaoImpl
 			target.setJsValueExpression(inquiry.getJsValueExpression());
 			target.setJsOutputExpression(inquiry.getJsOutputExpression());
 			target.setCategory(inquiry.getCategory());
+			target.setCategoryLocalized(L10nUtil.getInquiryCategory(Locales.USER, inquiry.getCategory()));
 			target.setDisabled(inquiry.isDisabled());
 			InputField inputField = inquiry.getField();
 			if (inputField != null) {

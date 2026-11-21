@@ -132,6 +132,7 @@ public class ECRFFieldValueDaoImpl
 			junction.add(Restrictions.and(
 					Restrictions.or(Restrictions.eq("externalId", ""), Restrictions.isNull("externalId")),
 					Restrictions.ilike("inputField0.externalId", fieldQuery, MatchMode.ANYWHERE)));
+			CriteriaUtil.addL10nFieldQueryCriterions(junction, fieldQuery);
 			ecrfFieldCriteria.add(junction);
 		}
 	}
@@ -1018,6 +1019,7 @@ public class ECRFFieldValueDaoImpl
 			target.setJsValueExpression(ecrfField.getJsValueExpression());
 			target.setJsOutputExpression(ecrfField.getJsOutputExpression());
 			target.setSection(ecrfField.getSection());
+			target.setSectionLocalized(L10nUtil.getEcrfFieldSection(Locales.USER, ecrfField.getSection()));
 			//target.setRef(ecrfField.getRef());
 			ECRF ecrf = ecrfField.getEcrf();
 			if (ecrf != null) {

@@ -907,4 +907,8 @@ public interface ServiceExceptionCodes {
 	public static final String PROBAND_LIST_ENTRY_TAG_REF_NOT_UNIQUE = "proband_list_entry_tag_ref_not_unique";
 	public static final String PROBAND_LIST_ENTRY_TAG_DUPLICATE_ID = "proband_list_entry_tag_duplicate_id";
 	public static final String PROBAND_LIST_ENTRY_TAG_FOR_WRONG_TRIAL = "proband_list_entry_tag_for_wrong_trial";
+	public static final String INPUT_FIELD_L10N_LOCALE_NOT_SUPPORTED = "input_field_l10n_locale_not_supported";
+	public static final String INPUT_FIELD_L10N_TEXT_INVALID = "input_field_l10n_text_invalid";
+	public static final String INPUT_FIELD_L10N_TEXT_TOO_LONG = "input_field_l10n_text_too_long";
+	public static final String INPUT_FIELD_L10N_KEY_MODIFIED_SINCE = "input_field_l10n_key_modified_since";
 }

@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -86,6 +87,8 @@ import org.phoenixctms.ctsms.email.NotificationMessageTemplateParameters;
 import org.phoenixctms.ctsms.enumeration.Color;
 import org.phoenixctms.ctsms.enumeration.ECRFFieldStatusQueue;
 import org.phoenixctms.ctsms.enumeration.ECRFValidationStatus;
+import org.phoenixctms.ctsms.enumeration.InputFieldL10nBundle;
+import org.phoenixctms.ctsms.enumeration.InputFieldL10nTarget;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.enumeration.PaymentMethod;
@@ -96,6 +99,7 @@ import org.phoenixctms.ctsms.enumeration.SignatureModule;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
 import org.phoenixctms.ctsms.enumeration.VisitScheduleDateMode;
 import org.phoenixctms.ctsms.excel.AuditTrailExcelDefaultSettings;
+import org.phoenixctms.ctsms.excel.AuditTrailExcelLabelCodes;
 import org.phoenixctms.ctsms.excel.AuditTrailExcelSettingCodes;
 import org.phoenixctms.ctsms.excel.AuditTrailExcelWriter;
 import org.phoenixctms.ctsms.excel.ExcelCellFormat;
@@ -126,6 +130,8 @@ import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.DefaultMessages;
 import org.phoenixctms.ctsms.util.DefaultProbandListStatusReasons;
 import org.phoenixctms.ctsms.util.DefaultSettings;
+import org.phoenixctms.ctsms.util.InputFieldL10nKeyUsage;
+import org.phoenixctms.ctsms.util.InputFieldL10nTextUtil;
 import org.phoenixctms.ctsms.util.JavaScriptCompressor;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
@@ -151,6 +157,7 @@ import org.phoenixctms.ctsms.vo.CourseOutVO;
 import org.phoenixctms.ctsms.vo.DepartmentVO;
 import org.phoenixctms.ctsms.vo.DutyRosterTurnOutVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldInVO;
+import org.phoenixctms.ctsms.vo.ECRFFieldL10nTextChangeVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldOutVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldStatusEntryInVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldStatusEntryOutVO;
@@ -5252,6 +5259,123 @@ public class TrialServiceImpl
 		}
 	}
 
+	/**
+	 * The changes of the localization texts applied by the eCRF fields of a trial or eCRF, computed from the
+	 * revisions: one row per changed key and eCRF field (and property) that applies it, oldest first.
+	 */
+	private ArrayList<ECRFFieldL10nTextChangeVO> getEcrfFieldL10nTextChanges(Long trialId, Long ecrfId) throws Exception {
+		ECRFFieldDao ecrfFieldDao = this.getECRFFieldDao();
+		HashMap<InputFieldL10nBundle, HashMap<String, ArrayList<Object[]>>> scope = new HashMap<InputFieldL10nBundle, HashMap<String, ArrayList<Object[]>>>();
+		Iterator<ECRFField> ecrfFieldsIt = ecrfFieldDao.findByTrialEcrfSeriesJs(trialId, ecrfId, true, null, null, null).iterator();
+		while (ecrfFieldsIt.hasNext()) {
+			ECRFField ecrfField = ecrfFieldsIt.next();
+			Iterator<InputFieldL10nKeyUsage> keysIt = InputFieldL10nKeyUsage.getKeys(ecrfField).iterator();
+			while (keysIt.hasNext()) {
+				InputFieldL10nKeyUsage key = keysIt.next();
+				HashMap<String, ArrayList<Object[]>> bundleKeys = scope.get(key.getBundle());
+				if (bundleKeys == null) {
+					bundleKeys = new HashMap<String, ArrayList<Object[]>>();
+					scope.put(key.getBundle(), bundleKeys);
+				}
+				ArrayList<Object[]> usages = bundleKeys.get(key.getKey());
+				if (usages == null) {
+					usages = new ArrayList<Object[]>();
+					bundleKeys.put(key.getKey(), usages);
+				}
+				usages.add(new Object[] { ecrfField, key });
+			}
+		}
+		ArrayList<ECRFFieldL10nTextChangeVO> result = new ArrayList<ECRFFieldL10nTextChangeVO>();
+		HashMap<Long, ECRFFieldOutVO> ecrfFieldVOs = new HashMap<Long, ECRFFieldOutVO>();
+		HashMap<Long, ECRFOutVO> ecrfVOs = new HashMap<Long, ECRFOutVO>();
+		HashMap<Long, UserOutVO> userVOs = new HashMap<Long, UserOutVO>();
+		HashMap<Long, InputFieldSelectionSetValueOutVO> selectionSetValueVOs = new HashMap<Long, InputFieldSelectionSetValueOutVO>();
+		InputFieldL10nTextDao inputFieldL10nTextDao = this.getInputFieldL10nTextDao();
+		Iterator<Entry<InputFieldL10nBundle, HashMap<String, ArrayList<Object[]>>>> scopeIt = scope.entrySet().iterator();
+		while (scopeIt.hasNext()) {
+			Entry<InputFieldL10nBundle, HashMap<String, ArrayList<Object[]>>> bundleKeys = scopeIt.next();
+			String locale = null;
+			Map<String, String> previousEntries = new HashMap<String, String>();
+			Iterator<InputFieldL10nText> revisionsIt = inputFieldL10nTextDao.findRevisions(bundleKeys.getKey(), null).iterator(); // by locale, version
+			while (revisionsIt.hasNext()) {
+				InputFieldL10nText revision = revisionsIt.next();
+				if (!revision.getLocale().equals(locale)) {
+					locale = revision.getLocale();
+					previousEntries = new HashMap<String, String>();
+				}
+				LinkedHashMap<String, String> entries = InputFieldL10nTextUtil.parse(revision.getText());
+				Iterator<Entry<String, InputFieldL10nTextUtil.Change>> changesIt = InputFieldL10nTextUtil.diff(previousEntries, entries).entrySet().iterator();
+				while (changesIt.hasNext()) {
+					Entry<String, InputFieldL10nTextUtil.Change> change = changesIt.next();
+					ArrayList<Object[]> usages = bundleKeys.getValue().get(change.getKey());
+					if (usages != null) {
+						Iterator<Object[]> usagesIt = usages.iterator();
+						HashSet<Long> sectionEcrfIds = new HashSet<Long>();
+						while (usagesIt.hasNext()) {
+							Object[] usage = usagesIt.next();
+							ECRFField ecrfField = (ECRFField) usage[0];
+							InputFieldL10nKeyUsage key = (InputFieldL10nKeyUsage) usage[1];
+							ECRFFieldL10nTextChangeVO row = new ECRFFieldL10nTextChangeVO();
+							ECRFOutVO ecrfVO = ecrfVOs.get(ecrfField.getEcrf().getId());
+							if (ecrfVO == null) {
+								ecrfVO = this.getECRFDao().toECRFOutVO(ecrfField.getEcrf());
+								ecrfVOs.put(ecrfField.getEcrf().getId(), ecrfVO);
+							}
+							row.setEcrf(ecrfVO);
+							row.setSection(ecrfField.getSection());
+							if (InputFieldL10nTarget.ECRF_FIELD_SECTION.equals(key.getTarget())) {
+								// a section change is listed once per eCRF, without a field:
+								if (!sectionEcrfIds.add(ecrfVO.getId())) {
+									continue;
+								}
+							} else {
+								ECRFFieldOutVO ecrfFieldVO = ecrfFieldVOs.get(ecrfField.getId());
+								if (ecrfFieldVO == null) {
+									ecrfFieldVO = ecrfFieldDao.toECRFFieldOutVO(ecrfField);
+									ecrfFieldVOs.put(ecrfField.getId(), ecrfFieldVO);
+								}
+								row.setEcrfField(ecrfFieldVO);
+							}
+							if (key.getSelectionSetValue() != null) {
+								InputFieldSelectionSetValueOutVO selectionSetValueVO = selectionSetValueVOs.get(key.getSelectionSetValue().getId());
+								if (selectionSetValueVO == null) {
+									selectionSetValueVO = this.getInputFieldSelectionSetValueDao().toInputFieldSelectionSetValueOutVO(key.getSelectionSetValue());
+									selectionSetValueVOs.put(key.getSelectionSetValue().getId(), selectionSetValueVO);
+								}
+								row.setSelectionSetValue(selectionSetValueVO);
+							}
+							row.setTarget(L10nUtil.createInputFieldL10nTargetVO(Locales.USER, key.getTarget()));
+							row.setBundle(bundleKeys.getKey());
+							row.setLocale(CommonUtil.isEmptyString(revision.getLocale())
+									? L10nUtil.getAuditTrailExcelLabel(Locales.USER, AuditTrailExcelLabelCodes.L10N_TEXT_CHANGES_DEFAULT_LOCALE, ExcelUtil.DEFAULT_LABEL)
+									: revision.getLocale());
+							row.setL10nKey(change.getKey());
+							row.setOldText(change.getValue().getOldValue());
+							row.setNewText(change.getValue().getNewValue());
+							row.setModifiedTimestamp(revision.getModifiedTimestamp());
+							UserOutVO userVO = userVOs.get(revision.getModifiedUser().getId());
+							if (userVO == null) {
+								userVO = this.getUserDao().toUserOutVO(revision.getModifiedUser());
+								userVOs.put(revision.getModifiedUser().getId(), userVO);
+							}
+							row.setModifiedUser(userVO);
+							result.add(row);
+						}
+					}
+				}
+				previousEntries = entries;
+			}
+		}
+		Collections.sort(result, new Comparator<ECRFFieldL10nTextChangeVO>() {
+
+			@Override
+			public int compare(ECRFFieldL10nTextChangeVO a, ECRFFieldL10nTextChangeVO b) {
+				return a.getModifiedTimestamp().compareTo(b.getModifiedTimestamp());
+			}
+		});
+		return result;
+	}
+
 	@Override
 	protected AuditTrailExcelVO handleExportAuditTrail(
 			AuthenticationVO auth, Long trialId, Long probandListEntryId, Long ecrfId, Long visitId) throws Exception {
@@ -5324,6 +5448,7 @@ public class TrialServiceImpl
 			}
 		}
 		writer.setEcrfProgressVOs(ecrfProgressVOs);
+		writer.setL10nTextChangeVOs(getEcrfFieldL10nTextChanges(trial != null ? trial.getId() : null, ecrfId));
 		ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao = this.getECRFFieldStatusEntryDao();
 		for (int i = 0; i < queues.length; i++) {
 			Collection statusEntries = ecrfFieldStatusEntryDao.getLog(queues[i], trialId, null, probandListEntryId, ecrfId, visitId, false, true, null);

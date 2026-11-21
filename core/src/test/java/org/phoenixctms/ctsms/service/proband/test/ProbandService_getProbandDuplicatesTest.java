@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>getProbandDuplicates</code> of service <code>ProbandService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.proband.ProbandService#getProbandDuplicates(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.String, java.lang.String, java.util.Date, java.lang.Integer)
+ * @see org.phoenixctms.ctsms.service.proband.ProbandService#getProbandDuplicates(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.String, java.lang.String, java.util.Date, java.lang.Long, java.lang.Integer)
  */
 @Test(groups={"service","ProbandService"})
 public class ProbandService_getProbandDuplicatesTest extends ProbandServiceBaseTest {

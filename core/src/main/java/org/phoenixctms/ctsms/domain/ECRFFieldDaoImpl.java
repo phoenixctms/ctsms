@@ -8,6 +8,7 @@ package org.phoenixctms.ctsms.domain;
 import java.text.MessageFormat;
 import java.util.Collection;
 
+import java.util.Set;
 import org.hibernate.Hibernate;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Criterion;
@@ -16,6 +17,7 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.phoenixctms.ctsms.enumeration.InputFieldL10nBundle;
 import org.phoenixctms.ctsms.query.CategoryCriterion;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
@@ -118,6 +120,17 @@ public class ECRFFieldDaoImpl
 	private org.hibernate.Criteria createEcrfFieldCriteria() {
 		org.hibernate.Criteria ecrfFieldCriteria = this.getSession().createCriteria(ECRFField.class);
 		return ecrfFieldCriteria;
+	}
+
+	/**
+	 * Usages of localized input fields that hold one of the keys as title or comment.
+	 */
+	@Override
+	protected Collection<ECRFField> handleFindByL10nKeys(Set<String> keys) throws Exception {
+		org.hibernate.Criteria ecrfFieldCriteria = createEcrfFieldCriteria();
+		ecrfFieldCriteria.createCriteria("field", "inputField0").add(Restrictions.eq("localized", true));
+		ecrfFieldCriteria.add(CriteriaUtil.getL10nKeysInCriterion(keys, "titleL10nKey", "comment"));
+		return ecrfFieldCriteria.list();
 	}
 
 	@Override
@@ -251,6 +264,7 @@ public class ECRFFieldDaoImpl
 			junction.add((new CategoryCriterion(nameInfix, "trial0.name", MatchMode.ANYWHERE)).getRestriction());
 			junction.add((new CategoryCriterion(nameInfix, "ecrf0.name", MatchMode.ANYWHERE)).getRestriction());
 			junction.add((new CategoryCriterion(nameInfix, "titleL10nKey", MatchMode.ANYWHERE)).getRestriction());
+			CriteriaUtil.addL10nNameInfixCriterions(junction, nameInfix, InputFieldL10nBundle.ECRF_FIELD_SECTIONS, "section");
 			addUniqueECRFFieldNameMatchRestriction(junction, nameInfix);
 			ecrfFieldCriteria.add(junction);
 		}
@@ -605,12 +619,17 @@ public class ECRFFieldDaoImpl
 			target.setTrial(this.getTrialDao().toTrialOutVO(trial));
 		}
 		target.setTitle(source.getTitleL10nKey());
+		target.setCommentL10nKey(source.getComment());
 		if (field != null) {
 			target.setField(this.getInputFieldDao().toInputFieldOutVO(field));
 			if (field.isLocalized()) {
 				target.setTitle(L10nUtil.getInputFieldTitle(Locales.USER, source.getTitleL10nKey()));
+				if (!CommonUtil.isEmptyString(source.getComment())) {
+					target.setComment(L10nUtil.getInputFieldComment(Locales.USER, source.getComment()));
+				}
 			}
 		}
+		target.setSectionLocalized(L10nUtil.getEcrfFieldSection(Locales.USER, source.getSection()));
 		if (modifiedUser != null) {
 			target.setModifiedUser(this.getUserDao().toUserOutVO(modifiedUser));
 		}

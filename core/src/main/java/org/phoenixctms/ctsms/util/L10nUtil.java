@@ -12,6 +12,8 @@ import org.phoenixctms.ctsms.enumeration.AuthenticationType;
 import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.enumeration.ECRFValidationStatus;
 import org.phoenixctms.ctsms.enumeration.EventImportance;
+import org.phoenixctms.ctsms.enumeration.InputFieldL10nBundle;
+import org.phoenixctms.ctsms.enumeration.InputFieldL10nTarget;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.enumeration.JobStatus;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
@@ -32,6 +34,7 @@ import org.phoenixctms.ctsms.vo.DBModuleVO;
 import org.phoenixctms.ctsms.vo.DepartmentVO;
 import org.phoenixctms.ctsms.vo.ECRFValidationStatusVO;
 import org.phoenixctms.ctsms.vo.EventImportanceVO;
+import org.phoenixctms.ctsms.vo.InputFieldL10nTargetVO;
 import org.phoenixctms.ctsms.vo.InputFieldTypeVO;
 import org.phoenixctms.ctsms.vo.JobStatusVO;
 import org.phoenixctms.ctsms.vo.JournalModuleVO;
@@ -190,6 +193,9 @@ public final class L10nUtil {
 	private static String inputFieldTextPresetsBundleBasename;
 	private static String inputFieldNamesBundleBasename;
 	private static String inputFieldCommentsBundleBasename;
+	private static String inputFieldL10nTargetNamesBundleBasename;
+	private static String ecrfFieldSectionsBundleBasename;
+	private static String inquiryCategoriesBundleBasename;
 
 	public static boolean containsAuditTrailChangeCommentFieldLabel(Locales locale, String l10nKey) {
 		return CommonUtil.bundleContainsKey(l10nKey, getBundle(locale, auditTrailChangeCommentFieldLabelsBundleBasename));
@@ -275,6 +281,19 @@ public final class L10nUtil {
 			jobStatusVO = null;
 		}
 		return jobStatusVO;
+	}
+
+	public static InputFieldL10nTargetVO createInputFieldL10nTargetVO(Locales locale, InputFieldL10nTarget target) {
+		InputFieldL10nTargetVO targetVO;
+		if (target != null) {
+			targetVO = new InputFieldL10nTargetVO();
+			targetVO.setTarget(target);
+			targetVO.setNameL10nKey(target.name());
+			targetVO.setName(getInputFieldL10nTargetName(locale, target.name()));
+		} else {
+			targetVO = null;
+		}
+		return targetVO;
 	}
 
 	public static InputFieldTypeVO createInputFieldTypeVO(Locales locale, InputFieldType fieldType) {
@@ -561,6 +580,28 @@ public final class L10nUtil {
 		return matchingKeys;
 	}
 
+	/**
+	 * The keys of an editable localization bundle whose text (in the user's language) contains the infix,
+	 * ignoring case, so filters can match translated texts.
+	 */
+	public static Collection<String> getMatchingInputFieldL10nKeys(InputFieldL10nBundle bundle, String infix) {
+		ArrayList<String> matchingKeys = new ArrayList<String>();
+		String lowerCaseInfix = (infix != null ? infix.trim().toLowerCase() : null);
+		String baseName = getInputFieldL10nBundleBasename(bundle);
+		if (lowerCaseInfix == null || lowerCaseInfix.length() == 0 || baseName == null) {
+			return matchingKeys;
+		}
+		Map<String, String> symbols = CommonUtil.getBundleSymbolMap(getBundle(Locales.USER, baseName), false);
+		Iterator<Map.Entry<String, String>> it = symbols.entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry<String, String> entry = it.next();
+			if (entry.getValue() != null && entry.getValue().toLowerCase().contains(lowerCaseInfix)) {
+				matchingKeys.add(entry.getKey());
+			}
+		}
+		return matchingKeys;
+	}
+
 	public static String getEcrfFieldStatusTypeName(Locales locale, String l10nKey) {
 		return CommonUtil.getString(l10nKey, getBundle(locale, ecrfFieldStatusTypesBundleBasename), DefaultMessages.ECRF_FIELD_STATUS_TYPE_NAME);
 	}
@@ -617,6 +658,91 @@ public final class L10nUtil {
 		return CommonUtil.getString(l10nKey, getBundle(locale, hyperlinkTitlePresetsBundleBasename), DefaultMessages.HYPERLINK_TITLE_PRESET);
 	}
 
+	public static String getEcrfFieldSection(Locales locale, String section) {
+		// sections are no keys of their own: a section without a text stays as it is
+		if (CommonUtil.isEmptyString(section)) {
+			return section;
+		}
+		return CommonUtil.getString(section, getBundle(locale, ecrfFieldSectionsBundleBasename), section);
+	}
+
+	public static String getInquiryCategory(Locales locale, String category) {
+		// categories are no keys of their own: a category without a text stays as it is
+		if (CommonUtil.isEmptyString(category)) {
+			return category;
+		}
+		return CommonUtil.getString(category, getBundle(locale, inquiryCategoriesBundleBasename), category);
+	}
+
+	public static String getInputFieldL10nBundleBasename(InputFieldL10nBundle bundle) {
+		if (bundle != null) {
+			switch (bundle) {
+				case NAMES:
+					return inputFieldNamesBundleBasename;
+				case TITLES:
+					return inputFieldTitlesBundleBasename;
+				case COMMENTS:
+					return inputFieldCommentsBundleBasename;
+				case TEXT_PRESETS:
+					return inputFieldTextPresetsBundleBasename;
+				case VALIDATION_ERROR_MSGS:
+					return inputFieldValidationErrorMsgsBundleBasename;
+				case SELECTION_SET_VALUE_NAMES:
+					return inputFieldSelectionSetValuesBundleBasename;
+				case SELECTION_SET_VALUE_ROWS:
+					return inputFieldSelectionSetValueRowsBundleBasename;
+				case SELECTION_SET_VALUE_COLUMNS:
+					return inputFieldSelectionSetValueColumnsBundleBasename;
+				case ECRF_FIELD_SECTIONS:
+					return ecrfFieldSectionsBundleBasename;
+				case INQUIRY_CATEGORIES:
+					return inquiryCategoriesBundleBasename;
+				default:
+			}
+		}
+		return null;
+	}
+
+	public static InputFieldL10nBundle getInputFieldL10nBundle(String baseName) {
+		if (baseName != null) {
+			for (InputFieldL10nBundle bundle : InputFieldL10nBundle.values()) {
+				if (baseName.equals(getInputFieldL10nBundleBasename(bundle))) {
+					return bundle;
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * The default (root) localization texts are the English ones and the fallback of every language,
+	 * so English has no texts of its own.
+	 */
+	public final static String INPUT_FIELD_L10N_ROOT_LANGUAGE = Locale.ENGLISH.getLanguage();
+
+	/**
+	 * The languages that can have localization texts of their own: the supported locales except English.
+	 */
+	public static ArrayList<String> getInputFieldL10nLocales() {
+		ArrayList<String> result = new ArrayList<String>();
+		Iterator<Locale> it = CoreUtil.getSupportedLocales().iterator();
+		while (it.hasNext()) {
+			String language = CommonUtil.localeToString(it.next());
+			if (!CommonUtil.isEmptyString(language) && !INPUT_FIELD_L10N_ROOT_LANGUAGE.equals(language)) {
+				result.add(language);
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * The effective bundle (classpath, CTSMS_PROPERTIES overloads, database texts, with locale fallback)
+	 * of an editable localization bundle, for a locale string ("" or null for the root bundle).
+	 */
+	public static ResourceBundle getInputFieldL10nBundle(InputFieldL10nBundle bundle, String locale) {
+		return CommonUtil.getBundle(getInputFieldL10nBundleBasename(bundle), CommonUtil.isEmptyString(locale) ? Locale.ROOT : CommonUtil.localeFromString(locale));
+	}
+
 	public static String getInputFieldComment(Locales locale, String l10nKey) {
 		return CommonUtil.getString(l10nKey, getBundle(locale, inputFieldCommentsBundleBasename), DefaultMessages.INPUT_FIELD_COMMENT);
 	}
@@ -643,6 +769,10 @@ public final class L10nUtil {
 
 	public static String getInputFieldTitle(Locales locale, String l10nKey) {
 		return CommonUtil.getString(l10nKey, getBundle(locale, inputFieldTitlesBundleBasename), DefaultMessages.INPUT_FIELD_TITLE);
+	}
+
+	public static String getInputFieldL10nTargetName(Locales locale, String l10nKey) {
+		return CommonUtil.getString(l10nKey, getBundle(locale, inputFieldL10nTargetNamesBundleBasename), l10nKey);
 	}
 
 	public static String getInputFieldTypeName(Locales locale, String l10nKey) {
@@ -1326,6 +1456,27 @@ public final class L10nUtil {
 			String hyperlinkTitlePresetsBundleBasename) {
 		L10nUtil.hyperlinkTitlePresetsBundleBasename = hyperlinkTitlePresetsBundleBasename;
 		getBundle(Locales.DEFAULT, hyperlinkTitlePresetsBundleBasename);
+	}
+
+	@Autowired(required = true)
+	public void setInputFieldL10nTargetNamesBundleBasename(
+			String inputFieldL10nTargetNamesBundleBasename) {
+		L10nUtil.inputFieldL10nTargetNamesBundleBasename = inputFieldL10nTargetNamesBundleBasename;
+		getBundle(Locales.DEFAULT, inputFieldL10nTargetNamesBundleBasename);
+	}
+
+	@Autowired(required = true)
+	public void setEcrfFieldSectionsBundleBasename(
+			String ecrfFieldSectionsBundleBasename) {
+		L10nUtil.ecrfFieldSectionsBundleBasename = ecrfFieldSectionsBundleBasename;
+		getBundle(Locales.DEFAULT, ecrfFieldSectionsBundleBasename);
+	}
+
+	@Autowired(required = true)
+	public void setInquiryCategoriesBundleBasename(
+			String inquiryCategoriesBundleBasename) {
+		L10nUtil.inquiryCategoriesBundleBasename = inquiryCategoriesBundleBasename;
+		getBundle(Locales.DEFAULT, inquiryCategoriesBundleBasename);
 	}
 
 	@Autowired(required = true)

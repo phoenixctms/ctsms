@@ -134,6 +134,7 @@ public class ProbandListEntryTagRowWriter extends RowWriter {
 		Iterator<ProbandListEntryTagOutVO> it = listEntryTags.iterator();
 		while (it.hasNext()) {
 			ProbandListEntryTagOutVO listEntryTag = it.next();
+			((XlsExporter) context.getExporter()).getL10nKeyCollector().addProbandListEntryTag(listEntryTag);
 			if (inputFieldIds.add(listEntryTag.getField().getId())) {
 				((XlsExporter) context.getExporter()).getInputFieldRowWriter().printRows(listEntryTag.getField());
 			}
@@ -143,7 +144,7 @@ public class ProbandListEntryTagRowWriter extends RowWriter {
 			values[externalIdColumnIndex] = listEntryTag.getExternalId();
 			values[inputFieldNameColumnIndex] = listEntryTag.getField().getNameL10nKey();
 			values[titleColumnIndex] = listEntryTag.getTitleL10nKey();
-			values[commentColumnIndex] = listEntryTag.getComment();
+			values[commentColumnIndex] = listEntryTag.getCommentL10nKey();
 			values[optionalColumnIndex] = Boolean.toString(listEntryTag.getOptional());
 			values[disabledColumnIndex] = Boolean.toString(listEntryTag.getDisabled());
 			values[excelValueColumnIndex] = Boolean.toString(listEntryTag.getExcelValue());

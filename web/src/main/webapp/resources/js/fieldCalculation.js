@@ -172,6 +172,14 @@ var FIELD_CALCULATION_OVERRIDE_CALCULATED_VALUES = true;
 	    return cloneO;
 	}
 
+	// the translated eCRF section (or inquiry category) for messages; expressions and grouping use the section as entered
+	function _getSectionLabel(inputFieldVariableValue) {
+		if (inputFieldVariableValue.sectionLocalized != null && inputFieldVariableValue.sectionLocalized.length > 0) {
+			return inputFieldVariableValue.sectionLocalized;
+		}
+		return inputFieldVariableValue.section;
+	}
+
 	function _getInputFieldVariableMapSize() {
 		var result = 0;
 		for ( var variableName in inputFieldVariableMap) {
@@ -728,9 +736,9 @@ var FIELD_CALCULATION_OVERRIDE_CALCULATED_VALUES = true;
 			var value = _printValue(calculated, formatOrSeparator, selectionSetValueFieldOrLocale);
 			if (inputFieldVariable.value.section != null && inputFieldVariable.value.section.length > 0) {
 			    if (inputFieldVariable.value.series) {
-			        return sprintf(localizedMessages[inputFieldVars.locale].calculatedSectionIndex,inputFieldVariable.value.section,inputFieldVariable.value.inputFieldName,inputFieldVariable.value.index,value);
+			        return sprintf(localizedMessages[inputFieldVars.locale].calculatedSectionIndex,_getSectionLabel(inputFieldVariable.value),inputFieldVariable.value.inputFieldName,inputFieldVariable.value.index,value);
 			    } else {
-			        return sprintf(localizedMessages[inputFieldVars.locale].calculatedSection,inputFieldVariable.value.section,inputFieldVariable.value.inputFieldName,value);
+			        return sprintf(localizedMessages[inputFieldVars.locale].calculatedSection,_getSectionLabel(inputFieldVariable.value),inputFieldVariable.value.inputFieldName,value);
 			    }
 			} else {
 			    if (inputFieldVariable.value.series) {
@@ -744,9 +752,9 @@ var FIELD_CALCULATION_OVERRIDE_CALCULATED_VALUES = true;
 			var value = _printValue(entered, formatOrSeparator, selectionSetValueFieldOrLocale);
 			if (inputFieldVariable.value.section != null && inputFieldVariable.value.section.length > 0) {
 			    if (inputFieldVariable.value.series) {
-			        return sprintf(localizedMessages[inputFieldVars.locale].enteredSectionIndex,inputFieldVariable.value.section,inputFieldVariable.value.inputFieldName,inputFieldVariable.value.index,value);
+			        return sprintf(localizedMessages[inputFieldVars.locale].enteredSectionIndex,_getSectionLabel(inputFieldVariable.value),inputFieldVariable.value.inputFieldName,inputFieldVariable.value.index,value);
 			    } else {
-			        return sprintf(localizedMessages[inputFieldVars.locale].enteredSection,inputFieldVariable.value.section,inputFieldVariable.value.inputFieldName,value);
+			        return sprintf(localizedMessages[inputFieldVars.locale].enteredSection,_getSectionLabel(inputFieldVariable.value),inputFieldVariable.value.inputFieldName,value);
 			    }
 			} else {
 				if (inputFieldVariable.value.series) {
@@ -806,9 +814,9 @@ var FIELD_CALCULATION_OVERRIDE_CALCULATED_VALUES = true;
 		    }
 		    if (inputFieldVariable.value.section != null && inputFieldVariable.value.section.length > 0) {
 			    if (inputFieldVariable.value.series) {
-			        throw { msg: sprintf(localizedMessages[inputFieldVars.locale].errorSectionIndex,inputFieldVariable.value.section,inputFieldVariable.value.inputFieldName,inputFieldVariable.value.index,noColon,message) };
+			        throw { msg: sprintf(localizedMessages[inputFieldVars.locale].errorSectionIndex,_getSectionLabel(inputFieldVariable.value),inputFieldVariable.value.inputFieldName,inputFieldVariable.value.index,noColon,message) };
 			    } else {
-			        throw { msg: sprintf(localizedMessages[inputFieldVars.locale].errorSection,inputFieldVariable.value.section,inputFieldVariable.value.inputFieldName,noColon,message) };
+			        throw { msg: sprintf(localizedMessages[inputFieldVars.locale].errorSection,_getSectionLabel(inputFieldVariable.value),inputFieldVariable.value.inputFieldName,noColon,message) };
 			    }
 		    } else {
 		    	if (inputFieldVariable.value.series) {
@@ -2070,6 +2078,7 @@ var FIELD_CALCULATION_OVERRIDE_CALCULATED_VALUES = true;
 
 		if (inputFieldVariableValue.category != null) {
 			inputFieldVariableValue.section = inputFieldVariableValue.category;
+			inputFieldVariableValue.sectionLocalized = inputFieldVariableValue.categoryLocalized;
 		}
 
     }

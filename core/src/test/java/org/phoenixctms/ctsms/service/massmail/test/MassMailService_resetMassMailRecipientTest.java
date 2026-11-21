@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>resetMassMailRecipient</code> of service <code>MassMailService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.massmail.MassMailService#resetMassMailRecipient(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.Long)
+ * @see org.phoenixctms.ctsms.service.massmail.MassMailService#resetMassMailRecipient(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.Boolean, java.lang.Long)
  */
 @Test(groups={"service","MassMailService"})
 public class MassMailService_resetMassMailRecipientTest extends MassMailServiceBaseTest {

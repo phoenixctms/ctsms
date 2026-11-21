@@ -13,10 +13,10 @@ function handleInputFieldTabChange(index) {
 			changeInputFieldBySelectionSetValue();
 			break;
 
-		case 4:
+		case 5:
 			changeInputFieldByJob();
 			break;
-		case 5:
+		case 6:
 			changeInputFieldByJournalEntry();
 			break;
 		default:
@@ -34,14 +34,18 @@ function handleInputFieldTabChange(index) {
 		break;
 
 	case 3:
-		changeInputFieldAssociation();
+		changeInputFieldL10n();
 		break;
 
 	case 4:
+		changeInputFieldAssociation();
+		break;
+
+	case 5:
 		changeInputFieldJob();
 		break;
-		
-	case 5:
+
+	case 6:
 		changeInputFieldJournalEntry();
 		break;
 
@@ -81,16 +85,96 @@ function handleUpdateInputFieldTabTitles(xhr, status, args) {
 	}
 
 	if (_testPropertyExists(args, AJAX_INPUT_FIELD_JOB_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_INPUT_FIELD_JOB_COUNT)) {
-		inputFieldTabView.setTabTitle(reverseTabIndex(4), decodeBase64(args[AJAX_INPUT_FIELD_JOB_TAB_TITLE_BASE64]));
-		inputFieldTabView.emphasizeTab(reverseTabIndex(4), args[AJAX_INPUT_FIELD_JOB_COUNT] == 0);
+		inputFieldTabView.setTabTitle(reverseTabIndex(5), decodeBase64(args[AJAX_INPUT_FIELD_JOB_TAB_TITLE_BASE64]));
+		inputFieldTabView.emphasizeTab(reverseTabIndex(5), args[AJAX_INPUT_FIELD_JOB_COUNT] == 0);
 	}
 	
 	if (_testPropertyExists(args, AJAX_INPUT_FIELD_JOURNAL_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_INPUT_FIELD_JOURNAL_ENTRY_COUNT)) {
-		inputFieldTabView.setTabTitle(reverseTabIndex(5), decodeBase64(args[AJAX_INPUT_FIELD_JOURNAL_TAB_TITLE_BASE64]));
-		inputFieldTabView.emphasizeTab(reverseTabIndex(5), args[AJAX_INPUT_FIELD_JOURNAL_ENTRY_COUNT] == 0);
+		inputFieldTabView.setTabTitle(reverseTabIndex(6), decodeBase64(args[AJAX_INPUT_FIELD_JOURNAL_TAB_TITLE_BASE64]));
+		inputFieldTabView.emphasizeTab(reverseTabIndex(6), args[AJAX_INPUT_FIELD_JOURNAL_ENTRY_COUNT] == 0);
 	}
 
 }
+
+// localization tab: the bundle tabs take the rest of the page height (all of them the same, so switching
+// tabs does not jump), and the editor of the shown tab fills its tab
+var INPUT_FIELD_L10N_TABVIEW_ID = 'tabView:inputfieldl10n_form:l10nbundletabs';
+var INPUT_FIELD_L10N_MIN_PANEL_HEIGHT = 240;
+var INPUT_FIELD_L10N_BOTTOM_MARGIN = 40;
+
+function _getInputFieldL10nEditor(index) {
+	var editor = window['widget_tabView_inputfieldl10n_form_l10nbundletabs_l10ntext_' + index];
+	return editor && editor.instance ? editor.instance : null;
+}
+
+function _sizeInputFieldL10nEditor(panel, panelHeight, index) {
+	var editor = _getInputFieldL10nEditor(index);
+	if (editor && panel.offsetParent !== null) {
+		var scroller = editor.getScrollerElement();
+		var grid = panel.querySelector('.ctsms-l10n-codemirror-panelgrid');
+		if (grid) {
+			// the label and toolbar keep their height, the editor gets the rest:
+			var others = grid.offsetHeight - scroller.offsetHeight;
+			scroller.style.height = Math.max(80, panelHeight - others) + 'px';
+		}
+		editor.refresh();
+	}
+}
+
+function sizeInputFieldL10nEditors() {
+	var tabView = document.getElementById(INPUT_FIELD_L10N_TABVIEW_ID);
+	if (!tabView || tabView.offsetParent === null) {
+		return; // the localization tab is not shown
+	}
+	var nav = tabView.querySelector('.ui-tabs-nav');
+	var top = (nav != null ? nav.getBoundingClientRect().bottom : tabView.getBoundingClientRect().top);
+	var height = Math.max(INPUT_FIELD_L10N_MIN_PANEL_HEIGHT, Math.floor(window.innerHeight - top - INPUT_FIELD_L10N_BOTTOM_MARGIN));
+	var panels = tabView.querySelectorAll('.ui-tabs-panel');
+	for (var i = 0; i < panels.length; i++) {
+		panels[i].style.height = height + 'px';
+		panels[i].style.overflow = 'hidden';
+		_sizeInputFieldL10nEditor(panels[i], height, i);
+	}
+}
+
+function clearInputFieldL10nMessages() {
+	// as on other tab switches, the messages of the last action are gone when another editor tab is shown:
+	$('[id="tabView:inputfieldl10n_form:l10nbundletabs"] .ui-messages').empty();
+}
+
+function copyInputFieldL10nKeyLine(button) {
+	var text = $(button).siblings('.ctsms-l10n-key-line').text();
+	if (navigator.clipboard && window.isSecureContext) {
+		navigator.clipboard.writeText(text);
+	} else {
+		// no clipboard API over plain http:
+		var textarea = $('<textarea readonly="readonly"></textarea>').val(text).css({
+			position : 'fixed',
+			top : 0,
+			left : 0,
+			opacity : 0
+		}).appendTo('body');
+		textarea[0].select();
+		try {
+			document.execCommand('copy');
+		} catch (e) {
+		}
+		textarea.remove();
+	}
+}
+
+function refreshInputFieldL10nEditor(index) {
+	// an editor created in a hidden tab has no size until it is shown and refreshed:
+	sizeInputFieldL10nEditors();
+}
+
+var _inputFieldL10nResizeTimer = null;
+$(window).on('resize', function() {
+	if (_inputFieldL10nResizeTimer != null) {
+		clearTimeout(_inputFieldL10nResizeTimer);
+	}
+	_inputFieldL10nResizeTimer = setTimeout(sizeInputFieldL10nEditors, 150);
+});
 
 // sketch selection set values: the regions sketch and its JSON editor follow each other while editing
 

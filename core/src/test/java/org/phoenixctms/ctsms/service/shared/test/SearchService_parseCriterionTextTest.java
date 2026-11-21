@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>parseCriterionText</code> of service <code>SearchService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.shared.SearchService#parseCriterionText(org.phoenixctms.ctsms.vo.AuthenticationVO, org.phoenixctms.ctsms.enumeration.DBModule, java.lang.String)
+ * @see org.phoenixctms.ctsms.service.shared.SearchService#parseCriterionText(org.phoenixctms.ctsms.vo.AuthenticationVO, org.phoenixctms.ctsms.enumeration.DBModule, java.lang.String, boolean, java.lang.Integer)
  */
 @Test(groups={"service","SearchService"})
 public class SearchService_parseCriterionTextTest extends SearchServiceBaseTest {

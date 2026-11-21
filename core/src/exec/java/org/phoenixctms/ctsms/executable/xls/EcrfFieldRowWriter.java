@@ -142,6 +142,7 @@ public class EcrfFieldRowWriter extends RowWriter {
 		Iterator<ECRFFieldOutVO> it = ecrfFields.iterator();
 		while (it.hasNext()) {
 			ECRFFieldOutVO ecrfField = it.next();
+			((XlsExporter) context.getExporter()).getL10nKeyCollector().addEcrfField(ecrfField);
 			if (inputFieldIds.add(ecrfField.getField().getId())) {
 				((XlsExporter) context.getExporter()).getInputFieldRowWriter().printRows(ecrfField.getField());
 			}
@@ -154,7 +155,7 @@ public class EcrfFieldRowWriter extends RowWriter {
 			values[externalIdColumnIndex] = ecrfField.getExternalId();
 			values[inputFieldNameColumnIndex] = ecrfField.getField().getNameL10nKey();
 			values[titleColumnIndex] = ecrfField.getTitleL10nKey();
-			values[commentColumnIndex] = ecrfField.getComment();
+			values[commentColumnIndex] = ecrfField.getCommentL10nKey();
 			values[seriesColumnIndex] = Boolean.toString(ecrfField.getSeries());
 			values[optionalColumnIndex] = Boolean.toString(ecrfField.getOptional());
 			values[disabledColumnIndex] = Boolean.toString(ecrfField.getDisabled());

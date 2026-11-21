@@ -9,6 +9,7 @@ package org.phoenixctms.ctsms.domain;
 import java.text.MessageFormat;
 import java.util.Collection;
 
+import java.util.Set;
 import org.hibernate.Hibernate;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Criterion;
@@ -17,6 +18,7 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.phoenixctms.ctsms.enumeration.InputFieldL10nBundle;
 import org.phoenixctms.ctsms.query.CategoryCriterion;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
@@ -112,6 +114,17 @@ public class InquiryDaoImpl
 		return inquiryCriteria;
 	}
 
+	/**
+	 * Usages of localized input fields that hold one of the keys as title or comment.
+	 */
+	@Override
+	protected Collection<Inquiry> handleFindByL10nKeys(Set<String> keys) throws Exception {
+		org.hibernate.Criteria inquiryCriteria = createInquiryCriteria();
+		inquiryCriteria.createCriteria("field", "inputField0").add(Restrictions.eq("localized", true));
+		inquiryCriteria.add(CriteriaUtil.getL10nKeysInCriterion(keys, "titleL10nKey", "comment"));
+		return inquiryCriteria.list();
+	}
+
 	@Override
 	protected Collection<Inquiry> handleFindAllSorted() throws Exception {
 		org.hibernate.Criteria inquiryCriteria = createInquiryCriteria();
@@ -131,6 +144,7 @@ public class InquiryDaoImpl
 			junction.add((new CategoryCriterion(nameInfix, "inputField.titleL10nKey", MatchMode.ANYWHERE)).getRestriction());
 			junction.add((new CategoryCriterion(nameInfix, "trial0.name", MatchMode.ANYWHERE)).getRestriction());
 			junction.add((new CategoryCriterion(nameInfix, "titleL10nKey", MatchMode.ANYWHERE)).getRestriction());
+			CriteriaUtil.addL10nNameInfixCriterions(junction, nameInfix, InputFieldL10nBundle.INQUIRY_CATEGORIES, "category");
 			addUniqueInquiryNameMatchRestriction(junction, nameInfix);
 			inquiryCriteria.add(junction);
 		}
@@ -616,12 +630,17 @@ public class InquiryDaoImpl
 			target.setTrial(this.getTrialDao().toTrialOutVO(trial));
 		}
 		target.setTitle(source.getTitleL10nKey());
+		target.setCommentL10nKey(source.getComment());
 		if (field != null) {
 			target.setField(this.getInputFieldDao().toInputFieldOutVO(field));
 			if (field.isLocalized()) {
 				target.setTitle(L10nUtil.getInputFieldTitle(Locales.USER, source.getTitleL10nKey()));
+				if (!CommonUtil.isEmptyString(source.getComment())) {
+					target.setComment(L10nUtil.getInputFieldComment(Locales.USER, source.getComment()));
+				}
 			}
 		}
+		target.setCategoryLocalized(L10nUtil.getInquiryCategory(Locales.USER, source.getCategory()));
 		if (modifiedUser != null) {
 			target.setModifiedUser(this.getUserDao().toUserOutVO(modifiedUser));
 		}

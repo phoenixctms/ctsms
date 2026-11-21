@@ -14,6 +14,7 @@ import org.phoenixctms.ctsms.Search;
 import org.phoenixctms.ctsms.SearchParameter;
 import org.phoenixctms.ctsms.domain.AspDao;
 import org.phoenixctms.ctsms.domain.AspSubstanceDao;
+import org.phoenixctms.ctsms.enumeration.InputFieldL10nBundle;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
@@ -21,6 +22,7 @@ import org.phoenixctms.ctsms.fileprocessors.xls.RowProcessor;
 import org.phoenixctms.ctsms.fileprocessors.xls.XlsImporterBase;
 import org.phoenixctms.ctsms.fileprocessors.xls.XlsImporterContext;
 import org.phoenixctms.ctsms.service.shared.FileService;
+import org.phoenixctms.ctsms.service.shared.InputFieldService;
 import org.phoenixctms.ctsms.util.ChunkedRemoveAll;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.ExecUtil;
@@ -60,6 +62,20 @@ public class XlsImporter extends XlsImporterBase {
 	private FileService fileService;
 
 	public XlsImporter() {
+	}
+
+	@Autowired
+	private InputFieldService inputFieldService;
+
+	/**
+	 * Merges the localization texts of the optional l10n_* sheets (files without them import as before).
+	 */
+	protected void loadL10nTexts(XlsImporterContext context) throws Throwable {
+		for (InputFieldL10nBundle bundle : InputFieldL10nBundle.values()) {
+			L10nTextRowProcessor processor = new L10nTextRowProcessor(bundle, inputFieldService);
+			setContext(processor, context, false);
+			readRows(context, context.getEncoding(), processor);
+		}
 	}
 
 	private XlsImporterContext createContext(RowProcessor processor, String fileName, String encoding, boolean mandatory) {
@@ -117,7 +133,9 @@ public class XlsImporter extends XlsImporterBase {
 		XlsImporterContext context = createContext(ecrfRowProcessor, fileName, encoding, true);
 		context.setAuth(auth);
 		context.setEntityId(trialId);
-		return readRows(context, encoding, ecrfRowProcessor);
+		long rowCount = readRows(context, encoding, ecrfRowProcessor);
+		loadL10nTexts(context);
+		return rowCount;
 	}
 
 	public long loadInquiries(String fileName, String encoding, AuthenticationVO auth, Long trialId) throws Throwable {
@@ -126,6 +144,7 @@ public class XlsImporter extends XlsImporterBase {
 		context.setEntityId(trialId);
 		long rowCount = readRows(context, encoding, inquiryRowProcessor);
 		inquiryRowProcessor.addUpdateInquiries();
+		loadL10nTexts(context);
 		return rowCount;
 	}
 
@@ -135,13 +154,16 @@ public class XlsImporter extends XlsImporterBase {
 		context.setEntityId(trialId);
 		long rowCount = readRows(context, encoding, probandListEntryTagRowProcessor);
 		probandListEntryTagRowProcessor.addUpdateProbandListEntryTags();
+		loadL10nTexts(context);
 		return rowCount;
 	}
 
 	public long loadInputFields(String fileName, String encoding, AuthenticationVO auth) throws Throwable {
 		XlsImporterContext context = createContext(inputFieldRowProcessor, fileName, encoding, true);
 		context.setAuth(auth);
-		return readRows(context, encoding, inputFieldRowProcessor);
+		long rowCount = readRows(context, encoding, inputFieldRowProcessor);
+		loadL10nTexts(context);
+		return rowCount;
 	}
 
 	protected long loadInputFields(XlsImporterContext context) throws Throwable {

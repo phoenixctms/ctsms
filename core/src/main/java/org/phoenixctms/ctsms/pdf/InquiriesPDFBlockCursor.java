@@ -64,7 +64,8 @@ public class InquiriesPDFBlockCursor extends PDFBlockCursor implements InputFiel
 		if (categoryBlock != null) {
 			String category = categoryBlock.getCategory();
 			if (category != null && category.length() > 0) {
-				return L10nUtil.getInquiriesPDFLabel(Locales.INQUIRIES_PDF, InquiriesPDFLabelCodes.INQUIRY_CATEGORY, PDFUtil.DEFAULT_LABEL, category);
+				return L10nUtil.getInquiriesPDFLabel(Locales.INQUIRIES_PDF, InquiriesPDFLabelCodes.INQUIRY_CATEGORY, PDFUtil.DEFAULT_LABEL,
+						L10nUtil.getInquiryCategory(Locales.INQUIRIES_PDF, category));
 			}
 		}
 		return null;

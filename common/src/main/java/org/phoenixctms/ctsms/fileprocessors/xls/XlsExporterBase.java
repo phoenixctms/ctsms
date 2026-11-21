@@ -55,6 +55,7 @@ public abstract class XlsExporterBase {
 			writer.init();
 			writer.printHeaderRow();
 			writer.printRows();
+			printAdditionalSheets(context);
 			workbook.write();
 			workbook.close();
 		} catch (Exception e) {
@@ -82,6 +83,12 @@ public abstract class XlsExporterBase {
 		}
 		jobOutput.println(writer.getLineCount() + " rows exported");
 		return writer.getLineCount();
+	}
+
+	/**
+	 * Sheets written after the rows of the main writer, before the workbook is closed.
+	 */
+	protected void printAdditionalSheets(XlsExporterContext context) throws Throwable {
 	}
 
 	public void setJobOutput(ProcessorJobOutput jobOutput) {

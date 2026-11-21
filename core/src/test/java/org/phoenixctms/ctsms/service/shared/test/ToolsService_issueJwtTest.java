@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>issueJwt</code> of service <code>ToolsService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.shared.ToolsService#issueJwt(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.String, java.lang.Long)
+ * @see org.phoenixctms.ctsms.service.shared.ToolsService#issueJwt(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long)
  */
 @Test(groups={"service","ToolsService"})
 public class ToolsService_issueJwtTest extends ToolsServiceBaseTest {

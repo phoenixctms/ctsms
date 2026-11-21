@@ -48,6 +48,34 @@ public final class AuditTrailExcelDefaultSettings {
 	public static final ExcelCellFormat AUDIT_TRAIL_GROUP_LABEL_FORMAT = ExcelCellFormat.getDefaultGroupLabelFormat();
 	public static final ExcelCellFormat ECRF_PROGRESS_GROUP_LABEL_FORMAT = ExcelCellFormat.getDefaultGroupLabelFormat();
 	public static final ExcelCellFormat ECRF_FIELD_STATUS_GROUP_LABEL_FORMAT = ExcelCellFormat.getDefaultGroupLabelFormat();
+	public static final boolean L10N_TEXT_CHANGES_AUTOSIZE = true;
+	public static final Integer L10N_TEXT_CHANGES_PAGE_BREAK_AT_ROW = null;
+	public static final Integer L10N_TEXT_CHANGES_ROW_OFFSET_FIRST_PAGE = null;
+	public static final Integer L10N_TEXT_CHANGES_ROW_OFFSET_OTHER_PAGES = null;
+	public static final Integer L10N_TEXT_CHANGES_COL_OFFSET = null;
+	public static final Integer L10N_TEXT_CHANGES_SCALE_FACTOR = null;
+	public static final ExcelCellFormat L10N_TEXT_CHANGES_HEAD_FORMAT = ExcelCellFormat.getDefaultHeadFormat();
+	public static final ExcelCellFormat L10N_TEXT_CHANGES_GROUP_LABEL_FORMAT = ExcelCellFormat.getDefaultGroupLabelFormat();
+	public static final ExcelCellFormat L10N_TEXT_CHANGES_ROW_FORMAT = ExcelCellFormat.getDefaultRowFormat();
+	public static final boolean L10N_TEXT_CHANGES_ROW_COLORS = false;
+	public final static ArrayList<String> L10N_TEXT_CHANGES_VO_FIELD_COLUMNS = new ArrayList<String>();
+	public static final boolean L10N_TEXT_CHANGES_WRITEHEAD = true;
+	public static final boolean L10N_TEXT_CHANGES_APPEND_HEADER_FOOTER = false;
+	static {
+		L10N_TEXT_CHANGES_VO_FIELD_COLUMNS.add("ecrf" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");
+		L10N_TEXT_CHANGES_VO_FIELD_COLUMNS.add("section");
+		L10N_TEXT_CHANGES_VO_FIELD_COLUMNS.add("ecrfField" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "position");
+		L10N_TEXT_CHANGES_VO_FIELD_COLUMNS
+				.add("ecrfField" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "field" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");
+		L10N_TEXT_CHANGES_VO_FIELD_COLUMNS.add("target" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");
+		L10N_TEXT_CHANGES_VO_FIELD_COLUMNS.add("selectionSetValue" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "value");
+		L10N_TEXT_CHANGES_VO_FIELD_COLUMNS.add("locale");
+		L10N_TEXT_CHANGES_VO_FIELD_COLUMNS.add("l10nKey");
+		L10N_TEXT_CHANGES_VO_FIELD_COLUMNS.add("oldText");
+		L10N_TEXT_CHANGES_VO_FIELD_COLUMNS.add("newText");
+		L10N_TEXT_CHANGES_VO_FIELD_COLUMNS.add("modifiedUser" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");
+		L10N_TEXT_CHANGES_VO_FIELD_COLUMNS.add("modifiedTimestamp");
+	}
 	static {
 		AUDIT_TRAIL_VO_FIELD_COLUMNS.add("listEntry" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "proband" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "id");
 		AUDIT_TRAIL_VO_FIELD_COLUMNS.add("ecrfField" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "ecrf" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");

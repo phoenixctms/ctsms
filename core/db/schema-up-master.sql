@@ -851,5 +851,32 @@ if get_database_version() < '010901018' then
 
 end if;
 
+if get_database_version() < '010901019' then
+
+  -- localization texts of input fields, eCRF sections and inquiry categories, one row per saved revision:
+  create table INPUT_FIELD_L10N_TEXT (
+    ID BIGINT not null,
+    BUNDLE CHARACTER VARYING(1024) not null,
+    LOCALE CHARACTER VARYING(1024) not null,
+    TEXT TEXT not null,
+    VERSION BIGINT not null,
+    MODIFIED_TIMESTAMP TIMESTAMP WITHOUT TIME ZONE not null,
+    MODIFIED_USER_FK BIGINT not null,
+    primary key (ID),
+    unique (BUNDLE, LOCALE, VERSION)
+  );
+  alter table INPUT_FIELD_L10N_TEXT
+    add constraint INPUT_FIELD_L10N_TEXT_MODIFIED_USER_FKC
+    foreign key (MODIFIED_USER_FK)
+    references users;
+  -- show the new localization tab of input fields to users who see the input field tabs:
+  update USERS set VISIBLE_INPUT_FIELD_TAB_LIST = VISIBLE_INPUT_FIELD_TAB_LIST || ',inputfieldl10n'
+    where VISIBLE_INPUT_FIELD_TAB_LIST is not null and VISIBLE_INPUT_FIELD_TAB_LIST <> ''
+    and VISIBLE_INPUT_FIELD_TAB_LIST not like '%inputfieldl10n%';
+
+  perform set_database_version('010901019');
+
+end if;
+
 end
 $$;

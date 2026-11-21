@@ -53,14 +53,14 @@ public class InquiryBean extends ManagedBeanBase {
 			in.setCategory(out.getCategory());
 			in.setDisabled(out.getDisabled());
 			in.setFieldId(fieldVO == null ? null : fieldVO.getId());
-			in.setTitle(out.getTitle());
+			in.setTitle(out.getTitleL10nKey());
 			in.setId(out.getId());
 			in.setOptional(out.getOptional());
 			in.setExcelValue(out.getExcelValue());
 			in.setExcelDate(out.getExcelDate());
 			in.setPosition(out.getPosition());
 			in.setTrialId(trialVO == null ? null : trialVO.getId());
-			in.setComment(out.getComment());
+			in.setComment(out.getCommentL10nKey());
 			in.setVersion(out.getVersion());
 			in.setJsVariableName(out.getJsVariableName());
 			in.setJsValueExpression(out.getJsValueExpression());

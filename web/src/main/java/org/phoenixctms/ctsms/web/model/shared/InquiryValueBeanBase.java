@@ -484,7 +484,9 @@ public abstract class InquiryValueBeanBase extends ManagedBeanBase {
 				} else {
 					inquiryValues = new ArrayList<InquiryValueInVO>();
 					inquiryValuesMap.put(category, inquiryValues);
-					categories.add(new InquiryCategory(category, categoryRowIndex));
+					InquiryCategory inquiryCategory = new InquiryCategory(category, categoryRowIndex);
+					inquiryCategory.setCategoryLocalized(inquiryVO.getCategoryLocalized());
+					categories.add(inquiryCategory);
 					categoryRowIndex++;
 				}
 				inquiryValues.add(inquiryValue);

@@ -17,9 +17,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.function.Supplier;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -41,6 +47,8 @@ import org.phoenixctms.ctsms.domain.ECRFFieldValueDao;
 import org.phoenixctms.ctsms.domain.ECRFStatusEntryDao;
 import org.phoenixctms.ctsms.domain.InputField;
 import org.phoenixctms.ctsms.domain.InputFieldDao;
+import org.phoenixctms.ctsms.domain.InputFieldL10nText;
+import org.phoenixctms.ctsms.domain.InputFieldL10nTextDao;
 import org.phoenixctms.ctsms.domain.InputFieldSelectionSetValue;
 import org.phoenixctms.ctsms.domain.InputFieldSelectionSetValueDao;
 import org.phoenixctms.ctsms.domain.InputFieldValue;
@@ -71,6 +79,7 @@ import org.phoenixctms.ctsms.domain.TrialDao;
 import org.phoenixctms.ctsms.domain.User;
 import org.phoenixctms.ctsms.domain.VisitScheduleItemDao;
 import org.phoenixctms.ctsms.enumeration.FileModule;
+import org.phoenixctms.ctsms.enumeration.InputFieldL10nBundle;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.exception.ServiceException;
@@ -79,6 +88,9 @@ import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.DefaultMessages;
 import org.phoenixctms.ctsms.util.DefaultSettings;
+import org.phoenixctms.ctsms.util.InputFieldL10nKeyUsage;
+import org.phoenixctms.ctsms.util.InputFieldL10nOverlay;
+import org.phoenixctms.ctsms.util.InputFieldL10nTextUtil;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
 import org.phoenixctms.ctsms.util.MessageCodes;
@@ -93,6 +105,9 @@ import org.phoenixctms.ctsms.util.randomization.Randomization;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldInVO;
+import org.phoenixctms.ctsms.vo.InputFieldL10nMissingKeyVO;
+import org.phoenixctms.ctsms.vo.InputFieldL10nTextInVO;
+import org.phoenixctms.ctsms.vo.InputFieldL10nTextOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueInVO;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
@@ -1606,5 +1621,265 @@ public class InputFieldServiceImpl
 		ServiceUtil.logSystemMessage(selectionSetValue.getField(), result.getField(), now, user, SystemMessageCodes.SELECTION_SET_VALUE_UPDATED, result, original,
 				this.getJournalEntryDao());
 		return result;
+	}
+
+	private final static int L10N_TEXT_MAX_LENGTH = 1048576;
+
+	/**
+	 * @return the locale, "" for the root bundle
+	 */
+	private static String checkL10nLocale(String locale) throws ServiceException {
+		if (CommonUtil.isEmptyString(locale)) {
+			return "";
+		}
+		// English is no language of its own: its texts are the default ones
+		if (L10nUtil.getInputFieldL10nLocales().contains(locale)) {
+			return locale;
+		}
+		throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_L10N_LOCALE_NOT_SUPPORTED, locale);
+	}
+
+	private static String getL10nTextName(InputFieldL10nBundle bundle, String locale) {
+		String baseName = L10nUtil.getInputFieldL10nBundleBasename(bundle);
+		return CommonUtil.isEmptyString(locale) ? baseName : baseName + "_" + locale;
+	}
+
+	private static LinkedHashMap<String, String> parseL10nText(InputFieldL10nBundle bundle, String locale, String text) throws Exception {
+		if (text != null && text.length() > L10N_TEXT_MAX_LENGTH) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_L10N_TEXT_TOO_LONG, getL10nTextName(bundle, locale), L10N_TEXT_MAX_LENGTH);
+		}
+		try {
+			return InputFieldL10nTextUtil.parse(text);
+		} catch (IllegalArgumentException e) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_L10N_TEXT_INVALID, getL10nTextName(bundle, locale), e.getMessage());
+		}
+	}
+
+	private static void addL10nKeyUsages(HashMap<InputField, TreeMap<String, InputFieldL10nTextUtil.Change>> result, InputField field,
+			Collection<InputFieldL10nKeyUsage> keys, InputFieldL10nBundle bundle, Map<String, InputFieldL10nTextUtil.Change> changes) {
+		Iterator<InputFieldL10nKeyUsage> it = keys.iterator();
+		while (it.hasNext()) {
+			InputFieldL10nKeyUsage key = it.next();
+			if (key.getBundle() == bundle && changes.containsKey(key.getKey())) {
+				TreeMap<String, InputFieldL10nTextUtil.Change> fieldChanges = result.get(field);
+				if (fieldChanges == null) {
+					fieldChanges = new TreeMap<String, InputFieldL10nTextUtil.Change>();
+					result.put(field, fieldChanges);
+				}
+				fieldChanges.put(key.getKey(), changes.get(key.getKey()));
+			}
+		}
+	}
+
+	/**
+	 * The input fields that apply one of the changed keys, through their own properties, selection set values or usages.
+	 */
+	private HashMap<InputField, TreeMap<String, InputFieldL10nTextUtil.Change>> getL10nKeyUsages(InputFieldL10nBundle bundle,
+			Map<String, InputFieldL10nTextUtil.Change> changes) throws Exception {
+		HashMap<InputField, TreeMap<String, InputFieldL10nTextUtil.Change>> result = new HashMap<InputField, TreeMap<String, InputFieldL10nTextUtil.Change>>();
+		HashSet<String> keys = new HashSet<String>(changes.keySet());
+		switch (bundle) {
+			case NAMES:
+			case TITLES:
+			case COMMENTS:
+			case TEXT_PRESETS:
+			case VALIDATION_ERROR_MSGS:
+				// the input fields holding a changed key:
+				Iterator<InputField> fieldsIt = this.getInputFieldDao().findByL10nKeys(keys).iterator();
+				while (fieldsIt.hasNext()) {
+					InputField field = fieldsIt.next();
+					addL10nKeyUsages(result, field, InputFieldL10nKeyUsage.getKeys(field), bundle, changes);
+				}
+				break;
+			case SELECTION_SET_VALUE_NAMES:
+			case SELECTION_SET_VALUE_ROWS:
+			case SELECTION_SET_VALUE_COLUMNS:
+				// the input fields of the selection set values holding a changed key:
+				Iterator<InputFieldSelectionSetValue> valuesIt = this.getInputFieldSelectionSetValueDao().findByL10nKeys(keys).iterator();
+				while (valuesIt.hasNext()) {
+					InputField field = valuesIt.next().getField();
+					addL10nKeyUsages(result, field, InputFieldL10nKeyUsage.getKeys(field), bundle, changes);
+				}
+				break;
+			default:
+				// eCRF sections and inquiry categories belong to no input field; the eCRF audit trail lists their changes
+				return result;
+		}
+		switch (bundle) {
+			case TITLES:
+			case COMMENTS:
+				// the input fields of the eCRF fields, inquiries and proband list entry tags holding a changed key:
+				Iterator<ECRFField> ecrfFieldsIt = this.getECRFFieldDao().findByL10nKeys(keys).iterator();
+				while (ecrfFieldsIt.hasNext()) {
+					ECRFField ecrfField = ecrfFieldsIt.next();
+					addL10nKeyUsages(result, ecrfField.getField(), InputFieldL10nKeyUsage.getUsageKeys(ecrfField), bundle, changes);
+				}
+				Iterator<Inquiry> inquiriesIt = this.getInquiryDao().findByL10nKeys(keys).iterator();
+				while (inquiriesIt.hasNext()) {
+					Inquiry inquiry = inquiriesIt.next();
+					addL10nKeyUsages(result, inquiry.getField(), InputFieldL10nKeyUsage.getUsageKeys(inquiry), bundle, changes);
+				}
+				Iterator<ProbandListEntryTag> tagsIt = this.getProbandListEntryTagDao().findByL10nKeys(keys).iterator();
+				while (tagsIt.hasNext()) {
+					ProbandListEntryTag tag = tagsIt.next();
+					addL10nKeyUsages(result, tag.getField(), InputFieldL10nKeyUsage.getUsageKeys(tag), bundle, changes);
+				}
+				break;
+			default:
+		}
+		return result;
+	}
+
+	@Override
+	protected InputFieldL10nTextOutVO handleGetInputFieldL10nText(AuthenticationVO auth, InputFieldL10nBundle bundle, String locale) throws Exception {
+		InputFieldL10nTextDao inputFieldL10nTextDao = this.getInputFieldL10nTextDao();
+		InputFieldL10nText latest = inputFieldL10nTextDao.findLatest(bundle, checkL10nLocale(locale));
+		return latest != null ? inputFieldL10nTextDao.toInputFieldL10nTextOutVO(latest) : null;
+	}
+
+	@Override
+	protected Collection<InputFieldL10nMissingKeyVO> handleGetInputFieldL10nMissingKeys(AuthenticationVO auth, Long inputFieldId, String locale) throws Exception {
+		locale = checkL10nLocale(locale);
+		InputField field = CheckIDUtil.checkInputFieldId(inputFieldId, this.getInputFieldDao());
+		LinkedHashSet<InputFieldL10nMissingKeyVO> result = new LinkedHashSet<InputFieldL10nMissingKeyVO>();
+		HashMap<InputFieldL10nBundle, ResourceBundle> bundles = new HashMap<InputFieldL10nBundle, ResourceBundle>();
+		addMissingL10nKeys(result, bundles, locale, InputFieldL10nKeyUsage.getKeys(field), null);
+		if (!field.isLocalized()) {
+			// the usages of an input field that is not localized show their keys as they are, except for eCRF sections and inquiry categories,
+			// which are no matter of this input field:
+			return new ArrayList<InputFieldL10nMissingKeyVO>(result);
+		}
+		ECRFFieldDao ecrfFieldDao = this.getECRFFieldDao();
+		Iterator<ECRFField> ecrfFieldsIt = field.getEcrfFields().iterator();
+		while (ecrfFieldsIt.hasNext()) {
+			ECRFField ecrfField = ecrfFieldsIt.next();
+			addMissingL10nKeys(result, bundles, locale, InputFieldL10nKeyUsage.getUsageKeys(ecrfField), () -> ecrfFieldDao.toECRFFieldOutVO(ecrfField).getUniqueName());
+		}
+		InquiryDao inquiryDao = this.getInquiryDao();
+		Iterator<Inquiry> inquiriesIt = field.getInquiries().iterator();
+		while (inquiriesIt.hasNext()) {
+			Inquiry inquiry = inquiriesIt.next();
+			addMissingL10nKeys(result, bundles, locale, InputFieldL10nKeyUsage.getUsageKeys(inquiry), () -> inquiryDao.toInquiryOutVO(inquiry).getUniqueName());
+		}
+		ProbandListEntryTagDao probandListEntryTagDao = this.getProbandListEntryTagDao();
+		Iterator<ProbandListEntryTag> tagsIt = field.getListEntryTags().iterator();
+		while (tagsIt.hasNext()) {
+			ProbandListEntryTag tag = tagsIt.next();
+			addMissingL10nKeys(result, bundles, locale, InputFieldL10nKeyUsage.getUsageKeys(tag),
+					() -> probandListEntryTagDao.toProbandListEntryTagOutVO(tag).getUniqueName());
+		}
+		return new ArrayList<InputFieldL10nMissingKeyVO>(result);
+	}
+
+	private static void addMissingL10nKeys(Set<InputFieldL10nMissingKeyVO> result, HashMap<InputFieldL10nBundle, ResourceBundle> bundles, String locale,
+			Collection<InputFieldL10nKeyUsage> keys, Supplier<String> usage) {
+		String usageName = null;
+		Iterator<InputFieldL10nKeyUsage> it = keys.iterator();
+		while (it.hasNext()) {
+			InputFieldL10nKeyUsage key = it.next();
+			ResourceBundle bundle = bundles.get(key.getBundle());
+			if (bundle == null) {
+				bundle = L10nUtil.getInputFieldL10nBundle(key.getBundle(), locale);
+				bundles.put(key.getBundle(), bundle);
+			}
+			if (!bundle.containsKey(key.getKey())) {
+				if (usage != null && usageName == null) {
+					usageName = usage.get();
+				}
+				InputFieldL10nMissingKeyVO missing = new InputFieldL10nMissingKeyVO(key.getBundle(), key.getKey(), usageName,
+						L10nUtil.createInputFieldL10nTargetVO(Locales.USER, key.getTarget()));
+				if (!containsMissingKey(result, missing)) {
+					result.add(missing);
+				}
+			}
+		}
+	}
+
+	private static boolean containsMissingKey(Set<InputFieldL10nMissingKeyVO> result, InputFieldL10nMissingKeyVO missing) {
+		Iterator<InputFieldL10nMissingKeyVO> it = result.iterator();
+		while (it.hasNext()) {
+			InputFieldL10nMissingKeyVO other = it.next();
+			if (other.getBundle() == missing.getBundle() && other.getTarget().getTarget() == missing.getTarget().getTarget() && other.getL10nKey().equals(missing.getL10nKey())
+					&& Objects.equals(other.getUsage(), missing.getUsage())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	protected InputFieldL10nTextOutVO handleSetInputFieldL10nText(AuthenticationVO auth, InputFieldL10nTextInVO inputFieldL10nText) throws Exception {
+		InputFieldL10nBundle bundle = inputFieldL10nText.getBundle();
+		String locale = checkL10nLocale(inputFieldL10nText.getLocale());
+		String text = inputFieldL10nText.getText() != null ? inputFieldL10nText.getText() : "";
+		String originalText = inputFieldL10nText.getOriginalText() != null ? inputFieldL10nText.getOriginalText() : "";
+		LinkedHashMap<String, String> entries = parseL10nText(bundle, locale, text);
+		InputFieldL10nTextDao inputFieldL10nTextDao = this.getInputFieldL10nTextDao();
+		InputFieldL10nText latest = inputFieldL10nTextDao.findLatest(bundle, locale);
+		String latestText = latest != null ? latest.getText() : "";
+		LinkedHashMap<String, String> latestEntries = InputFieldL10nTextUtil.parse(latestText);
+		String newText;
+		if (Objects.equals(latest != null ? latest.getVersion() : null, inputFieldL10nText.getVersion())) {
+			// nobody saved meanwhile: the text is stored as it was edited
+			newText = text;
+		} else {
+			// somebody saved meanwhile: apply only the keys changed in the editor to the latest text
+			LinkedHashMap<String, String> originalEntries = parseL10nText(bundle, locale, originalText);
+			LinkedHashMap<String, InputFieldL10nTextUtil.Change> mine = InputFieldL10nTextUtil.diff(originalEntries, entries);
+			LinkedHashMap<String, InputFieldL10nTextUtil.Change> theirs = InputFieldL10nTextUtil.diff(originalEntries, latestEntries);
+			Set<String> conflicts = InputFieldL10nTextUtil.getConflicts(mine, theirs);
+			if (conflicts.size() > 0) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_L10N_KEY_MODIFIED_SINCE, getL10nTextName(bundle, locale), conflicts.iterator().next(),
+						latest.getModifiedUser().getName());
+			}
+			newText = InputFieldL10nTextUtil.apply(latestText, mine);
+		}
+		if (newText.equals(latestText)) {
+			return latest != null ? inputFieldL10nTextDao.toInputFieldL10nTextOutVO(latest) : null;
+		}
+		LinkedHashMap<String, InputFieldL10nTextUtil.Change> changes = InputFieldL10nTextUtil.diff(latestEntries, InputFieldL10nTextUtil.parse(newText));
+		Timestamp now = new Timestamp(System.currentTimeMillis());
+		User user = CoreUtil.getUser();
+		InputFieldL10nText revision = inputFieldL10nTextDao.inputFieldL10nTextInVOToEntity(inputFieldL10nText);
+		revision.setLocale(locale);
+		revision.setText(newText);
+		revision.setVersion(latest != null ? latest.getVersion() + 1l : 0l);
+		revision.setModifiedTimestamp(now);
+		revision.setModifiedUser(user);
+		revision = inputFieldL10nTextDao.create(revision);
+		if (changes.size() > 0) {
+			InputFieldDao inputFieldDao = this.getInputFieldDao();
+			JournalEntryDao journalEntryDao = this.getJournalEntryDao();
+			String textName = getL10nTextName(bundle, locale);
+			Iterator<Entry<InputField, TreeMap<String, InputFieldL10nTextUtil.Change>>> it = getL10nKeyUsages(bundle, changes).entrySet().iterator();
+			while (it.hasNext()) {
+				Entry<InputField, TreeMap<String, InputFieldL10nTextUtil.Change>> fieldChanges = it.next();
+				journalEntryDao.addSystemMessage(fieldChanges.getKey(), now, user, SystemMessageCodes.INPUT_FIELD_L10N_TEXT_UPDATED,
+						new Object[] { CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(fieldChanges.getKey())), textName },
+						new Object[] { getL10nChangesComment(fieldChanges.getValue()) });
+			}
+		}
+		InputFieldL10nOverlay overlay = InputFieldL10nOverlay.getInstance();
+		if (overlay != null) {
+			overlay.update(bundle, locale, newText);
+		}
+		return inputFieldL10nTextDao.toInputFieldL10nTextOutVO(revision);
+	}
+
+	private static String getL10nChangesComment(Map<String, InputFieldL10nTextUtil.Change> changes) {
+		StringBuilder comment = new StringBuilder();
+		Iterator<Entry<String, InputFieldL10nTextUtil.Change>> it = changes.entrySet().iterator();
+		while (it.hasNext()) {
+			Entry<String, InputFieldL10nTextUtil.Change> change = it.next();
+			if (comment.length() > 0) {
+				comment.append("\n");
+			}
+			comment.append(change.getKey());
+			comment.append(": ");
+			comment.append(change.getValue().getOldValue() != null ? "\"" + change.getValue().getOldValue() + "\"" : "-");
+			comment.append(" -> ");
+			comment.append(change.getValue().getNewValue() != null ? "\"" + change.getValue().getNewValue() + "\"" : "-");
+		}
+		return comment.toString();
 	}
 }
