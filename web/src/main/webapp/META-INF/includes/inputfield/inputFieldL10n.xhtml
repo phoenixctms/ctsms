@@ -16,7 +16,7 @@
 				process="@this"
 				name="changeInputFieldL10n"
 				actionListener="#{inputFieldL10nBean.change(inputFieldBean.in.id)}"
-				oncomplete="handleUpdateInputFieldTabTitles(xhr, status, args)"
+				oncomplete="handleUpdateInputFieldTabTitles(xhr, status, args);sizeInputFieldL10nEditors()"
 				update=":tabView:inputfieldl10n_form:l10n_input" />
 			<h:panelGrid columns="1" id="l10n_input" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">
@@ -35,6 +35,7 @@
 								styleClass="ctsms-control">
 								<f:selectItems value="#{inputFieldL10nBean.locales}" />
 								<p:ajax process="@this" listener="#{inputFieldL10nBean.changeLocale}"
+									oncomplete="sizeInputFieldL10nEditors()"
 									update=":tabView:inputfieldl10n_form:l10n_input" />
 							</p:selectOneMenu>
 							<p:tooltip rendered="#{enableTooltips}" for="l10nlocale">
@@ -44,34 +45,8 @@
 						</h:panelGroup>
 						<p:message for="l10nlocale" />
 					</h:panelGrid>
-					<p:tabView id="l10nbundletabs" widgetVar="inputFieldL10nBundleTabView" dynamic="true" cache="true"
-						onTabShow="refreshInputFieldL10nEditor(index.index())"
-						styleClass="ctsms-l10n-tabview">
-						<c:forEach items="#{inputFieldL10nBean.editors}" var="editor" varStatus="status">
-							<p:tab id="l10nbundletab_#{status.index}" title="#{inputFieldL10nBean.getBundleTabTitle(editor.bundle)}">
-								<h:panelGrid id="l10nbundle_#{status.index}" columns="1" cellpadding="0"
-									styleClass="ctsms-l10n-codemirror-panelgrid"
-									rowClasses="ctsms-l10n-bundle-label-row,ctsms-codemirror-input-row,ctsms-codemirror-message-for-row,ctsms-toolbar-row">
-									<h:outputText value="#{inputFieldL10nBean.getBundleLabel(editor.bundle)}" />
-									<pe:codeMirror id="l10ntext_#{status.index}"
-										mode="properties" theme="eclipse"
-										value="#{editor.text}"
-										readOnly="#{!inputFieldL10nBean.created}"
-										required="false" lineWrapping="true" lineNumbers="true" />
-									<h:outputText value="#{editor.modifiedAnnotation}" styleClass="ctsms-l10n-modified" />
-									<p:commandButton id="l10nsave_#{status.index}"
-										process="@this,l10ntext_#{status.index}"
-										value="#{labels.update_button_label}"
-										actionListener="#{inputFieldL10nBean.save(editor.bundleName)}"
-										oncomplete="handleUpdateInputFieldTabTitles(xhr, status, args)"
-										icon="ui-icon ui-icon-disk" ajax="true"
-										disabled="#{!inputFieldL10nBean.created}"
-										update=":tabView:inputfieldl10n_form:l10nbundletabs:l10nbundle_#{status.index} :tabView:inputfieldl10n_form:l10nmissing :tabView:inputfieldl10n_form:l10nmessages" />
-								</h:panelGrid>
-							</p:tab>
-						</c:forEach>
-					</p:tabView>
-					<p:fieldset id="l10nmissing" legend="#{inputfieldlabels.input_field_l10n_missing_keys_label}">
+					<p:fieldset id="l10nmissing" legend="#{inputfieldlabels.input_field_l10n_missing_keys_label}"
+						styleClass="ctsms-l10n-missing-fieldset">
 						<h:outputText rendered="#{inputFieldL10nBean.missingKeysEmpty}"
 							value="#{inputfieldlabels.input_field_l10n_no_missing_keys}" />
 						<p:dataTable rendered="#{!inputFieldL10nBean.missingKeysEmpty}"
@@ -92,17 +67,56 @@
 						</p:dataTable>
 					</p:fieldset>
 					<p:messages id="l10nmessages" globalOnly="true" />
-					<p:toolbar>
-						<p:toolbarGroup align="right">
-							<p:commandButton process="@this"
-								value="#{labels.load_button_label}"
-								actionListener="#{inputFieldL10nBean.changeLocale}"
-								oncomplete="handleUpdateInputFieldTabTitles(xhr, status, args)"
-								icon="ui-icon ui-icon-refresh" ajax="true"
-								disabled="#{!inputFieldL10nBean.created}"
-								update=":tabView:inputfieldl10n_form:l10n_input" />
-						</p:toolbarGroup>
-					</p:toolbar>
+					<p:tabView id="l10nbundletabs" widgetVar="inputFieldL10nBundleTabView" dynamic="true" cache="true"
+						onTabShow="refreshInputFieldL10nEditor(index.index())"
+						styleClass="ctsms-l10n-tabview">
+						<c:forEach items="#{inputFieldL10nBean.editors}" var="editor" varStatus="status">
+							<p:tab id="l10nbundletab_#{status.index}" title="#{inputFieldL10nBean.getBundleTabTitle(editor.bundle)}">
+								<h:panelGrid id="l10nbundle_#{status.index}" columns="1" cellpadding="0"
+									styleClass="ctsms-l10n-codemirror-panelgrid"
+									rowClasses="ctsms-l10n-bundle-label-row,ctsms-codemirror-input-row,ctsms-toolbar-row">
+									<h:outputText value="#{inputFieldL10nBean.getBundleLabel(editor.bundle)}" />
+									<pe:codeMirror id="l10ntext_#{status.index}"
+										mode="properties" theme="eclipse"
+										value="#{editor.text}"
+										readOnly="#{!inputFieldL10nBean.created}"
+										required="false" lineWrapping="true" lineNumbers="true" />
+									<p:toolbar>
+										<p:toolbarGroup align="left">
+											<h:outputText
+												styleClass="ctsms-toolbar-text"
+												value="#{editor.modifiedAnnotation}" />
+										</p:toolbarGroup>
+										<p:separator />
+										<p:toolbarGroup align="right">
+											<p:commandButton id="l10nsave_#{status.index}"
+												process="@this,l10ntext_#{status.index}"
+												value="#{labels.update_button_label}"
+												actionListener="#{inputFieldL10nBean.save(editor.bundleName)}"
+												oncomplete="handleUpdateInputFieldTabTitles(xhr, status, args);sizeInputFieldL10nEditors()"
+												icon="ui-icon ui-icon-disk" ajax="true"
+												disabled="#{!inputFieldL10nBean.created}"
+												update=":tabView:inputfieldl10n_form:l10nbundletabs:l10nbundle_#{status.index} :tabView:inputfieldl10n_form:l10nmissing :tabView:inputfieldl10n_form:l10nmessages" />
+											<p:commandButton process="@this"
+												value="#{labels.load_button_label}"
+												actionListener="#{inputFieldL10nBean.changeLocale}"
+												oncomplete="handleUpdateInputFieldTabTitles(xhr, status, args);sizeInputFieldL10nEditors()"
+												icon="ui-icon ui-icon-refresh" ajax="true"
+												disabled="#{!inputFieldL10nBean.created}"
+												update=":tabView:inputfieldl10n_form:l10n_input" />
+										</p:toolbarGroup>
+										<p:separator />
+										<p:toolbarGroup align="right">
+											<ui:include src="../shared/toolbarAjaxStatus.xhtml" />
+										</p:toolbarGroup>
+									</p:toolbar>
+								</h:panelGrid>
+							</p:tab>
+						</c:forEach>
+					</p:tabView>
+					<script type="text/javascript">
+						sizeInputFieldL10nEditors();
+					</script>
 				</p:panel>
 			</h:panelGrid>
 		</h:form>
