@@ -3193,11 +3193,11 @@ public class ProbandServiceImpl
 		Iterator<ProbandAddress> addressesIt = addressDao.findByProband(proband.getId(), null, null, true, null).iterator();
 		while (addressesIt.hasNext()) {
 			ProbandAddress oldWireTransferAddress = addressesIt.next();
-			ProbandAddressOutVO oldWireTransferAddressOriginal = addressDao.toProbandAddressOutVO(address);
+			ProbandAddressOutVO oldWireTransferAddressOriginal = addressDao.toProbandAddressOutVO(oldWireTransferAddress);
 			oldWireTransferAddress.setWireTransfer(false);
 			CoreUtil.modifyVersion(oldWireTransferAddress, oldWireTransferAddress, now, user);
 			addressDao.update(oldWireTransferAddress);
-			ProbandAddressOutVO oldWireTransferAddressResult = addressDao.toProbandAddressOutVO(address);
+			ProbandAddressOutVO oldWireTransferAddressResult = addressDao.toProbandAddressOutVO(oldWireTransferAddress);
 			ServiceUtil.logSystemMessage(oldWireTransferAddress.getProband(), oldWireTransferAddressOriginal.getProband(), now, user,
 					SystemMessageCodes.PROBAND_ADDRESS_WIRE_TRANSFER_UNSET, oldWireTransferAddressResult, oldWireTransferAddressOriginal, journalEntryDao);
 		}
