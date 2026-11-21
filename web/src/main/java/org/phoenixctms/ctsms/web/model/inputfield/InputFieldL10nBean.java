@@ -3,6 +3,7 @@ package org.phoenixctms.ctsms.web.model.inputfield;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Locale;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -84,6 +85,7 @@ public class InputFieldL10nBean extends ManagedBeanBase {
 	}
 
 	private final static String ROOT_LOCALE = "";
+	private final static String ROOT_LANGUAGE = Locale.ENGLISH.getLanguage();
 	private Long inputFieldId;
 	private String locale;
 	private ArrayList<SelectItem> locales;
@@ -154,8 +156,15 @@ public class InputFieldL10nBean extends ManagedBeanBase {
 	public ArrayList<SelectItem> getLocales() {
 		if (locales == null) {
 			locales = new ArrayList<SelectItem>();
+			// the default (root) texts are the English ones and the fallback of every language, so English has no entry of its own:
 			locales.add(new SelectItem(ROOT_LOCALE, Messages.getString(MessageCodes.INPUT_FIELD_L10N_ROOT_LOCALE_LABEL)));
-			locales.addAll(WebUtil.getLocales());
+			Iterator<SelectItem> it = WebUtil.getLocales().iterator();
+			while (it.hasNext()) {
+				SelectItem locale = it.next();
+				if (!ROOT_LANGUAGE.equals(locale.getValue())) {
+					locales.add(locale);
+				}
+			}
 		}
 		return locales;
 	}
