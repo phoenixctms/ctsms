@@ -87,6 +87,10 @@
 	width: 100%;
 }
 
+.ctsms-l10n-bundle-label-row > td {
+	padding: 6px 2px 4px 2px;
+}
+
 /* until sizeInputFieldL10nEditors fits the editor into the rest of the page height */
 .ctsms-l10n-codemirror-panelgrid .CodeMirror-scroll {
 	height: 180px;
@@ -94,19 +98,6 @@
 
 .ctsms-l10n-missing-fieldset {
 	margin-bottom: 12px;
-}
-
-/* the key on the left, its copy button at the right edge of the column */
-.ctsms-l10n-key-cell {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	font-weight: bold;
-}
-
-.ctsms-l10n-missing-fieldset .ctsms-l10n-copy-key-button {
-	flex: none;
-	margin-left: 6px;
 }
 
 .ctsms-inputfield-output-row {
