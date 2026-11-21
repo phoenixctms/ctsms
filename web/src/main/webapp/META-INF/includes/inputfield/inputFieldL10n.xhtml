@@ -46,7 +46,8 @@
 						<p:message for="l10nlocale" />
 					</h:panelGrid>
 					<p:fieldset id="l10nmissing" legend="#{inputfieldlabels.input_field_l10n_missing_keys_label}"
-						styleClass="ctsms-l10n-missing-fieldset">
+						styleClass="ctsms-l10n-missing-fieldset" toggleable="true" collapsed="false">
+						<p:ajax event="toggle" process="@this" oncomplete="sizeInputFieldL10nEditors()" />
 						<h:outputText rendered="#{inputFieldL10nBean.missingKeysEmpty}"
 							value="#{inputfieldlabels.input_field_l10n_no_missing_keys}" />
 						<p:dataTable rendered="#{!inputFieldL10nBean.missingKeysEmpty}"
@@ -58,19 +59,18 @@
 							<p:column headerText="#{inputfieldlabels.input_field_l10n_missing_key_target_column}">
 								<h:outputText value="#{missingKey.target.name}" />
 							</p:column>
-							<p:column headerText="#{inputfieldlabels.input_field_l10n_missing_key_key_column}">
-								<h:panelGroup layout="block" styleClass="ctsms-l10n-key-cell">
-									<h:outputText value="#{missingKey.l10nKey}" />
-									<h:outputText styleClass="ctsms-l10n-key-line" style="display:none;"
-										value="#{inputFieldL10nBean.getKeyLine(missingKey.l10nKey)}" />
-									<p:commandButton type="button" icon="ui-icon ui-icon-copy"
-										title="#{inputfieldlabels.input_field_l10n_copy_key_button_title}"
-										onclick="copyInputFieldL10nKeyLine(this);return false;"
-										styleClass="ctsms-l10n-copy-key-button" />
-								</h:panelGroup>
-							</p:column>
 							<p:column headerText="#{inputfieldlabels.input_field_l10n_missing_key_usage_column}">
 								<h:outputText value="#{missingKey.usage}" />
+							</p:column>
+							<p:column headerText="#{inputfieldlabels.input_field_l10n_missing_key_key_column}">
+								<h:outputText value="#{missingKey.l10nKey}" />
+							</p:column>
+							<p:column style="width:32px;">
+								<h:outputText styleClass="ctsms-l10n-key-line" style="display:none;"
+									value="#{inputFieldL10nBean.getKeyLine(missingKey.l10nKey)}" />
+								<p:commandButton type="button" icon="ui-icon ui-icon-copy"
+									title="#{inputfieldlabels.input_field_l10n_copy_key_button_title}"
+									onclick="copyInputFieldL10nKeyLine(this);return false;" />
 							</p:column>
 						</p:dataTable>
 					</p:fieldset>
@@ -82,7 +82,7 @@
 								<h:panelGrid id="l10nbundle_#{status.index}" columns="1" cellpadding="0"
 									styleClass="ctsms-l10n-codemirror-panelgrid"
 									rowClasses="ctsms-l10n-bundle-label-row,ctsms-codemirror-input-row,ctsms-message-row,ctsms-toolbar-row">
-									<h:outputText value="#{inputFieldL10nBean.getBundleLabel(editor.bundle)}" />
+									<h:outputLabel for="l10ntext_#{status.index}" value="#{inputFieldL10nBean.getBundleEditorLabel(editor.bundle)}" />
 									<pe:codeMirror id="l10ntext_#{status.index}"
 										mode="properties" theme="eclipse"
 										value="#{editor.text}"
