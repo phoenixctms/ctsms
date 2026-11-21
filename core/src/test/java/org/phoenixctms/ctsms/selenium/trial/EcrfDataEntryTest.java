@@ -30,6 +30,7 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.phoenixctms.ctsms.enumeration.AuthenticationType;
+import org.phoenixctms.ctsms.enumeration.InputFieldL10nBundle;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.enumeration.JobModule;
 import org.phoenixctms.ctsms.enumeration.PermissionProfile;
@@ -46,6 +47,7 @@ import org.phoenixctms.ctsms.test.InputFieldValuesEnum;
 import org.phoenixctms.ctsms.test.xls.XlsImporter;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.Compress;
+import org.phoenixctms.ctsms.util.InputFieldL10nTextUtil;
 import org.phoenixctms.ctsms.util.ServiceUtil;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.vo.DepartmentVO;
@@ -54,6 +56,8 @@ import org.phoenixctms.ctsms.vo.ECRFFieldOutVO;
 import org.phoenixctms.ctsms.vo.ECRFOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldImageVO;
 import org.phoenixctms.ctsms.vo.InputFieldInVO;
+import org.phoenixctms.ctsms.vo.InputFieldL10nTextInVO;
+import org.phoenixctms.ctsms.vo.InputFieldL10nTextOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.phoenixctms.ctsms.vo.JobFileVO;
 import org.phoenixctms.ctsms.vo.JobOutVO;
@@ -83,6 +87,13 @@ public class EcrfDataEntryTest extends SeleniumTestBase implements ProcessorJobO
 	private TrialOutVO trial;
 	private Long probandId;
 	private XlsImporter xlsImporter;
+	// the localization texts of the sketch field's eCRF section, carried by the eCRF setup export and import:
+	private final static String L10N_SECTION = "sketch";
+	private final static String L10N_LOCALE = "de";
+	private final static String L10N_SECTIONS_SHEET = "l10n_ecrffieldsections";
+	private final static String L10N_CHANGED_TEXT = "changed";
+	private String sectionText;
+	private String sectionTextLocalized;
 	private final static Pattern FILE_NAME_ID_REGEXP = Pattern.compile("'([0-9a-z._-]+)' \\(file ID (\\d+)\\)");
 	private final static long FILE_DOWNLOAD_TIMEOUT_MS = 60_000L;
 	private final static String EXPORT_FILES_FILE_NAME_PREFIX = "ecrf_files_";
@@ -346,7 +357,14 @@ public class EcrfDataEntryTest extends SeleniumTestBase implements ProcessorJobO
 		newEcrfField.setRef(CommonUtil.generateShortUUID());
 		newEcrfField.setOptional(true);
 		ECRFFieldOutVO ecrfField = trialService.addEcrfField(auth, newEcrfField);
-		testOK("eCRF field " + ecrfField.getUniqueName() + " with sketch background image added");
+		// texts of its section, for the eCRF setup export and import:
+		sectionText = "sketch section " + getTestId();
+		sectionTextLocalized = "Skizzenabschnitt " + getTestId();
+		setSectionText("", sectionText);
+		setSectionText(L10N_LOCALE, sectionTextLocalized);
+		Assert.assertEquals(getSectionText(""), sectionText, "default text of section " + L10N_SECTION + ":");
+		Assert.assertEquals(getSectionText(L10N_LOCALE), sectionTextLocalized, L10N_LOCALE + " text of section " + L10N_SECTION + ":");
+		testOK("eCRF field " + ecrfField.getUniqueName() + " with sketch background image added, section texts saved");
 	}
 
 	@Test(description = "Execute trial job for exporting the eCRF setup. With the sketch background image, it has to be a zip archive containing the .xls and the image.")
@@ -377,6 +395,10 @@ public class EcrfDataEntryTest extends SeleniumTestBase implements ProcessorJobO
 				Assert.assertNotNull(background, "zip entry " + backgroundPath + " exists:");
 				Assert.assertEquals(getMd5(background), getMd5(Files.readAllBytes(new File(getResourceFilePath(SKETCH_BACKGROUND_FILE)).toPath())),
 						"zip entry " + backgroundPath + " MD5:");
+				String[] sectionTexts = getExportedSectionTexts(archive.getXlsData());
+				Assert.assertNotNull(sectionTexts, "row of section " + L10N_SECTION + " in sheet " + L10N_SECTIONS_SHEET + ":");
+				Assert.assertEquals(sectionTexts[0], sectionText, "exported default text of section " + L10N_SECTION + ":");
+				Assert.assertEquals(sectionTexts[1], sectionTextLocalized, "exported " + L10N_LOCALE + " text of section " + L10N_SECTION + ":");
 				File file = new File(getTestDirectory(), jobFile.getFileName());
 				Files.write(file.toPath(), jobFile.getDatas());
 				exportSetupFile = file.getCanonicalPath();
@@ -385,6 +407,68 @@ public class EcrfDataEntryTest extends SeleniumTestBase implements ProcessorJobO
 			}
 		}
 		testFailed(job + " failed");
+	}
+
+	/**
+	 * Saves the text of the sketch section key in a language ("" for the default texts), keeping the other keys.
+	 */
+	private void setSectionText(String locale, String text) throws Exception {
+		InputFieldService inputFieldService = getApplicationContext().getBean("inputFieldService", InputFieldService.class);
+		InputFieldL10nTextOutVO current = inputFieldService.getInputFieldL10nText(auth, InputFieldL10nBundle.ECRF_FIELD_SECTIONS, locale);
+		String currentText = current != null ? current.getText() : "";
+		LinkedHashMap<String, InputFieldL10nTextUtil.Change> changes = new LinkedHashMap<String, InputFieldL10nTextUtil.Change>();
+		changes.put(L10N_SECTION, new InputFieldL10nTextUtil.Change(InputFieldL10nTextUtil.parse(currentText).get(L10N_SECTION), text));
+		InputFieldL10nTextInVO in = new InputFieldL10nTextInVO();
+		in.setBundle(InputFieldL10nBundle.ECRF_FIELD_SECTIONS);
+		in.setLocale(locale);
+		in.setOriginalText(currentText);
+		in.setText(InputFieldL10nTextUtil.apply(currentText, changes));
+		in.setVersion(current != null ? current.getVersion() : null);
+		inputFieldService.setInputFieldL10nText(auth, in);
+	}
+
+	/**
+	 * The saved text of the sketch section key in a language ("" for the default texts).
+	 */
+	private String getSectionText(String locale) throws Exception {
+		InputFieldService inputFieldService = getApplicationContext().getBean("inputFieldService", InputFieldService.class);
+		InputFieldL10nTextOutVO current = inputFieldService.getInputFieldL10nText(auth, InputFieldL10nBundle.ECRF_FIELD_SECTIONS, locale);
+		return current != null ? InputFieldL10nTextUtil.parse(current.getText()).get(L10N_SECTION) : null;
+	}
+
+	/**
+	 * The default and localized text of the sketch section key in the eCRF sections sheet of an exported eCRF setup.
+	 */
+	private static String[] getExportedSectionTexts(byte[] xlsData) throws Exception {
+		Workbook workbook = Workbook.getWorkbook(new ByteArrayInputStream(xlsData));
+		try {
+			Sheet sheet = workbook.getSheet(L10N_SECTIONS_SHEET);
+			if (sheet == null || sheet.getRows() == 0) {
+				return null;
+			}
+			Cell[] header = sheet.getRow(0);
+			int defaultColumn = -1;
+			int localeColumn = -1;
+			for (int c = 0; c < header.length; c++) {
+				String head = header[c].getContents().trim();
+				if ("default".equals(head)) {
+					defaultColumn = c;
+				} else if (L10N_LOCALE.equals(head)) {
+					localeColumn = c;
+				}
+			}
+			for (int i = 1; i < sheet.getRows(); i++) {
+				Cell[] row = sheet.getRow(i);
+				if (row.length > 0 && L10N_SECTION.equals(row[0].getContents())) {
+					return new String[] {
+							defaultColumn >= 0 && row.length > defaultColumn ? row[defaultColumn].getContents() : null,
+							localeColumn >= 0 && row.length > localeColumn ? row[localeColumn].getContents() : null };
+				}
+			}
+			return null;
+		} finally {
+			workbook.close();
+		}
 	}
 
 	private static String getSketchBackgroundPath(byte[] xlsData, String inputFieldName) throws Exception {
@@ -414,6 +498,9 @@ public class EcrfDataEntryTest extends SeleniumTestBase implements ProcessorJobO
 		ToolsService toolsService = getApplicationContext().getBean("toolsService", ToolsService.class);
 		inputFieldService.updateInputField(auth, getSketchFieldWithoutImage(inputFieldService.getInputField(auth, sketchField.getId())));
 		Assert.assertFalse(toolsService.getInputFieldImage(sketchField.getId()).getHasImage(), "sketch background image cleared:");
+		// the import has to restore the exported section texts:
+		setSectionText("", L10N_CHANGED_TEXT);
+		setSectionText(L10N_LOCALE, L10N_CHANGED_TEXT);
 		TrialOutVO trial2 = createTrial("trial2-" + getTestId(), department.getId());
 		load(getUrl("/trial/trial.jsf?trialid=" + trial2.getId()));
 		clickTab("tabView:trialjobs");
@@ -441,7 +528,9 @@ public class EcrfDataEntryTest extends SeleniumTestBase implements ProcessorJobO
 					}
 				}
 				Assert.assertTrue(found, "eCRF field of input field " + sketchField.getName() + " imported:");
-				testOK("eCRF setup zip archive imported, sketch background image restored");
+				Assert.assertEquals(getSectionText(""), sectionText, "imported default text of section " + L10N_SECTION + ":");
+				Assert.assertEquals(getSectionText(L10N_LOCALE), sectionTextLocalized, "imported " + L10N_LOCALE + " text of section " + L10N_SECTION + ":");
+				testOK("eCRF setup zip archive imported, sketch background image and section texts restored");
 				return;
 			}
 		}
