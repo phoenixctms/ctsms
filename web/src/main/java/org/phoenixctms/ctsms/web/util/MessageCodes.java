@@ -705,6 +705,8 @@ public interface MessageCodes {
 	public final static String INPUT_FIELD_L10N_BUNDLE_LABEL_PREFIX = "input_field_l10n_bundle_";
 	public final static String INPUT_FIELD_L10N_BUNDLE_TAB_TITLE_PREFIX = "input_field_l10n_bundle_tab_";
 	public final static String INPUT_FIELD_L10N_BUNDLE_EDITOR_LABEL_PREFIX = "input_field_l10n_bundle_editor_";
+	public final static String INPUT_FIELD_L10N_EDITOR_LABEL_LOCALE = "input_field_l10n_editor_label_locale";
+	public final static String INPUT_FIELD_L10N_EDITOR_LABEL_ROOT_LOCALE = "input_field_l10n_editor_label_root_locale";
 	public final static String INPUT_FIELD_L10N_ADD_KEY_BUTTON_TITLE = "input_field_l10n_add_key_button_title";
 	public final static String INPUT_FIELD_ASSOCIATIONS_TAB_LABEL = "input_field_associations_tab_label";
 	public final static String INPUT_FIELD_JOURNAL_TAB_TITLE = "input_field_journal_tab_title";

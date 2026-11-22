@@ -176,8 +176,13 @@ public class InputFieldL10nBean extends ManagedBeanBase {
 		return line.append('=').toString();
 	}
 
+	// a StringBuilder, as the JSF 2.1 annotation scanner may miss a bean with string concatenation (invokedynamic), see JsfAnnotationScanCheck:
+	private static String getBundleMessageCode(String prefix, InputFieldL10nBundle bundle) {
+		return new StringBuilder(prefix).append(bundle.name().toLowerCase()).toString();
+	}
+
 	public String getBundleLabel(InputFieldL10nBundle bundle) {
-		return bundle != null ? Messages.getString(MessageCodes.INPUT_FIELD_L10N_BUNDLE_LABEL_PREFIX + bundle.name().toLowerCase()) : "";
+		return bundle != null ? Messages.getString(getBundleMessageCode(MessageCodes.INPUT_FIELD_L10N_BUNDLE_LABEL_PREFIX, bundle)) : "";
 	}
 
 	public int getEditorIndex(InputFieldL10nBundle bundle) {
@@ -193,12 +198,31 @@ public class InputFieldL10nBean extends ManagedBeanBase {
 		return Messages.getMessage(MessageCodes.INPUT_FIELD_L10N_ADD_KEY_BUTTON_TITLE, getBundleTabTitle(bundle));
 	}
 
+	/**
+	 * The label of an editor, naming the language of its texts (e.g. "Global list of eCRF section texts in German:").
+	 */
 	public String getBundleEditorLabel(InputFieldL10nBundle bundle) {
-		return bundle != null ? Messages.getString(MessageCodes.INPUT_FIELD_L10N_BUNDLE_EDITOR_LABEL_PREFIX + bundle.name().toLowerCase()) : "";
+		return bundle != null ? Messages.getMessage(getBundleMessageCode(MessageCodes.INPUT_FIELD_L10N_BUNDLE_EDITOR_LABEL_PREFIX, bundle), getEditorLocaleLabel()) : "";
+	}
+
+	private String getEditorLocaleLabel() {
+		if (ROOT_LOCALE.equals(locale)) {
+			return Messages.getString(MessageCodes.INPUT_FIELD_L10N_EDITOR_LABEL_ROOT_LOCALE);
+		}
+		String name = locale;
+		Iterator<SelectItem> it = getLocales().iterator();
+		while (it.hasNext()) {
+			SelectItem item = it.next();
+			if (locale.equals(item.getValue())) {
+				name = item.getLabel();
+				break;
+			}
+		}
+		return Messages.getMessage(MessageCodes.INPUT_FIELD_L10N_EDITOR_LABEL_LOCALE, name);
 	}
 
 	public String getBundleTabTitle(InputFieldL10nBundle bundle) {
-		return bundle != null ? Messages.getString(MessageCodes.INPUT_FIELD_L10N_BUNDLE_TAB_TITLE_PREFIX + bundle.name().toLowerCase()) : "";
+		return bundle != null ? Messages.getString(getBundleMessageCode(MessageCodes.INPUT_FIELD_L10N_BUNDLE_TAB_TITLE_PREFIX, bundle)) : "";
 	}
 
 	public ArrayList<L10nTextEditor> getEditors() {
