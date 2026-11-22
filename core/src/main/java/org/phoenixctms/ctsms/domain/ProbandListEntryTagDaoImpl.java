@@ -111,7 +111,7 @@ public class ProbandListEntryTagDaoImpl
 	protected Collection<ProbandListEntryTag> handleFindByL10nKeys(Set<String> keys) throws Exception {
 		org.hibernate.Criteria listEntryTagCriteria = createListEntryTagCriteria();
 		listEntryTagCriteria.createCriteria("field", "inputField0").add(Restrictions.eq("localized", true));
-		listEntryTagCriteria.add(CriteriaUtil.getL10nKeysInCriterion(keys, "titleL10nKey", "comment"));
+		listEntryTagCriteria.add(CriteriaUtil.getL10nKeysInCriterion(keys, "titleL10nKey", "commentL10nKey"));
 		return listEntryTagCriteria.list();
 	}
 
@@ -418,6 +418,7 @@ public class ProbandListEntryTagDaoImpl
 			boolean copyIfNull) {
 		super.probandListEntryTagInVOToEntity(source, target, copyIfNull);
 		target.setTitleL10nKey(source.getTitle());
+		target.setCommentL10nKey(source.getComment());
 		Long fieldId = source.getFieldId();
 		Long trialId = source.getTrialId();
 		if (fieldId != null) {
@@ -531,6 +532,7 @@ public class ProbandListEntryTagDaoImpl
 			ProbandListEntryTagInVO target) {
 		super.toProbandListEntryTagInVO(source, target);
 		target.setTitle(source.getTitleL10nKey());
+		target.setComment(source.getCommentL10nKey());
 		InputField field = source.getField();
 		Trial trial = source.getTrial();
 		if (field != null) {
@@ -561,13 +563,14 @@ public class ProbandListEntryTagDaoImpl
 		Trial trial = source.getTrial();
 		User modifiedUser = source.getModifiedUser();
 		target.setTitle(source.getTitleL10nKey());
-		target.setCommentL10nKey(source.getComment());
+		target.setComment(source.getCommentL10nKey());
+		target.setCommentL10nKey(source.getCommentL10nKey());
 		if (field != null) {
 			target.setField(this.getInputFieldDao().toInputFieldOutVO(field));
 			if (field.isLocalized()) {
 				target.setTitle(L10nUtil.getInputFieldTitle(Locales.USER, source.getTitleL10nKey()));
-				if (!CommonUtil.isEmptyString(source.getComment())) {
-					target.setComment(L10nUtil.getInputFieldComment(Locales.USER, source.getComment()));
+				if (!CommonUtil.isEmptyString(source.getCommentL10nKey())) {
+					target.setComment(L10nUtil.getInputFieldComment(Locales.USER, source.getCommentL10nKey()));
 				}
 			}
 		}

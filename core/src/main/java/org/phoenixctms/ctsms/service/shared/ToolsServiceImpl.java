@@ -303,6 +303,7 @@ public class ToolsServiceImpl
 	protected void handleClearResourceBundleCache() throws Exception {
 		ResourceBundle.clearCache();
 		Compile.clearResourceBundleCache();
+		L10nUtil.clearInputFieldL10nOwnKeysCache();
 	}
 
 	@Override

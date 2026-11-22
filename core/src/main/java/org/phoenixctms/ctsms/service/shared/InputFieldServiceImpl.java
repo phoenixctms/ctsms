@@ -17,12 +17,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.function.Supplier;
@@ -105,6 +105,7 @@ import org.phoenixctms.ctsms.util.randomization.Randomization;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldInVO;
+import org.phoenixctms.ctsms.vo.InputFieldL10nKeyLocalesVO;
 import org.phoenixctms.ctsms.vo.InputFieldL10nMissingKeyVO;
 import org.phoenixctms.ctsms.vo.InputFieldL10nTextInVO;
 import org.phoenixctms.ctsms.vo.InputFieldL10nTextOutVO;
@@ -113,6 +114,7 @@ import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueInVO;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldValueVO;
 import org.phoenixctms.ctsms.vo.InquiryOutVO;
+import org.phoenixctms.ctsms.vo.LocaleVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagOutVO;
 import org.phoenixctms.ctsms.vo.StratificationRandomizationListOutVO;
@@ -1738,11 +1740,43 @@ public class InputFieldServiceImpl
 	}
 
 	@Override
+	protected Collection<InputFieldL10nKeyLocalesVO> handleGetInputFieldL10nKeyLocales(AuthenticationVO auth, InputFieldL10nBundle bundle, Set<String> l10nKeys)
+			throws Exception {
+		ArrayList<InputFieldL10nKeyLocalesVO> result = new ArrayList<InputFieldL10nKeyLocalesVO>();
+		if (l10nKeys != null) {
+			Locale userLocale = L10nUtil.getLocale(Locales.USER);
+			HashMap<String, LocaleVO> localeVOs = new HashMap<String, LocaleVO>();
+			Iterator<String> it = l10nKeys.iterator();
+			while (it.hasNext()) {
+				String l10nKey = it.next();
+				InputFieldL10nKeyLocalesVO keyLocales = new InputFieldL10nKeyLocalesVO();
+				keyLocales.setBundle(bundle);
+				keyLocales.setL10nKey(l10nKey);
+				// English (first) stands for the default texts, it has no texts of its own:
+				ArrayList<LocaleVO> locales = new ArrayList<LocaleVO>();
+				Iterator<String> languagesIt = L10nUtil.getInputFieldL10nLocales(bundle, l10nKey).iterator();
+				while (languagesIt.hasNext()) {
+					locales.add(localeVOs.computeIfAbsent(languagesIt.next(), language -> {
+						Locale locale = CommonUtil.localeFromString(language);
+						LocaleVO localeVO = new LocaleVO();
+						localeVO.setLanguage(CommonUtil.localeToString(locale));
+						localeVO.setName(CommonUtil.localeToDisplayString(locale, userLocale));
+						return localeVO;
+					}));
+				}
+				keyLocales.setLocales(locales);
+				result.add(keyLocales);
+			}
+		}
+		return result;
+	}
+
+	@Override
 	protected Collection<InputFieldL10nMissingKeyVO> handleGetInputFieldL10nMissingKeys(AuthenticationVO auth, Long inputFieldId, String locale) throws Exception {
 		locale = checkL10nLocale(locale);
 		InputField field = CheckIDUtil.checkInputFieldId(inputFieldId, this.getInputFieldDao());
 		LinkedHashSet<InputFieldL10nMissingKeyVO> result = new LinkedHashSet<InputFieldL10nMissingKeyVO>();
-		HashMap<InputFieldL10nBundle, ResourceBundle> bundles = new HashMap<InputFieldL10nBundle, ResourceBundle>();
+		HashMap<InputFieldL10nBundle, Set<String>> bundles = new HashMap<InputFieldL10nBundle, Set<String>>(); // the keys with a text in the locale itself
 		addMissingL10nKeys(result, bundles, locale, InputFieldL10nKeyUsage.getKeys(field), null);
 		if (!field.isLocalized()) {
 			// the usages of an input field that is not localized show their keys as they are, except for eCRF sections and inquiry categories,
@@ -1771,18 +1805,19 @@ public class InputFieldServiceImpl
 		return new ArrayList<InputFieldL10nMissingKeyVO>(result);
 	}
 
-	private static void addMissingL10nKeys(Set<InputFieldL10nMissingKeyVO> result, HashMap<InputFieldL10nBundle, ResourceBundle> bundles, String locale,
+	private static void addMissingL10nKeys(Set<InputFieldL10nMissingKeyVO> result, HashMap<InputFieldL10nBundle, Set<String>> bundles, String locale,
 			Collection<InputFieldL10nKeyUsage> keys, Supplier<String> usage) {
 		String usageName = null;
 		Iterator<InputFieldL10nKeyUsage> it = keys.iterator();
 		while (it.hasNext()) {
 			InputFieldL10nKeyUsage key = it.next();
-			ResourceBundle bundle = bundles.get(key.getBundle());
-			if (bundle == null) {
-				bundle = L10nUtil.getInputFieldL10nBundle(key.getBundle(), locale);
-				bundles.put(key.getBundle(), bundle);
+			Set<String> ownKeys = bundles.get(key.getBundle());
+			if (ownKeys == null) {
+				// a language counts as without a text for a key that only the default texts have, as it still needs a translation:
+				ownKeys = L10nUtil.getInputFieldL10nOwnKeys(key.getBundle(), locale);
+				bundles.put(key.getBundle(), ownKeys);
 			}
-			if (!bundle.containsKey(key.getKey())) {
+			if (!ownKeys.contains(key.getKey())) {
 				if (usage != null && usageName == null) {
 					usageName = usage.get();
 				}

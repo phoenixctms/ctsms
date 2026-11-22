@@ -139,7 +139,16 @@
 								<h:outputText
 									value="#{triallabels.ecrffield_ecrffield_list_title_column}" />
 							</f:facet>
-							<h:outputText value="#{ecrfField.vo.titleL10nKey}" />
+							<h:outputText value="#{ecrfField.vo.titleL10nKey}"
+								title="#{ecrfField.vo.title ne ecrfField.vo.titleL10nKey ? ecrfField.vo.title : null}" />
+						</p:column>
+						<p:column>
+							<f:attribute name="visibleDefault" value="false" />
+							<f:facet name="header">
+								<h:outputText value="#{labels.title_l10n_locales_column}"
+									title="#{labels.l10n_locales_column_tooltip}" />
+							</f:facet>
+							<h:outputText value="#{ecrfFieldBean.ecrfFieldModel.getL10nKeyLocales('TITLES', ecrfField)}" />
 						</p:column>
 						<p:column sortBy="#{ecrfField.vo.jsVariableName}"
 							filterBy="#{ecrfField.vo.jsVariableName}">
@@ -238,14 +247,15 @@
 							</f:facet>
 							<h:outputText value="#{ecrfField.vo.field.externalId}" />
 						</p:column>
-						<p:column sortBy="#{ecrfField.vo.comment}" filterBy="#{ecrfField.vo.comment}">
+						<p:column sortBy="#{ecrfField.vo.commentL10nKey}" filterBy="#{ecrfField.vo.commentL10nKey}">
 							<f:attribute name="visibleDefault" value="false" />
 							<f:facet name="header">
 								<h:outputText
 									value="#{triallabels.ecrffield_ecrffield_list_field_comment_column}" />
 							</f:facet>
 							<h:outputText
-								value="#{applicationScopeBean.clipStringTrailing(ecrfField.vo.comment)}" />
+								value="#{applicationScopeBean.clipStringTrailing(ecrfField.vo.commentL10nKey)}"
+								title="#{ecrfField.vo.comment ne ecrfField.vo.commentL10nKey ? ecrfField.vo.comment : null}" />
 						</p:column>						
 						<p:column>
 							<f:attribute name="visibleDefault" value="false" />
@@ -272,7 +282,16 @@
 								<h:outputText
 									value="#{triallabels.ecrffield_ecrffield_list_section_column}" />
 							</f:facet>
-							<h:outputText value="#{ecrfField.vo.section}" />
+							<h:outputText value="#{ecrfField.vo.section}"
+								title="#{ecrfField.vo.sectionLocalized ne ecrfField.vo.section ? ecrfField.vo.sectionLocalized : null}" />
+						</p:column>
+						<p:column>
+							<f:attribute name="visibleDefault" value="false" />
+							<f:facet name="header">
+								<h:outputText value="#{labels.section_l10n_locales_column}"
+									title="#{labels.l10n_locales_column_tooltip}" />
+							</f:facet>
+							<h:outputText value="#{ecrfFieldBean.ecrfFieldModel.getL10nKeyLocales('ECRF_FIELD_SECTIONS', ecrfField)}" />
 						</p:column>
 						<p:column sortBy="#{ecrfField.vo.series}">
 							<f:facet name="header">

@@ -182,13 +182,13 @@
 						<h:outputText
 							value="#{fieldStatusEntry.vo.visit.title}" />
 					</p:column>
-					<p:column sortBy="#{fieldStatusEntry.vo.ecrfField.section}"
+					<p:column sortBy="#{fieldStatusEntry.vo.ecrfField.sectionLocalized}"
 						filterBy="#{fieldStatusEntry.vo.ecrfField.section}">
 						<f:facet name="header">
 							<h:outputText
 								value="#{labels.ecrffieldstatus_ecrffield_section_column}" />
 						</f:facet>
-						<h:outputText value="#{fieldStatusEntry.vo.ecrfField.section}" />
+						<h:outputText value="#{fieldStatusEntry.vo.ecrfField.sectionLocalized}" />
 					</p:column>
 					<p:column sortBy="#{fieldStatusEntry.vo.ecrfField.position}">
 						<f:attribute name="visibleDefault" value="false" />

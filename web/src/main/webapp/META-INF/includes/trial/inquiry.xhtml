@@ -86,7 +86,16 @@
 								<h:outputText
 									value="#{triallabels.inquiry_inquiry_list_title_column}" />
 							</f:facet>
-							<h:outputText value="#{inquiry.vo.titleL10nKey}" />
+							<h:outputText value="#{inquiry.vo.titleL10nKey}"
+								title="#{inquiry.vo.title ne inquiry.vo.titleL10nKey ? inquiry.vo.title : null}" />
+						</p:column>
+						<p:column>
+							<f:attribute name="visibleDefault" value="false" />
+							<f:facet name="header">
+								<h:outputText value="#{labels.title_l10n_locales_column}"
+									title="#{labels.l10n_locales_column_tooltip}" />
+							</f:facet>
+							<h:outputText value="#{inquiryBean.inquiryModel.getL10nKeyLocales('TITLES', inquiry)}" />
 						</p:column>
 						<p:column sortBy="#{inquiry.vo.jsVariableName}"
 							filterBy="#{inquiry.vo.jsVariableName}">
@@ -188,14 +197,15 @@
 							</f:facet>
 							<h:outputText value="#{inquiry.vo.ref}" />
 						</p:column>
-						<p:column sortBy="#{inquiry.vo.comment}" filterBy="#{inquiry.vo.comment}">
+						<p:column sortBy="#{inquiry.vo.commentL10nKey}" filterBy="#{inquiry.vo.commentL10nKey}">
 							<f:attribute name="visibleDefault" value="false" />
 							<f:facet name="header">
 								<h:outputText
 									value="#{triallabels.inquiry_inquiry_list_comment_column}" />
 							</f:facet>
 							<h:outputText
-								value="#{applicationScopeBean.clipStringTrailing(inquiry.vo.comment)}" />
+								value="#{applicationScopeBean.clipStringTrailing(inquiry.vo.commentL10nKey)}"
+								title="#{inquiry.vo.comment ne inquiry.vo.commentL10nKey ? inquiry.vo.comment : null}" />
 						</p:column>						
 						<p:column>
 							<f:attribute name="visibleDefault" value="false" />
@@ -213,7 +223,16 @@
 								<h:outputText
 									value="#{triallabels.inquiry_inquiry_list_category_column}" />
 							</f:facet>
-							<h:outputText value="#{inquiry.vo.category}" />
+							<h:outputText value="#{inquiry.vo.category}"
+								title="#{inquiry.vo.categoryLocalized ne inquiry.vo.category ? inquiry.vo.categoryLocalized : null}" />
+						</p:column>
+						<p:column>
+							<f:attribute name="visibleDefault" value="false" />
+							<f:facet name="header">
+								<h:outputText value="#{labels.category_l10n_locales_column}"
+									title="#{labels.l10n_locales_column_tooltip}" />
+							</f:facet>
+							<h:outputText value="#{inquiryBean.inquiryModel.getL10nKeyLocales('INQUIRY_CATEGORIES', inquiry)}" />
 						</p:column>
 						<p:column sortBy="#{inquiry.vo.position}">
 							<f:facet name="header">

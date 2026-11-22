@@ -3,6 +3,7 @@ package org.phoenixctms.ctsms.web.model.trial;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.phoenixctms.ctsms.enumeration.InputFieldL10nBundle;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
@@ -31,6 +32,21 @@ public class EcrfFieldLazyModel extends LazyDataModelBase<ECRFFieldOutVO> {
 			}
 		}
 		return new ArrayList<ECRFFieldOutVO>();
+	}
+
+	@Override
+	protected String getL10nKey(Object vo, InputFieldL10nBundle bundle) {
+		if (vo instanceof ECRFFieldOutVO) {
+			ECRFFieldOutVO ecrfField = (ECRFFieldOutVO) vo;
+			if (bundle == InputFieldL10nBundle.ECRF_FIELD_SECTIONS) {
+				return ecrfField.getSection();
+			}
+			// titles are keys only if the input field is localized:
+			if (bundle == InputFieldL10nBundle.TITLES && ecrfField.getField() != null && ecrfField.getField().isLocalized()) {
+				return ecrfField.getTitleL10nKey();
+			}
+		}
+		return null;
 	}
 
 	@Override

@@ -94,6 +94,8 @@ public class EcrfDataEntryTest extends SeleniumTestBase implements ProcessorJobO
 	private final static String L10N_CHANGED_TEXT = "changed";
 	private String sectionText;
 	private String sectionTextLocalized;
+	private final static String ECRF_FIELD_TITLE = "sketch title";
+	private final static String ECRF_FIELD_COMMENT = "sketch comment";
 	private final static Pattern FILE_NAME_ID_REGEXP = Pattern.compile("'([0-9a-z._-]+)' \\(file ID (\\d+)\\)");
 	private final static long FILE_DOWNLOAD_TIMEOUT_MS = 60_000L;
 	private final static String EXPORT_FILES_FILE_NAME_PREFIX = "ecrf_files_";
@@ -356,7 +358,12 @@ public class EcrfDataEntryTest extends SeleniumTestBase implements ProcessorJobO
 		newEcrfField.setPosition(position);
 		newEcrfField.setRef(CommonUtil.generateShortUUID());
 		newEcrfField.setOptional(true);
+		// a title and comment of its own, which the eCRF setup export and import have to carry (the imported setup has none):
+		newEcrfField.setTitle(ECRF_FIELD_TITLE);
+		newEcrfField.setComment(ECRF_FIELD_COMMENT);
 		ECRFFieldOutVO ecrfField = trialService.addEcrfField(auth, newEcrfField);
+		Assert.assertEquals(ecrfField.getTitleL10nKey(), ECRF_FIELD_TITLE, "title of eCRF field " + ecrfField.getUniqueName() + ":");
+		Assert.assertEquals(ecrfField.getCommentL10nKey(), ECRF_FIELD_COMMENT, "comment of eCRF field " + ecrfField.getUniqueName() + ":");
 		// texts of its section, for the eCRF setup export and import:
 		sectionText = "sketch section " + getTestId();
 		sectionTextLocalized = "Skizzenabschnitt " + getTestId();
@@ -521,13 +528,38 @@ public class EcrfDataEntryTest extends SeleniumTestBase implements ProcessorJobO
 				Assert.assertEquals(getMd5(image.getDatas()), getMd5(Files.readAllBytes(new File(getResourceFilePath(SKETCH_BACKGROUND_FILE)).toPath())),
 						"sketch background image MD5:");
 				boolean found = false;
-				Iterator<ECRFFieldOutVO> it = getApplicationContext().getBean("trialService", TrialService.class).getEcrfFieldList(auth, trial2.getId(), null, false, null).iterator();
+				TrialService trialService = getApplicationContext().getBean("trialService", TrialService.class);
+				Iterator<ECRFFieldOutVO> it = trialService.getEcrfFieldList(auth, trial2.getId(), null, false, null).iterator();
 				while (it.hasNext()) {
 					if (it.next().getField().getId() == sketchField.getId()) {
 						found = true;
 					}
 				}
 				Assert.assertTrue(found, "eCRF field of input field " + sketchField.getName() + " imported:");
+				// every imported eCRF field has the title and comment (keys) of its exported one:
+				HashMap<String, ECRFFieldOutVO> exportedEcrfFields = new HashMap<String, ECRFFieldOutVO>();
+				it = trialService.getEcrfFieldList(auth, trial.getId(), null, false, null).iterator();
+				while (it.hasNext()) {
+					ECRFFieldOutVO ecrfField = it.next();
+					exportedEcrfFields.put(getEcrfFieldKey(ecrfField), ecrfField);
+				}
+				int count = 0;
+				it = trialService.getEcrfFieldList(auth, trial2.getId(), null, false, null).iterator();
+				while (it.hasNext()) {
+					ECRFFieldOutVO ecrfField = it.next();
+					ECRFFieldOutVO exportedEcrfField = exportedEcrfFields.get(getEcrfFieldKey(ecrfField));
+					Assert.assertNotNull(exportedEcrfField, "exported eCRF field of imported eCRF field " + ecrfField.getUniqueName() + ":");
+					Assert.assertEquals(emptyIfNull(ecrfField.getTitleL10nKey()), emptyIfNull(exportedEcrfField.getTitleL10nKey()),
+							"title of imported eCRF field " + ecrfField.getUniqueName() + ":");
+					Assert.assertEquals(emptyIfNull(ecrfField.getCommentL10nKey()), emptyIfNull(exportedEcrfField.getCommentL10nKey()),
+							"comment of imported eCRF field " + ecrfField.getUniqueName() + ":");
+					if (ecrfField.getField().getId() == sketchField.getId()) {
+						Assert.assertEquals(ecrfField.getTitleL10nKey(), ECRF_FIELD_TITLE, "title of imported eCRF field " + ecrfField.getUniqueName() + ":");
+						Assert.assertEquals(ecrfField.getCommentL10nKey(), ECRF_FIELD_COMMENT, "comment of imported eCRF field " + ecrfField.getUniqueName() + ":");
+					}
+					count++;
+				}
+				Assert.assertEquals(count, exportedEcrfFields.size(), "number of imported eCRF fields:");
 				Assert.assertEquals(getSectionText(""), sectionText, "imported default text of section " + L10N_SECTION + ":");
 				Assert.assertEquals(getSectionText(L10N_LOCALE), sectionTextLocalized, "imported " + L10N_LOCALE + " text of section " + L10N_SECTION + ":");
 				testOK("eCRF setup zip archive imported, sketch background image and section texts restored");
@@ -535,6 +567,21 @@ public class EcrfDataEntryTest extends SeleniumTestBase implements ProcessorJobO
 			}
 		}
 		testFailed(job + " failed");
+	}
+
+	/**
+	 * Identifies an eCRF field across the exporting and the importing trial: eCRF name and revision, section and position.
+	 */
+	private static String getEcrfFieldKey(ECRFFieldOutVO ecrfField) {
+		return ecrfField.getEcrf().getName() + "|" + emptyIfNull(ecrfField.getEcrf().getRevision()) + "|" + emptyIfNull(ecrfField.getSection()) + "|"
+				+ ecrfField.getPosition();
+	}
+
+	/**
+	 * Empty cells of the setup sheets are imported as empty strings.
+	 */
+	private static String emptyIfNull(String value) {
+		return value != null ? value : "";
 	}
 
 	private static InputFieldInVO getSketchFieldWithoutImage(InputFieldOutVO inputField) {

@@ -45,6 +45,7 @@ public class InputFieldL10nOverlay implements BundleOverlayProvider {
 		ResourceBundle.clearCache(InputFieldL10nOverlay.class.getClassLoader());
 		ResourceBundle.clearCache(CommonUtil.class.getClassLoader());
 		Compile.clearResourceBundleCache();
+		L10nUtil.clearInputFieldL10nOwnKeysCache();
 	}
 
 	@Override
