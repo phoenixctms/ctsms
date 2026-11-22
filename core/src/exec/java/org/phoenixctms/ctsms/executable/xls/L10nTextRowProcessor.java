@@ -36,7 +36,9 @@ public class L10nTextRowProcessor extends RowProcessor {
 		super();
 		this.bundle = bundle;
 		this.inputFieldService = inputFieldService;
-		acceptCommentsIndex = KEY_COLUMN_INDEX; // texts may contain the comment character
+		// no column is cut at the comment character, as keys (e.g. eCRF sections "series #1", "series #2") and texts may contain it;
+		// a row is commented out only if its key starts with it (see testNotNullRowFields):
+		acceptCommentsIndex = -1;
 	}
 
 	@Override
@@ -136,7 +138,8 @@ public class L10nTextRowProcessor extends RowProcessor {
 
 	@Override
 	protected boolean testNotNullRowFields(String[] values, long rowNumber) {
-		// rows without a key (blank or commented out) are skipped:
-		return !CommonUtil.isEmptyString(getColumnValue(values, KEY_COLUMN_INDEX));
+		// rows without a key (blank) or commented out are skipped:
+		String key = getColumnValue(values, KEY_COLUMN_INDEX);
+		return !CommonUtil.isEmptyString(key) && (CommonUtil.isEmptyString(getCommentChar()) || !key.startsWith(getCommentChar()));
 	}
 }
