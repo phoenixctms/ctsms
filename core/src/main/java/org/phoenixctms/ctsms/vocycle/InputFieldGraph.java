@@ -17,6 +17,7 @@ import org.phoenixctms.ctsms.domain.MimeTypeDao;
 import org.phoenixctms.ctsms.domain.User;
 import org.phoenixctms.ctsms.domain.UserDao;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
+import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
 import org.phoenixctms.ctsms.util.ServiceUtil;
@@ -131,11 +132,16 @@ public class InputFieldGraph extends GraphCycleNHelper<InputField, InputFieldOut
 		Collections.sort(allowedMimeTypes, MIME_TYPE_ID_COMPARATOR);
 		target.setAllowedMimeTypes(allowedMimeTypes);
 		if (source.isLocalized()) {
-			target.setTextPreset(L10nUtil.getInputFieldTextPreset(Locales.USER, source.getTextPresetL10nKey()));
+			// an empty key stays empty (null) like for fields that are not localized, instead of becoming the placeholder
+			// default text (e.g. "<input field text preset>", which new values would take as their text value):
+			target.setTextPreset(CommonUtil.isEmptyString(source.getTextPresetL10nKey()) ? source.getTextPresetL10nKey()
+					: L10nUtil.getInputFieldTextPreset(Locales.USER, source.getTextPresetL10nKey()));
 			target.setName(L10nUtil.getInputFieldName(Locales.USER, source.getNameL10nKey()));
 			target.setTitle(L10nUtil.getInputFieldTitle(Locales.USER, source.getTitleL10nKey()));
-			target.setBottomComment(L10nUtil.getInputFieldComment(Locales.USER, source.getBottomCommentL10nKey()));
-			target.setTopComment(L10nUtil.getInputFieldComment(Locales.USER, source.getTopCommentL10nKey()));
+			target.setBottomComment(CommonUtil.isEmptyString(source.getBottomCommentL10nKey()) ? source.getBottomCommentL10nKey()
+					: L10nUtil.getInputFieldComment(Locales.USER, source.getBottomCommentL10nKey()));
+			target.setTopComment(CommonUtil.isEmptyString(source.getTopCommentL10nKey()) ? source.getTopCommentL10nKey()
+					: L10nUtil.getInputFieldComment(Locales.USER, source.getTopCommentL10nKey()));
 			target.setValidationErrorMsg(L10nUtil.getInputFieldValidationErrorMsg(Locales.USER, source.getValidationErrorMsgL10nKey()));
 		} else {
 			target.setTextPreset(source.getTextPresetL10nKey());
