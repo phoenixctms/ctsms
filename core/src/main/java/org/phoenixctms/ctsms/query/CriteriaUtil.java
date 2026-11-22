@@ -36,6 +36,7 @@ import org.hibernate.type.Type;
 import org.phoenixctms.ctsms.adapt.ExpirationEntityAdapter;
 import org.phoenixctms.ctsms.adapt.ReminderEntityAdapter;
 import org.phoenixctms.ctsms.domain.Department;
+import org.phoenixctms.ctsms.domain.InputFieldImpl;
 import org.phoenixctms.ctsms.domain.LecturerImpl;
 import org.phoenixctms.ctsms.domain.Staff;
 import org.phoenixctms.ctsms.domain.TeamMemberImpl;
@@ -121,6 +122,8 @@ public final class CriteriaUtil {
 	private final static HashMap<String, InputFieldL10nBundle> L10N_FILTER_ENTITY_FIELDS = new HashMap<String, InputFieldL10nBundle>();
 	// ... where the entity has a localized flag of its own, only if it is set:
 	private final static HashSet<String> L10N_FILTER_LOCALIZED_ENTITIES = new HashSet<String>();
+	// ... where the property holds a key only if the input field of the entity is localized, only for those:
+	private final static HashSet<String> L10N_FILTER_INPUT_FIELD_LOCALIZED_FIELDS = new HashSet<String>();
 	private final static int L10N_FILTER_IN_CHUNK_SIZE = 1000;
 	// sort fields of the VO properties holding the texts of eCRF sections and inquiry categories in the user's language (a table column showing them sorts by
 	// them, a column showing the key sorts by the key): the VO property -> the entity property holding the key
@@ -141,6 +144,12 @@ public final class CriteriaUtil {
 		L10N_FILTER_ENTITY_FIELDS.put("ProbandListEntryTag.commentL10nKey", InputFieldL10nBundle.COMMENTS);
 		L10N_FILTER_LOCALIZED_ENTITIES.add("InputField");
 		L10N_FILTER_LOCALIZED_ENTITIES.add("InputFieldSelectionSetValue");
+		L10N_FILTER_INPUT_FIELD_LOCALIZED_FIELDS.add("ECRFField.titleL10nKey");
+		L10N_FILTER_INPUT_FIELD_LOCALIZED_FIELDS.add("ECRFField.commentL10nKey");
+		L10N_FILTER_INPUT_FIELD_LOCALIZED_FIELDS.add("Inquiry.titleL10nKey");
+		L10N_FILTER_INPUT_FIELD_LOCALIZED_FIELDS.add("Inquiry.commentL10nKey");
+		L10N_FILTER_INPUT_FIELD_LOCALIZED_FIELDS.add("ProbandListEntryTag.titleL10nKey");
+		L10N_FILTER_INPUT_FIELD_LOCALIZED_FIELDS.add("ProbandListEntryTag.commentL10nKey");
 		L10N_SORT_PROPERTIES.put("sectionLocalized", "section");
 		L10N_SORT_PROPERTIES.put("categoryLocalized", "category");
 		L10N_SORT_ENTITY_FIELDS.put("ECRFField.sectionLocalized", InputFieldL10nBundle.ECRF_FIELD_SECTIONS);
@@ -166,11 +175,20 @@ public final class CriteriaUtil {
 	 * The keys of a localized property whose translation (in the user's language) contains the filter value.
 	 */
 	public static org.hibernate.criterion.Criterion getL10nKeysCriterion(String entityName, String propertyName, String value) {
-		InputFieldL10nBundle bundle = L10N_FILTER_ENTITY_FIELDS.get(entityName + AssociationPath.ASSOCIATION_PATH_SEPARATOR + propertyName);
+		String field = entityName + AssociationPath.ASSOCIATION_PATH_SEPARATOR + propertyName;
+		InputFieldL10nBundle bundle = L10N_FILTER_ENTITY_FIELDS.get(field);
 		if (bundle == null) {
 			return null;
 		}
-		return getL10nKeysCriterion(bundle, propertyName, L10N_FILTER_LOCALIZED_ENTITIES.contains(entityName) ? "localized" : null, value);
+		org.hibernate.criterion.Criterion in = getL10nKeysCriterion(bundle, propertyName, L10N_FILTER_LOCALIZED_ENTITIES.contains(entityName) ? "localized" : null, value);
+		if (in != null && L10N_FILTER_INPUT_FIELD_LOCALIZED_FIELDS.contains(field)) {
+			// the input field is not joined in the filter criteria, so its localized flag is checked by a subquery:
+			DetachedCriteria localizedSubQuery = DetachedCriteria.forClass(InputFieldImpl.class); // IMPL!!!!
+			localizedSubQuery.add(Restrictions.eq("localized", true));
+			localizedSubQuery.setProjection(Projections.id());
+			return Restrictions.and(Subqueries.propertyIn("field.id", localizedSubQuery), in);
+		}
+		return in;
 	}
 
 	/**
