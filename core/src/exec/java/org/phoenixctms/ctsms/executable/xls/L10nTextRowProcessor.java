@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.ResourceBundle;
 
 import org.phoenixctms.ctsms.enumeration.InputFieldL10nBundle;
 import org.phoenixctms.ctsms.fileprocessors.xls.RowProcessor;
@@ -19,7 +20,9 @@ import org.phoenixctms.ctsms.vo.InputFieldL10nTextOutVO;
 /**
  * Imports one sheet of localization texts (see {@link L10nTextRowWriter}): the non-empty cells of each
  * language column are merged into the text of that language, like an editor save; empty cells leave the
- * text of a key as it is, and nothing is removed.
+ * text of a key as it is, and nothing is removed. A cell is a change only if it differs from the text the key
+ * has in effect (as exported: classpath, CTSMS_PROPERTIES overloads, database texts, with the fallback to the
+ * default texts), so re-importing an export does not copy the .properties texts into the database texts.
  */
 public class L10nTextRowProcessor extends RowProcessor {
 
@@ -62,13 +65,14 @@ public class L10nTextRowProcessor extends RowProcessor {
 			InputFieldL10nTextOutVO current = inputFieldService.getInputFieldL10nText(context.getAuth(), bundle, locale);
 			String currentText = current != null ? current.getText() : "";
 			Map<String, String> currentEntries = InputFieldL10nTextUtil.parse(currentText);
+			ResourceBundle effective = L10nUtil.getInputFieldL10nBundle(bundle, locale);
 			LinkedHashMap<String, InputFieldL10nTextUtil.Change> changes = new LinkedHashMap<String, InputFieldL10nTextUtil.Change>();
 			Iterator<Entry<String, String>> textIt = localeTexts.getValue().entrySet().iterator();
 			while (textIt.hasNext()) {
 				Entry<String, String> text = textIt.next();
-				String currentValue = currentEntries.get(text.getKey());
-				if (!text.getValue().equals(currentValue)) {
-					changes.put(text.getKey(), new InputFieldL10nTextUtil.Change(currentValue, text.getValue()));
+				String effectiveValue = effective.containsKey(text.getKey()) ? effective.getString(text.getKey()) : null;
+				if (!text.getValue().equals(effectiveValue)) {
+					changes.put(text.getKey(), new InputFieldL10nTextUtil.Change(currentEntries.get(text.getKey()), text.getValue()));
 				}
 			}
 			String textName = getSheetName() + (CommonUtil.isEmptyString(locale) ? "" : " " + locale);
