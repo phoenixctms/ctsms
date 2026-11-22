@@ -51,7 +51,9 @@ public class InputFieldL10nOverlay implements BundleOverlayProvider {
 	@Override
 	public String getOverlay(String baseName, Locale locale) {
 		InputFieldL10nBundle bundle = L10nUtil.getInputFieldL10nBundle(baseName);
-		if (bundle != null) {
+		// the texts are saved per language: a country or variant bundle (e.g. de_AT) gets them from its parent (de) instead,
+		// so its own .properties texts still take precedence for it
+		if (bundle != null && (locale == null || (locale.getCountry().isEmpty() && locale.getVariant().isEmpty() && locale.getScript().isEmpty()))) {
 			return texts.get(getKey(bundle, locale == null ? "" : CommonUtil.localeToString(locale)));
 		}
 		return null;
