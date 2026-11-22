@@ -769,10 +769,11 @@ public final class L10nUtil {
 	}
 
 	// the keys with a text of their own per bundle and locale (see getInputFieldL10nOwnKeys), cleared with the bundle caches:
-	private final static ConcurrentHashMap<String, Set<String>> inputFieldL10nOwnKeysCache = new ConcurrentHashMap<String, Set<String>>();
+	// replaced rather than cleared, so a computation still running when it is cleared stores its outdated keys in the dropped map:
+	private static volatile ConcurrentHashMap<String, Set<String>> inputFieldL10nOwnKeysCache = new ConcurrentHashMap<String, Set<String>>();
 
 	public static void clearInputFieldL10nOwnKeysCache() {
-		inputFieldL10nOwnKeysCache.clear();
+		inputFieldL10nOwnKeysCache = new ConcurrentHashMap<String, Set<String>>();
 	}
 
 	/**
@@ -784,10 +785,11 @@ public final class L10nUtil {
 		if (bundle != null && !CommonUtil.isEmptyString(key)) {
 			ArrayList<String> locales = getInputFieldL10nLocales();
 			locales.add(0, "");
+			ConcurrentHashMap<String, Set<String>> ownKeysCache = inputFieldL10nOwnKeysCache;
 			Iterator<String> it = locales.iterator();
 			while (it.hasNext()) {
 				String locale = it.next();
-				Set<String> ownKeys = inputFieldL10nOwnKeysCache.computeIfAbsent(bundle.name() + "/" + locale,
+				Set<String> ownKeys = ownKeysCache.computeIfAbsent(bundle.name() + "/" + locale,
 						k -> Collections.unmodifiableSet(getInputFieldL10nOwnKeys(bundle, locale)));
 				if (ownKeys.contains(key)) {
 					result.add(locale.length() > 0 ? locale : INPUT_FIELD_L10N_ROOT_LANGUAGE);
