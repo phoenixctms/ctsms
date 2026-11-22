@@ -911,4 +911,5 @@ public interface ServiceExceptionCodes {
 	public static final String INPUT_FIELD_L10N_TEXT_INVALID = "input_field_l10n_text_invalid";
 	public static final String INPUT_FIELD_L10N_TEXT_TOO_LONG = "input_field_l10n_text_too_long";
 	public static final String INPUT_FIELD_L10N_KEY_MODIFIED_SINCE = "input_field_l10n_key_modified_since";
+	public static final String INPUT_FIELD_L10N_TEXT_CREATED_MEANWHILE = "input_field_l10n_text_created_meanwhile";
 }

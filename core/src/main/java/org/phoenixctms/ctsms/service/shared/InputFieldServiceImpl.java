@@ -118,6 +118,7 @@ import org.phoenixctms.ctsms.vo.LocaleVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagOutVO;
 import org.phoenixctms.ctsms.vo.StratificationRandomizationListOutVO;
+import org.springframework.dao.DataIntegrityViolationException;
 
 /**
  * @see org.phoenixctms.ctsms.service.shared.InputFieldService
@@ -1850,12 +1851,12 @@ public class InputFieldServiceImpl
 		String originalText = inputFieldL10nText.getOriginalText() != null ? inputFieldL10nText.getOriginalText() : "";
 		LinkedHashMap<String, String> entries = parseL10nText(bundle, locale, text);
 		InputFieldL10nTextDao inputFieldL10nTextDao = this.getInputFieldL10nTextDao();
-		InputFieldL10nText latest = inputFieldL10nTextDao.findLatest(bundle, locale);
+		InputFieldL10nText latest = lockLatestL10nText(inputFieldL10nTextDao, bundle, locale);
 		String latestText = latest != null ? latest.getText() : "";
 		LinkedHashMap<String, String> latestEntries = InputFieldL10nTextUtil.parse(latestText);
 		String newText;
-		if (Objects.equals(latest != null ? latest.getVersion() : null, inputFieldL10nText.getVersion())) {
-			// nobody saved meanwhile: the text is stored as it was edited
+		if (latest == null || Objects.equals(latest.getVersion(), inputFieldL10nText.getVersion())) {
+			// nobody saved meanwhile (or there is no saved text to merge with): the text is stored as it was edited
 			newText = text;
 		} else {
 			// somebody saved meanwhile: apply only the keys changed in the editor to the latest text
@@ -1881,7 +1882,17 @@ public class InputFieldServiceImpl
 		revision.setVersion(latest != null ? latest.getVersion() + 1l : 0l);
 		revision.setModifiedTimestamp(now);
 		revision.setModifiedUser(user);
-		revision = inputFieldL10nTextDao.create(revision);
+		if (latest != null) {
+			revision = inputFieldL10nTextDao.create(revision);
+		} else {
+			// the first revision has nothing to lock: of two first saves at the same time, the second one hits the
+			// unique constraint (bundle, locale, version) when flushing, and is rolled back with a message
+			try {
+				revision = inputFieldL10nTextDao.create(revision, LockMode.NONE);
+			} catch (DataIntegrityViolationException e) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_L10N_TEXT_CREATED_MEANWHILE, getL10nTextName(bundle, locale));
+			}
+		}
 		if (changes.size() > 0) {
 			InputFieldDao inputFieldDao = this.getInputFieldDao();
 			JournalEntryDao journalEntryDao = this.getJournalEntryDao();
@@ -1899,6 +1910,24 @@ public class InputFieldServiceImpl
 			overlay.update(bundle, locale, newText);
 		}
 		return inputFieldL10nTextDao.toInputFieldL10nTextOutVO(revision);
+	}
+
+	/**
+	 * The latest revision of a localization text, locked, so saves of this text wait for each other (null if there is none yet).
+	 * The lock neither re-reads nor checks the revision loaded before, and a save may have committed a newer revision while
+	 * waiting for it, so the latest revision is read again after locking, until the locked one is still the latest.
+	 */
+	private static InputFieldL10nText lockLatestL10nText(InputFieldL10nTextDao inputFieldL10nTextDao, InputFieldL10nBundle bundle, String locale) {
+		InputFieldL10nText latest = inputFieldL10nTextDao.findLatest(bundle, locale);
+		while (latest != null) {
+			inputFieldL10nTextDao.refresh(latest, LockMode.PESSIMISTIC_WRITE);
+			InputFieldL10nText reread = inputFieldL10nTextDao.findLatest(bundle, locale);
+			if (reread == null || reread.getId().equals(latest.getId())) {
+				break;
+			}
+			latest = reread;
+		}
+		return latest;
 	}
 
 	private static String getL10nChangesComment(Map<String, InputFieldL10nTextUtil.Change> changes) {
