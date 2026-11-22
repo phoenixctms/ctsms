@@ -91,11 +91,12 @@ public class DummyInputFieldValueBean extends ManagedBeanBase {
 
 	/**
 	 * The authentication of the user, with the language to localize the input field texts
-	 * (and validation messages) in.
+	 * (and validation messages) in. The language is passed only if it is not the user's own one, as the user's own
+	 * language may no longer be a supported one (which the authentication rejects as an explicit language).
 	 */
 	private AuthenticationVO getPreviewAuthentication() {
 		AuthenticationVO auth = WebUtil.getAuthentication();
-		if (auth != null && !CommonUtil.isEmptyString(locale)) {
+		if (auth != null && !CommonUtil.isEmptyString(locale) && !locale.equals(CommonUtil.localeToString(WebUtil.getLocale()))) {
 			auth = new AuthenticationVO(auth);
 			auth.setLocale(locale);
 		}
