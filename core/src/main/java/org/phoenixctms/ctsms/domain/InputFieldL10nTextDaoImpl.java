@@ -38,6 +38,14 @@ public class InputFieldL10nTextDaoImpl
 	}
 
 	/**
+	 * The number of all revisions: as revisions are only added, it changes with every save (see InputFieldL10nOverlay).
+	 */
+	@Override
+	protected long handleGetCount() throws Exception {
+		return (Long) createTextCriteria(null).setProjection(Projections.rowCount()).uniqueResult();
+	}
+
+	/**
 	 * All revisions that are the latest of their bundle and locale.
 	 */
 	@Override

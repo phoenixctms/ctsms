@@ -1212,10 +1212,15 @@
 		id="inputFieldL10nOverlay"
 		class="org.phoenixctms.ctsms.util.InputFieldL10nOverlay"
 		depends-on="l10nUtil"
-		init-method="init">
+		init-method="init"
+		destroy-method="destroy">
 		<property
 			name="inputFieldL10nTextDao"
 			ref="inputFieldL10nTextDao" />
+		<!-- seconds between the checks for texts saved by another JVM (e.g. import jobs), 0 for none: -->
+		<property
+			name="reloadInterval"
+			value="60" />
 		<property
 			name="transactionManager"
 			ref="transactionManager" />
