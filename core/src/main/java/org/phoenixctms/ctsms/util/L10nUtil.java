@@ -1,12 +1,18 @@
 package org.phoenixctms.ctsms.util;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.TimeZone;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.phoenixctms.ctsms.enumeration.AuthenticationType;
 import org.phoenixctms.ctsms.enumeration.DBModule;
@@ -581,6 +587,25 @@ public final class L10nUtil {
 	}
 
 	/**
+	 * The texts of an editable localization bundle in the user's language, by key, without the texts that equal their key
+	 * (to sort by the texts).
+	 */
+	public static Map<String, String> getInputFieldL10nTexts(InputFieldL10nBundle bundle) {
+		HashMap<String, String> texts = new HashMap<String, String>();
+		String baseName = getInputFieldL10nBundleBasename(bundle);
+		if (baseName != null) {
+			Iterator<Map.Entry<String, String>> it = CommonUtil.getBundleSymbolMap(getBundle(Locales.USER, baseName), false).entrySet().iterator();
+			while (it.hasNext()) {
+				Map.Entry<String, String> entry = it.next();
+				if (entry.getKey() != null && entry.getValue() != null && !entry.getValue().equals(entry.getKey())) {
+					texts.put(entry.getKey(), entry.getValue());
+				}
+			}
+		}
+		return texts;
+	}
+
+	/**
 	 * The keys of an editable localization bundle whose text (in the user's language) contains the infix,
 	 * ignoring case, so filters can match translated texts.
 	 */
@@ -741,6 +766,54 @@ public final class L10nUtil {
 	 */
 	public static ResourceBundle getInputFieldL10nBundle(InputFieldL10nBundle bundle, String locale) {
 		return CommonUtil.getBundle(getInputFieldL10nBundleBasename(bundle), CommonUtil.isEmptyString(locale) ? Locale.ROOT : CommonUtil.localeFromString(locale));
+	}
+
+	// the keys with a text of their own per bundle and locale (see getInputFieldL10nOwnKeys), cleared with the bundle caches:
+	private final static ConcurrentHashMap<String, Set<String>> inputFieldL10nOwnKeysCache = new ConcurrentHashMap<String, Set<String>>();
+
+	public static void clearInputFieldL10nOwnKeysCache() {
+		inputFieldL10nOwnKeysCache.clear();
+	}
+
+	/**
+	 * The languages with a text of their own for a key: English for the default texts first (English has no texts of its own,
+	 * it shows the default ones), then the supported languages in the order of the supported locales setting. Empty for an empty key.
+	 */
+	public static ArrayList<String> getInputFieldL10nLocales(InputFieldL10nBundle bundle, String key) {
+		ArrayList<String> result = new ArrayList<String>();
+		if (bundle != null && !CommonUtil.isEmptyString(key)) {
+			ArrayList<String> locales = getInputFieldL10nLocales();
+			locales.add(0, "");
+			Iterator<String> it = locales.iterator();
+			while (it.hasNext()) {
+				String locale = it.next();
+				Set<String> ownKeys = inputFieldL10nOwnKeysCache.computeIfAbsent(bundle.name() + "/" + locale,
+						k -> Collections.unmodifiableSet(getInputFieldL10nOwnKeys(bundle, locale)));
+				if (ownKeys.contains(key)) {
+					result.add(locale.length() > 0 ? locale : INPUT_FIELD_L10N_ROOT_LANGUAGE);
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * The keys with a text in exactly this locale (classpath copy, CTSMS_PROPERTIES overloads, texts edited in the UI),
+	 * without the keys a language only takes from the default (root) texts.
+	 */
+	public static Set<String> getInputFieldL10nOwnKeys(InputFieldL10nBundle bundle, String locale) {
+		HashSet<String> keys = new HashSet<String>();
+		try {
+			// loaded apart from the bundle cache, as the locale alone, without the fallback to the root texts:
+			ResourceBundle own = CommonUtil.BUNDLE_CONTROL.newBundle(getInputFieldL10nBundleBasename(bundle),
+					CommonUtil.isEmptyString(locale) ? Locale.ROOT : CommonUtil.localeFromString(locale), "java.properties", CommonUtil.class.getClassLoader(), false);
+			if (own != null) {
+				keys.addAll(own.keySet());
+			}
+		} catch (IllegalAccessException | InstantiationException | IOException e) {
+			throw new RuntimeException(e);
+		}
+		return keys;
 	}
 
 	public static String getInputFieldComment(Locales locale, String l10nKey) {

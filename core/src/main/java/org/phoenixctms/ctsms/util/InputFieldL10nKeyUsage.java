@@ -32,7 +32,7 @@ public final class InputFieldL10nKeyUsage {
 		ArrayList<InputFieldL10nKeyUsage> result = getKeys(ecrfField.getField());
 		if (ecrfField.getField().isLocalized()) {
 			add(result, InputFieldL10nBundle.TITLES, ecrfField.getTitleL10nKey(), InputFieldL10nTarget.ECRF_FIELD_TITLE, null);
-			add(result, InputFieldL10nBundle.COMMENTS, ecrfField.getComment(), InputFieldL10nTarget.ECRF_FIELD_COMMENT, null);
+			add(result, InputFieldL10nBundle.COMMENTS, ecrfField.getCommentL10nKey(), InputFieldL10nTarget.ECRF_FIELD_COMMENT, null);
 		}
 		add(result, InputFieldL10nBundle.ECRF_FIELD_SECTIONS, ecrfField.getSection(), InputFieldL10nTarget.ECRF_FIELD_SECTION, null);
 		return result;
@@ -70,7 +70,7 @@ public final class InputFieldL10nKeyUsage {
 		ArrayList<InputFieldL10nKeyUsage> result = new ArrayList<InputFieldL10nKeyUsage>();
 		if (inquiry.getField().isLocalized()) {
 			add(result, InputFieldL10nBundle.TITLES, inquiry.getTitleL10nKey(), InputFieldL10nTarget.INQUIRY_TITLE, null);
-			add(result, InputFieldL10nBundle.COMMENTS, inquiry.getComment(), InputFieldL10nTarget.INQUIRY_COMMENT, null);
+			add(result, InputFieldL10nBundle.COMMENTS, inquiry.getCommentL10nKey(), InputFieldL10nTarget.INQUIRY_COMMENT, null);
 		}
 		add(result, InputFieldL10nBundle.INQUIRY_CATEGORIES, inquiry.getCategory(), InputFieldL10nTarget.INQUIRY_CATEGORY, null);
 		return result;
@@ -92,7 +92,7 @@ public final class InputFieldL10nKeyUsage {
 		ArrayList<InputFieldL10nKeyUsage> result = new ArrayList<InputFieldL10nKeyUsage>();
 		if (tag.getField().isLocalized()) {
 			add(result, InputFieldL10nBundle.TITLES, tag.getTitleL10nKey(), InputFieldL10nTarget.PROBAND_LIST_ENTRY_TAG_TITLE, null);
-			add(result, InputFieldL10nBundle.COMMENTS, tag.getComment(), InputFieldL10nTarget.PROBAND_LIST_ENTRY_TAG_COMMENT, null);
+			add(result, InputFieldL10nBundle.COMMENTS, tag.getCommentL10nKey(), InputFieldL10nTarget.PROBAND_LIST_ENTRY_TAG_COMMENT, null);
 		}
 		return result;
 	}

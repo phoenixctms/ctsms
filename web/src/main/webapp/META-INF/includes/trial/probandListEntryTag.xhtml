@@ -88,7 +88,16 @@
 								<h:outputText
 									value="#{triallabels.proband_list_entry_tag_probandlistentrytag_list_title_column}" />
 							</f:facet>
-							<h:outputText value="#{probandListEntryTag.vo.titleL10nKey}" />
+							<h:outputText value="#{probandListEntryTag.vo.titleL10nKey}"
+								title="#{probandListEntryTag.vo.title ne probandListEntryTag.vo.titleL10nKey ? probandListEntryTag.vo.title : null}" />
+						</p:column>
+						<p:column>
+							<f:attribute name="visibleDefault" value="false" />
+							<f:facet name="header">
+								<h:outputText value="#{labels.title_l10n_locales_column}"
+									title="#{labels.l10n_locales_column_tooltip}" />
+							</f:facet>
+							<h:outputText value="#{probandListEntryTagBean.probandListEntryTagModel.getL10nKeyLocales('TITLES', probandListEntryTag)}" />
 						</p:column>
 						<p:column sortBy="#{probandListEntryTag.vo.jsVariableName}"
 							filterBy="#{probandListEntryTag.vo.jsVariableName}">
@@ -201,14 +210,15 @@
 							</f:facet>
 							<h:outputText value="#{probandListEntryTag.vo.ref}" />
 						</p:column>
-						<p:column sortBy="#{probandListEntryTag.vo.comment}" filterBy="#{probandListEntryTag.vo.comment}">
+						<p:column sortBy="#{probandListEntryTag.vo.commentL10nKey}" filterBy="#{probandListEntryTag.vo.commentL10nKey}">
 							<f:attribute name="visibleDefault" value="false" />
 							<f:facet name="header">
 								<h:outputText
 									value="#{triallabels.proband_list_entry_tag_probandlistentrytag_list_comment_column}" />
 							</f:facet>
 							<h:outputText
-								value="#{applicationScopeBean.clipStringTrailing(probandListEntryTag.vo.comment)}" />
+								value="#{applicationScopeBean.clipStringTrailing(probandListEntryTag.vo.commentL10nKey)}"
+								title="#{probandListEntryTag.vo.comment ne probandListEntryTag.vo.commentL10nKey ? probandListEntryTag.vo.comment : null}" />
 						</p:column>
 						<p:column>
 							<f:attribute name="visibleDefault" value="false" />

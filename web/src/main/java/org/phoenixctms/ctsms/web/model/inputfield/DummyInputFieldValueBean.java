@@ -1,6 +1,8 @@
 package org.phoenixctms.ctsms.web.model.inputfield;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Locale;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -36,6 +38,7 @@ public class DummyInputFieldValueBean extends ManagedBeanBase {
 	private DummyInputModel inputModel;
 	private Long inputFieldId;
 	private String locale; // the language to preview the input field in
+	private ArrayList<SelectItem> locales;
 
 	public DummyInputFieldValueBean() {
 		super();
@@ -120,7 +123,21 @@ public class DummyInputFieldValueBean extends ManagedBeanBase {
 	}
 
 	public ArrayList<SelectItem> getLocales() {
-		return WebUtil.getLocales();
+		if (locales == null) {
+			// English has no texts of its own, it shows the default (root) texts, which are the raw keys
+			// where no text exists; so label it as in the localization tab, and list it first:
+			locales = new ArrayList<SelectItem>();
+			Iterator<SelectItem> it = WebUtil.getLocales().iterator();
+			while (it.hasNext()) {
+				SelectItem item = it.next();
+				if (Locale.ENGLISH.getLanguage().equals(item.getValue())) {
+					locales.add(0, new SelectItem(item.getValue(), Messages.getString(MessageCodes.INPUT_FIELD_L10N_ROOT_LOCALE_LABEL)));
+				} else {
+					locales.add(item);
+				}
+			}
+		}
+		return locales;
 	}
 
 	public void changeLocale() {

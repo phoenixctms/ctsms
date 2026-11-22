@@ -4111,7 +4111,7 @@ public class TrialServiceImpl
 			ECRFFieldOutVO originalEcrfFieldVO = ecrfFieldDao.toECRFFieldOutVO(originalEcrfField);
 			ECRFField newEcrfField = ECRFField.Factory.newInstance();
 			newEcrfField.setAuditTrail(originalEcrfField.isAuditTrail());
-			newEcrfField.setComment(originalEcrfField.getComment());
+			newEcrfField.setCommentL10nKey(originalEcrfField.getCommentL10nKey());
 			newEcrfField.setTitleL10nKey(originalEcrfField.getTitleL10nKey());
 			newEcrfField.setDeferredDelete(originalEcrfField.isDeferredDelete());
 			newEcrfField.setDeferredDeleteReason(originalEcrfField.getDeferredDeleteReason());

@@ -3,6 +3,7 @@ package org.phoenixctms.ctsms.web.model.trial;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.phoenixctms.ctsms.enumeration.InputFieldL10nBundle;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
@@ -26,6 +27,18 @@ public class ProbandListEntryTagLazyModel extends LazyDataModelBase<ProbandListE
 			}
 		}
 		return new ArrayList<ProbandListEntryTagOutVO>();
+	}
+
+	@Override
+	protected String getL10nKey(Object vo, InputFieldL10nBundle bundle) {
+		if (vo instanceof ProbandListEntryTagOutVO) {
+			ProbandListEntryTagOutVO tag = (ProbandListEntryTagOutVO) vo;
+			// titles are keys only if the input field is localized:
+			if (bundle == InputFieldL10nBundle.TITLES && tag.getField() != null && tag.getField().isLocalized()) {
+				return tag.getTitleL10nKey();
+			}
+		}
+		return null;
 	}
 
 	@Override

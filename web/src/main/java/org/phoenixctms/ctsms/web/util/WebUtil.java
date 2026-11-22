@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -47,6 +48,7 @@ import org.phoenixctms.ctsms.enumeration.ECRFFieldStatusQueue;
 import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.enumeration.HyperlinkModule;
 import org.phoenixctms.ctsms.enumeration.JobModule;
+import org.phoenixctms.ctsms.enumeration.InputFieldL10nBundle;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.enumeration.PaymentMethod;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
@@ -2803,6 +2805,46 @@ public final class WebUtil {
 			return sessionScopeBean.getLocale();
 		}
 		return null;
+	}
+
+	/**
+	 * The languages with a text of their own for localization keys of a bundle, by key, as a list of the language names (in the user's
+	 * language; English, which shows the default texts, is named as the default entry of the language dropdowns); "" for a key without
+	 * any text.
+	 */
+	public static HashMap<String, String> getInputFieldL10nKeyLocales(InputFieldL10nBundle bundle, Set<String> keys) {
+		HashMap<String, String> result = new HashMap<String, String>();
+		Iterator<String> keysIt = keys.iterator();
+		while (keysIt.hasNext()) {
+			result.put(keysIt.next(), "");
+		}
+		Collection<InputFieldL10nKeyLocalesVO> keyLocales = null;
+		try {
+			keyLocales = getServiceLocator().getInputFieldService().getInputFieldL10nKeyLocales(getAuthentication(), bundle, keys);
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+		} catch (AuthenticationException e) {
+			publishException(e);
+		}
+		if (keyLocales != null) {
+			Iterator<InputFieldL10nKeyLocalesVO> it = keyLocales.iterator();
+			while (it.hasNext()) {
+				InputFieldL10nKeyLocalesVO keyLocale = it.next();
+				StringBuilder names = new StringBuilder();
+				if (keyLocale.getLocales() != null) {
+					Iterator<LocaleVO> localesIt = keyLocale.getLocales().iterator();
+					while (localesIt.hasNext()) {
+						LocaleVO locale = localesIt.next();
+						if (names.length() > 0) {
+							names.append(", ");
+						}
+						names.append(Locale.ENGLISH.getLanguage().equals(locale.getLanguage()) ? Messages.getString(MessageCodes.INPUT_FIELD_L10N_ROOT_LOCALE_LABEL)
+								: locale.getName());
+					}
+				}
+				result.put(keyLocale.getL10nKey(), names.toString());
+			}
+		}
+		return result;
 	}
 
 	public static ArrayList<SelectItem> getLocales() {

@@ -122,20 +122,44 @@ public final class CriteriaUtil {
 	// ... where the entity has a localized flag of its own, only if it is set:
 	private final static HashSet<String> L10N_FILTER_LOCALIZED_ENTITIES = new HashSet<String>();
 	private final static int L10N_FILTER_IN_CHUNK_SIZE = 1000;
+	// sort fields of the VO properties holding the texts of eCRF sections and inquiry categories in the user's language (a table column showing them sorts by
+	// them, a column showing the key sorts by the key): the VO property -> the entity property holding the key
+	private final static HashMap<String, String> L10N_SORT_PROPERTIES = new HashMap<String, String>();
+	// ... and the bundle of the texts, per entity:
+	private final static HashMap<String, InputFieldL10nBundle> L10N_SORT_ENTITY_FIELDS = new HashMap<String, InputFieldL10nBundle>();
 	static {
 		L10N_FILTER_ENTITY_FIELDS.put("InputField.nameL10nKey", InputFieldL10nBundle.NAMES);
 		L10N_FILTER_ENTITY_FIELDS.put("InputField.titleL10nKey", InputFieldL10nBundle.TITLES);
 		L10N_FILTER_ENTITY_FIELDS.put("InputFieldSelectionSetValue.nameL10nKey", InputFieldL10nBundle.SELECTION_SET_VALUE_NAMES);
 		L10N_FILTER_ENTITY_FIELDS.put("ECRFField.titleL10nKey", InputFieldL10nBundle.TITLES);
-		L10N_FILTER_ENTITY_FIELDS.put("ECRFField.comment", InputFieldL10nBundle.COMMENTS);
+		L10N_FILTER_ENTITY_FIELDS.put("ECRFField.commentL10nKey", InputFieldL10nBundle.COMMENTS);
 		L10N_FILTER_ENTITY_FIELDS.put("ECRFField.section", InputFieldL10nBundle.ECRF_FIELD_SECTIONS);
 		L10N_FILTER_ENTITY_FIELDS.put("Inquiry.titleL10nKey", InputFieldL10nBundle.TITLES);
-		L10N_FILTER_ENTITY_FIELDS.put("Inquiry.comment", InputFieldL10nBundle.COMMENTS);
+		L10N_FILTER_ENTITY_FIELDS.put("Inquiry.commentL10nKey", InputFieldL10nBundle.COMMENTS);
 		L10N_FILTER_ENTITY_FIELDS.put("Inquiry.category", InputFieldL10nBundle.INQUIRY_CATEGORIES);
 		L10N_FILTER_ENTITY_FIELDS.put("ProbandListEntryTag.titleL10nKey", InputFieldL10nBundle.TITLES);
-		L10N_FILTER_ENTITY_FIELDS.put("ProbandListEntryTag.comment", InputFieldL10nBundle.COMMENTS);
+		L10N_FILTER_ENTITY_FIELDS.put("ProbandListEntryTag.commentL10nKey", InputFieldL10nBundle.COMMENTS);
 		L10N_FILTER_LOCALIZED_ENTITIES.add("InputField");
 		L10N_FILTER_LOCALIZED_ENTITIES.add("InputFieldSelectionSetValue");
+		L10N_SORT_PROPERTIES.put("sectionLocalized", "section");
+		L10N_SORT_PROPERTIES.put("categoryLocalized", "category");
+		L10N_SORT_ENTITY_FIELDS.put("ECRFField.sectionLocalized", InputFieldL10nBundle.ECRF_FIELD_SECTIONS);
+		L10N_SORT_ENTITY_FIELDS.put("Inquiry.categoryLocalized", InputFieldL10nBundle.INQUIRY_CATEGORIES);
+	}
+
+	/**
+	 * The sort field of the criteria; a VO property holding localized texts (sectionLocalized, categoryLocalized) becomes the entity property holding the key.
+	 */
+	private static AssociationPath getSortFieldAssociationPath(PSFVO psf) {
+		String sortField = psf != null ? psf.getSortField() : null;
+		if (sortField != null) {
+			int i = sortField.lastIndexOf(AssociationPath.ASSOCIATION_PATH_SEPARATOR);
+			String property = L10N_SORT_PROPERTIES.get(sortField.substring(i + 1));
+			if (property != null) {
+				sortField = sortField.substring(0, i + 1) + property;
+			}
+		}
+		return new AssociationPath(sortField);
 	}
 
 	/**
@@ -147,6 +171,26 @@ public final class CriteriaUtil {
 			return null;
 		}
 		return getL10nKeysCriterion(bundle, propertyName, L10N_FILTER_LOCALIZED_ENTITIES.contains(entityName) ? "localized" : null, value);
+	}
+
+	/**
+	 * The order of the sort field (see getSortFieldAssociationPath); sectionLocalized and categoryLocalized sort by the texts in the user's language.
+	 */
+	private static Order getOrder(SubCriteriaMap criteriaMap, PSFVO psf, AssociationPath sortFieldAssociationPath, boolean ascending) {
+		String sortProperty = sortFieldAssociationPath.getPropertyName();
+		Class pathClass = criteriaMap.getPropertyClassMap().get(sortFieldAssociationPath.getPathString());
+		// properties of the root entity have no path class:
+		if (pathClass == null && sortFieldAssociationPath.getPathDepth() == 0) {
+			pathClass = criteriaMap.getEntity();
+		}
+		if (pathClass != null) {
+			InputFieldL10nBundle bundle = L10N_SORT_ENTITY_FIELDS.get(getEntityName(pathClass) + AssociationPath.ASSOCIATION_PATH_SEPARATOR
+					+ new AssociationPath(psf.getSortField()).getPropertyName());
+			if (bundle != null) {
+				return new L10nOrder(sortProperty, ascending, L10nUtil.getInputFieldL10nTexts(bundle));
+			}
+		}
+		return ascending ? Order.asc(sortProperty) : Order.desc(sortProperty);
 	}
 
 	private static String getEntityName(Class entityClass) {
@@ -901,7 +945,7 @@ public final class CriteriaUtil {
 			}
 			boolean sortJoin = false;
 			if (psf != null) {
-				AssociationPath sortFieldAssociationPath = new AssociationPath(psf.getSortField());
+				AssociationPath sortFieldAssociationPath = getSortFieldAssociationPath(psf);
 				if (sortFieldAssociationPath.isValid()) {
 					sortJoin = sortFieldAssociationPath.getPathDepth() > 0;
 				}
@@ -982,7 +1026,9 @@ public final class CriteriaUtil {
 						subCriteria = criteriaMap.createCriteriaForAttribute(sortFieldAssociationPath, CriteriaSpecification.LEFT_JOIN);
 					}
 					String sortProperty = sortFieldAssociationPath.getPropertyName();
-					subCriteria.addOrder(psf.getSortOrder() ? Order.asc(sortProperty) : Order.desc(sortProperty));
+					// SELECT DISTINCT can only sort by a selected column, so the distinct listing keeps sorting by the key:
+					subCriteria.addOrder(distinct ? (psf.getSortOrder() ? Order.asc(sortProperty) : Order.desc(sortProperty))
+							: getOrder(criteriaMap, psf, sortFieldAssociationPath, psf.getSortOrder()));
 					if (distinct) {
 						ProjectionList proj = Projections.projectionList();
 						proj.add(Projections.id());
@@ -1387,7 +1433,7 @@ public final class CriteriaUtil {
 				criteria.setProjection(null);
 				criteria.setResultTransformer(CriteriaSpecification.ROOT_ENTITY);
 				Method loadMethod = CoreUtil.getDaoLoadMethod(dao);
-				AssociationPath sortFieldAssociationPath = new AssociationPath(psf.getSortField());
+				AssociationPath sortFieldAssociationPath = getSortFieldAssociationPath(psf);
 				Map<String, String> filters = psf.getFilters();
 				if (filters != null && filters.size() > 0) {
 					Iterator<Map.Entry<String, String>> filterIt = filters.entrySet().iterator();

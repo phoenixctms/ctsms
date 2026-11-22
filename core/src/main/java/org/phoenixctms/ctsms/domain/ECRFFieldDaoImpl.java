@@ -129,7 +129,7 @@ public class ECRFFieldDaoImpl
 	protected Collection<ECRFField> handleFindByL10nKeys(Set<String> keys) throws Exception {
 		org.hibernate.Criteria ecrfFieldCriteria = createEcrfFieldCriteria();
 		ecrfFieldCriteria.createCriteria("field", "inputField0").add(Restrictions.eq("localized", true));
-		ecrfFieldCriteria.add(CriteriaUtil.getL10nKeysInCriterion(keys, "titleL10nKey", "comment"));
+		ecrfFieldCriteria.add(CriteriaUtil.getL10nKeysInCriterion(keys, "titleL10nKey", "commentL10nKey"));
 		return ecrfFieldCriteria.list();
 	}
 
@@ -147,6 +147,7 @@ public class ECRFFieldDaoImpl
 			boolean copyIfNull) {
 		super.eCRFFieldInVOToEntity(source, target, copyIfNull);
 		target.setTitleL10nKey(source.getTitle());
+		target.setCommentL10nKey(source.getComment());
 		Long ecrfId = source.getEcrfId();
 		Long fieldId = source.getFieldId();
 		Long trialId = source.getTrialId();
@@ -581,6 +582,7 @@ public class ECRFFieldDaoImpl
 			ECRFFieldInVO target) {
 		super.toECRFFieldInVO(source, target);
 		target.setTitle(source.getTitleL10nKey());
+		target.setComment(source.getCommentL10nKey());
 		ECRF ecrf = source.getEcrf();
 		Trial trial = source.getTrial();
 		InputField field = source.getField();
@@ -619,13 +621,14 @@ public class ECRFFieldDaoImpl
 			target.setTrial(this.getTrialDao().toTrialOutVO(trial));
 		}
 		target.setTitle(source.getTitleL10nKey());
-		target.setCommentL10nKey(source.getComment());
+		target.setComment(source.getCommentL10nKey());
+		target.setCommentL10nKey(source.getCommentL10nKey());
 		if (field != null) {
 			target.setField(this.getInputFieldDao().toInputFieldOutVO(field));
 			if (field.isLocalized()) {
 				target.setTitle(L10nUtil.getInputFieldTitle(Locales.USER, source.getTitleL10nKey()));
-				if (!CommonUtil.isEmptyString(source.getComment())) {
-					target.setComment(L10nUtil.getInputFieldComment(Locales.USER, source.getComment()));
+				if (!CommonUtil.isEmptyString(source.getCommentL10nKey())) {
+					target.setComment(L10nUtil.getInputFieldComment(Locales.USER, source.getCommentL10nKey()));
 				}
 			}
 		}

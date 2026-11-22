@@ -105,7 +105,8 @@
 										<h:outputText
 											value="#{inputfieldlabels.input_field_association_probandlistentrytag_list_title_column}" />
 									</f:facet>
-									<h:outputText value="#{probandListEntryTag.vo.titleL10nKey}" />
+									<h:outputText value="#{probandListEntryTag.vo.titleL10nKey}"
+										title="#{probandListEntryTag.vo.title ne probandListEntryTag.vo.titleL10nKey ? probandListEntryTag.vo.title : null}" />
 								</p:column>
 								<p:column sortBy="#{probandListEntryTag.vo.optional}"
 									filterBy="#{probandListEntryTag.vo.optional}"
@@ -133,15 +134,16 @@
 											value="#{!probandListEntryTag.vo.disabled}" />
 									</ui:include>
 								</p:column>
-								<p:column sortBy="#{probandListEntryTag.vo.comment}"
-									filterBy="#{probandListEntryTag.vo.comment}">
+								<p:column sortBy="#{probandListEntryTag.vo.commentL10nKey}"
+									filterBy="#{probandListEntryTag.vo.commentL10nKey}">
 									<f:attribute name="visibleDefault" value="false" />
 									<f:facet name="header">
 										<h:outputText
 											value="#{inputfieldlabels.input_field_association_probandlistentrytag_list_comment_column}" />
 									</f:facet>
 									<h:outputText
-										value="#{applicationScopeBean.clipStringTrailing(probandListEntryTag.vo.comment)}" />
+										value="#{applicationScopeBean.clipStringTrailing(probandListEntryTag.vo.commentL10nKey)}"
+										title="#{probandListEntryTag.vo.comment ne probandListEntryTag.vo.commentL10nKey ? probandListEntryTag.vo.comment : null}" />
 								</p:column>
 								<p:column>
 									<f:facet name="header">
@@ -244,7 +246,8 @@
 										<h:outputText
 											value="#{inputfieldlabels.input_field_association_inquiry_list_category_column}" />
 									</f:facet>
-									<h:outputText value="#{inquiry.vo.category}" />
+									<h:outputText value="#{inquiry.vo.category}"
+										title="#{inquiry.vo.categoryLocalized ne inquiry.vo.category ? inquiry.vo.categoryLocalized : null}" />
 								</p:column>
 
 								<p:column sortBy="#{inquiry.vo.titleL10nKey}"
@@ -253,7 +256,8 @@
 										<h:outputText
 											value="#{inputfieldlabels.input_field_association_inquiry_list_title_column}" />
 									</f:facet>
-									<h:outputText value="#{inquiry.vo.titleL10nKey}" />
+									<h:outputText value="#{inquiry.vo.titleL10nKey}"
+										title="#{inquiry.vo.title ne inquiry.vo.titleL10nKey ? inquiry.vo.title : null}" />
 								</p:column>
 
 								<p:column sortBy="#{inquiry.vo.active}"
@@ -304,15 +308,16 @@
 										<ui:param name="value" value="#{!inquiry.vo.disabled}" />
 									</ui:include>
 								</p:column>
-								<p:column sortBy="#{inquiry.vo.comment}"
-									filterBy="#{inquiry.vo.comment}">
+								<p:column sortBy="#{inquiry.vo.commentL10nKey}"
+									filterBy="#{inquiry.vo.commentL10nKey}">
 									<f:attribute name="visibleDefault" value="false" />
 									<f:facet name="header">
 										<h:outputText
 											value="#{inputfieldlabels.input_field_association_inquiry_list_comment_column}" />
 									</f:facet>
 									<h:outputText
-										value="#{applicationScopeBean.clipStringTrailing(inquiry.vo.comment)}" />
+										value="#{applicationScopeBean.clipStringTrailing(inquiry.vo.commentL10nKey)}"
+										title="#{inquiry.vo.comment ne inquiry.vo.commentL10nKey ? inquiry.vo.comment : null}" />
 								</p:column>
 								<p:column>
 									<f:facet name="header">
@@ -442,7 +447,8 @@
 										<h:outputText
 											value="#{inputfieldlabels.input_field_association_ecrffield_list_section_column}" />
 									</f:facet>
-									<h:outputText value="#{ecrfField.vo.section}" />
+									<h:outputText value="#{ecrfField.vo.section}"
+										title="#{ecrfField.vo.sectionLocalized ne ecrfField.vo.section ? ecrfField.vo.sectionLocalized : null}" />
 								</p:column>
 
 								<p:column sortBy="#{ecrfField.vo.titleL10nKey}"
@@ -451,7 +457,8 @@
 										<h:outputText
 											value="#{inputfieldlabels.input_field_association_ecrffield_list_title_column}" />
 									</f:facet>
-									<h:outputText value="#{ecrfField.vo.titleL10nKey}" />
+									<h:outputText value="#{ecrfField.vo.titleL10nKey}"
+										title="#{ecrfField.vo.title ne ecrfField.vo.titleL10nKey ? ecrfField.vo.title : null}" />
 								</p:column>
 
 								<p:column sortBy="#{ecrfField.vo.series}"
@@ -490,15 +497,16 @@
 										<ui:param name="value" value="#{!ecrfField.vo.disabled}" />
 									</ui:include>
 								</p:column>
-								<p:column sortBy="#{ecrfField.vo.comment}"
-									filterBy="#{ecrfField.vo.comment}">
+								<p:column sortBy="#{ecrfField.vo.commentL10nKey}"
+									filterBy="#{ecrfField.vo.commentL10nKey}">
 									<f:attribute name="visibleDefault" value="false" />
 									<f:facet name="header">
 										<h:outputText
 											value="#{inputfieldlabels.input_field_association_ecrffield_list_comment_column}" />
 									</f:facet>
 									<h:outputText
-										value="#{applicationScopeBean.clipStringTrailing(ecrfField.vo.comment)}" />
+										value="#{applicationScopeBean.clipStringTrailing(ecrfField.vo.commentL10nKey)}"
+										title="#{ecrfField.vo.comment ne ecrfField.vo.commentL10nKey ? ecrfField.vo.comment : null}" />
 								</p:column>
 								<p:column>
 									<f:facet name="header">
