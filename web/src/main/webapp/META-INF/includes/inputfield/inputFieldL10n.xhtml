@@ -108,11 +108,11 @@
 												update=":tabView:inputfieldl10n_form:l10nbundletabs:l10nbundle_#{status.index} :tabView:inputfieldl10n_form:l10nmissing" />
 											<p:commandButton process="@this"
 												value="#{labels.load_button_label}"
-												actionListener="#{inputFieldL10nBean.changeLocale}"
+												actionListener="#{inputFieldL10nBean.reload(editor.bundleName)}"
 												oncomplete="handleUpdateInputFieldTabTitles(xhr, status, args);sizeInputFieldL10nEditors()"
 												icon="ui-icon ui-icon-refresh" ajax="true"
 												disabled="#{!inputFieldL10nBean.created}"
-												update=":tabView:inputfieldl10n_form:l10n_input" />
+												update=":tabView:inputfieldl10n_form:l10nbundletabs:l10nbundle_#{status.index} :tabView:inputfieldl10n_form:l10nmissing" />
 										</p:toolbarGroup>
 										<p:separator />
 										<p:toolbarGroup align="right">

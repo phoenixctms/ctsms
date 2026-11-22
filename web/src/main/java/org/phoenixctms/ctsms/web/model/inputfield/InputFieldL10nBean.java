@@ -261,19 +261,45 @@ public class InputFieldL10nBean extends ManagedBeanBase {
 	private void loadTexts() {
 		Iterator<L10nTextEditor> it = editors.iterator();
 		while (it.hasNext()) {
-			L10nTextEditor editor = it.next();
-			InputFieldL10nTextOutVO out = null;
-			try {
-				out = WebUtil.getServiceLocator().getInputFieldService().getInputFieldL10nText(WebUtil.getAuthentication(), editor.getBundle(), locale);
-			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
-				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
-			} catch (AuthenticationException e) {
-				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
-				WebUtil.publishException(e);
-			}
-			editor.load(out);
+			loadText(it.next());
 		}
 		loadMissingKeys();
+	}
+
+	private void loadText(L10nTextEditor editor) {
+		InputFieldL10nTextOutVO out = null;
+		try {
+			out = WebUtil.getServiceLocator().getInputFieldService().getInputFieldL10nText(WebUtil.getAuthentication(), editor.getBundle(), locale);
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+		} catch (AuthenticationException e) {
+			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+			WebUtil.publishException(e);
+		}
+		editor.load(out);
+	}
+
+	private L10nTextEditor getEditor(String bundleName) {
+		Iterator<L10nTextEditor> it = editors.iterator();
+		while (it.hasNext()) {
+			L10nTextEditor editor = it.next();
+			if (editor.getBundleName().equals(bundleName)) {
+				return editor;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Reloads the text of one editor (its reload button), so unsaved edits in the other editors are kept.
+	 */
+	public void reload(String bundleName) {
+		L10nTextEditor editor = getEditor(bundleName);
+		if (editor != null) {
+			loadText(editor);
+			loadMissingKeys();
+		}
+		appendRequestContextCallbackArgs(editor != null);
 	}
 
 	private void loadMissingKeys() {
@@ -295,15 +321,7 @@ public class InputFieldL10nBean extends ManagedBeanBase {
 	}
 
 	private String saveAction(String bundleName) {
-		L10nTextEditor editor = null;
-		Iterator<L10nTextEditor> it = editors.iterator();
-		while (it.hasNext()) {
-			L10nTextEditor candidate = it.next();
-			if (candidate.getBundleName().equals(bundleName)) {
-				editor = candidate;
-				break;
-			}
-		}
+		L10nTextEditor editor = getEditor(bundleName);
 		if (editor == null) {
 			return ERROR_OUTCOME;
 		}
