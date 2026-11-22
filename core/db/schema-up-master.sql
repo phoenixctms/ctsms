@@ -878,5 +878,16 @@ if get_database_version() < '010901019' then
 
 end if;
 
+if get_database_version() < '010901020' then
+
+  -- the comments of eCRF fields, inquiries and proband list attributes are localization keys if the input field is localized:
+  alter table ECRF_FIELD rename column COMMENT to COMMENT_L10N_KEY;
+  alter table INQUIRY rename column COMMENT to COMMENT_L10N_KEY;
+  alter table PROBAND_LIST_ENTRY_TAG rename column COMMENT to COMMENT_L10N_KEY;
+
+  perform set_database_version('010901020');
+
+end if;
+
 end
 $$;
