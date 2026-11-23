@@ -177,6 +177,9 @@ public class Authenticator {
 			String[] credentials = verifyJwt(auth.getJwt(), audienceOut);
 			auth.setUsername(credentials[0]);
 			auth.setPassword(credentials[1]);
+			// credentials of a jwt never come with a remembered device, also not when this object is authenticated again
+			// (then username and password are already filled in):
+			auth.setDeviceToken(null);
 			return audienceOut[0];
 		}
 		return null;
@@ -387,7 +390,7 @@ public class Authenticator {
 				userContext.setTrustedDevice(true);
 				if (logon) {
 					device.setLastUsed(now);
-					device.setLastUsedHost(auth.getHost());
+					device.setLastUsedHost(TrustedDeviceUtil.clipColumnValue(auth.getHost()));
 					trustedDeviceDao.update(device);
 				}
 			}
