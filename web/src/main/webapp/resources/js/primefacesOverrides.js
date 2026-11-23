@@ -1875,11 +1875,16 @@ PrimeFaces.widget.FileUpload = PrimeFaces.widget.BaseWidget.extend({
         this.cfg.dropZone = this.cfg.dnd && !this.cfg.disabled ? this.jq : null;
 
         //create widget
-        if(this.form.data().fileupload) {
+        //the jquery fileupload plugin is attached to the upload control itself, not to the form: its callbacks
+        //render the upload rows (progress bar, invalid file type/size messages) and the progress bar into
+        //$(this).find(...), which shows them in every upload control of the form otherwise. it also triggers
+        //its fileupload* events on that element, so the start/done/stop handlers below no longer run once for
+        //each upload control of the form.
+        if(this.jq.data('fileupload')) {
             this.destroy();
         }
 
-        this.form.fileupload(this.cfg).bind('fileuploadstart', function(e, data) {
+        this.jq.fileupload(this.cfg).bind('fileuploadstart', function(e, data) {
                                         if(_self.cfg.onstart) {
                                             _self.cfg.onstart.call(_self);
                                         }
@@ -1957,7 +1962,7 @@ PrimeFaces.widget.FileUpload = PrimeFaces.widget.BaseWidget.extend({
     },
     
     destroy: function() {
-        this.form.fileupload('destroy');
+        this.jq.fileupload('destroy');
     },
     
     disable: function() {
