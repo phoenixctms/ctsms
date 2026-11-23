@@ -907,18 +907,17 @@ if get_database_version() < '010901021' then
   update TRIAL set RANDOMIZATION_LOCKED = 'f';
   alter table TRIAL alter RANDOMIZATION_LOCKED set not null;
 
-  -- the proband list status entry written by a randomization is marked; existing ones are found by the
-  -- "randomized and created/updated" journal entry written by the same request (same modified timestamp):
-  alter table PROBAND_LIST_STATUS_ENTRY add column RANDOMIZED BOOLEAN;
-  update PROBAND_LIST_STATUS_ENTRY set RANDOMIZED = 'f';
-  update PROBAND_LIST_STATUS_ENTRY set RANDOMIZED = 't'
-    from PROBAND_LIST_ENTRY
-    where PROBAND_LIST_STATUS_ENTRY.LIST_ENTRY_FK = PROBAND_LIST_ENTRY.ID
-    and exists (select 1 from JOURNAL_ENTRY
-      where JOURNAL_ENTRY.SYSTEM_MESSAGE_CODE in ('proband_list_entry_randomized_and_created', 'proband_list_entry_randomized_and_updated')
+  -- a proband list entry remembers it was randomized; existing ones are found by a status entry written together with
+  -- the proband's "randomized and created/updated" journal entry (same modified timestamp), which is a best effort:
+  alter table PROBAND_LIST_ENTRY add column RANDOMIZED BOOLEAN;
+  update PROBAND_LIST_ENTRY set RANDOMIZED = 'f';
+  update PROBAND_LIST_ENTRY set RANDOMIZED = 't'
+    where exists (select 1 from PROBAND_LIST_STATUS_ENTRY, JOURNAL_ENTRY
+      where PROBAND_LIST_STATUS_ENTRY.LIST_ENTRY_FK = PROBAND_LIST_ENTRY.ID
+      and JOURNAL_ENTRY.SYSTEM_MESSAGE_CODE in ('proband_list_entry_randomized_and_created', 'proband_list_entry_randomized_and_updated')
       and JOURNAL_ENTRY.MODIFIED_TIMESTAMP = PROBAND_LIST_STATUS_ENTRY.MODIFIED_TIMESTAMP
       and JOURNAL_ENTRY.PROBAND_FK = PROBAND_LIST_ENTRY.PROBAND_FK);
-  alter table PROBAND_LIST_STATUS_ENTRY alter RANDOMIZED set not null;
+  alter table PROBAND_LIST_ENTRY alter RANDOMIZED set not null;
 
   perform set_database_version('010901021');
 
@@ -945,23 +944,6 @@ if get_database_version() < '010901022' then
   CREATE INDEX trusted_device_password_fk ON trusted_device (password_fk);
 
   perform set_database_version('010901022');
-
-end if;
-
-if get_database_version() < '010901023' then
-
-  -- the proband list entry itself remembers it was randomized (a status entry can be deleted, or not be written at all);
-  -- entries randomized before 010901021 are found by their journal, which is a best effort:
-  alter table PROBAND_LIST_ENTRY add column RANDOMIZED BOOLEAN;
-  update PROBAND_LIST_ENTRY set RANDOMIZED = 'f';
-  update PROBAND_LIST_ENTRY set RANDOMIZED = 't'
-    where exists (select 1 from PROBAND_LIST_STATUS_ENTRY
-      where PROBAND_LIST_STATUS_ENTRY.LIST_ENTRY_FK = PROBAND_LIST_ENTRY.ID
-      and PROBAND_LIST_STATUS_ENTRY.RANDOMIZED = 't');
-  alter table PROBAND_LIST_ENTRY alter RANDOMIZED set not null;
-  alter table PROBAND_LIST_STATUS_ENTRY drop column RANDOMIZED;
-
-  perform set_database_version('010901023');
 
 end if;
 
