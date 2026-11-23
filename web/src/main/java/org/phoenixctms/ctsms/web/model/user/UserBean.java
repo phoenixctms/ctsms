@@ -33,6 +33,7 @@ import org.phoenixctms.ctsms.web.model.AuthenticationTypeSelectorListener;
 import org.phoenixctms.ctsms.web.model.DefaultTreeNode;
 import org.phoenixctms.ctsms.web.model.IDVO;
 import org.phoenixctms.ctsms.web.model.IDVOTreeNode;
+import org.phoenixctms.ctsms.web.model.SessionScopeBean;
 import org.phoenixctms.ctsms.web.model.shared.UserSettingsBeanBase;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
@@ -842,16 +843,18 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 	}
 
 	private static boolean isLogonChanged(UserOutVO original, UserOutVO user) {
-		// changes the session cannot continue with, so they still require to logon again:
+		// changes of the user's own (stored) values the session cannot continue with, so they still require to logon again:
 		if (!original.getName().equals(user.getName())) {
 			return true;
 		}
 		if (!original.getAuthMethod().getMethod().equals(user.getAuthMethod().getMethod())) {
 			return true;
 		}
-		if (!original.getDepartment().getId().equals(user.getDepartment().getId())) {
-			return true;
-		}
+		return !original.getDepartment().getId().equals(user.getDepartment().getId());
+	}
+
+	private static boolean isLockChanged(UserOutVO original, UserOutVO user) {
+		// the effective (inherited) locks of the active user, which may also come from a parent user:
 		return original.getLocked() != user.getLocked() || original.getLockedUntrusted() != user.getLockedUntrusted();
 	}
 
@@ -862,17 +865,24 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 		logoutRequired = false;
 		settingsVersion = null;
 		try {
-			UserOutVO activeUser = WebUtil.getUser();
+			UserOutVO activeUser = WebUtil.getUser(); // effective values (with inherited ones) of the session
+			UserOutVO original = out; // stored values the update is based on
 			out = WebUtil.getServiceLocator().getUserService().updateUser(WebUtil.getAuthentication(), in, newDepartmentPassword, oldDepartmentPassword,
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_USER_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_USER_INSTANCES),
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_USER_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_USER_PARENT_DEPTH),
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_USER_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_USER_CHILDREN_DEPTH));
-			if (WebUtil.isPropertiesDescendantLoggedIn(out.getId())) {
-				if (activeUser != null && activeUser.getId() == out.getId() && isLogonChanged(activeUser, out)) {
+			if (activeUser != null && WebUtil.isPropertiesDescendantLoggedIn(out.getId())) {
+				SessionScopeBean sessionScopeBean = WebUtil.getSessionScopeBean();
+				if (activeUser.getId() == out.getId() && original != null && original.getId() == out.getId() && isLogonChanged(original, out)) {
+					logoutRequired = true;
+				} else if (!sessionScopeBean.refreshLogon(true)) {
+					// the saved user could not be loaded into the session, so it applies with the next logon:
+					logoutRequired = true;
+				} else if (WebUtil.getUser() == null || isLockChanged(activeUser, WebUtil.getUser())) {
 					logoutRequired = true;
 				} else {
-					// apply the changes (settings inherited from a parent user, too) to the session, instead of a logout:
-					settingsVersion = WebUtil.getSessionScopeBean().refreshLogon(true);
+					// the changes (settings inherited from a parent user, too) apply to the session, instead of a logout:
+					settingsVersion = sessionScopeBean.getSettingsVersion();
 				}
 			}
 			initIn();

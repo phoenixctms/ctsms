@@ -22,13 +22,17 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
  * <p>
  * Each view is stamped with the settings version of the session when it is rendered. A postback of a view with an
  * older settings version is not processed, but redirected to the page again (like an expired view), so it is rendered
- * with the current settings. This happens after the view is restored, before any submitted value is converted, so values
- * entered in the old date format or time zone are never parsed with the new ones.
+ * with the current settings. This is checked after the view is restored, and again after the submitted values were
+ * converted (apply request values, process validations): a change by another request of the session meanwhile is
+ * caught before any value is updated, so values entered in the old date format or time zone are never applied as
+ * parsed with the new ones.
  */
 public class SettingsVersionPhaseListener implements PhaseListener {
 
 	private static final long serialVersionUID = 1L;
 	private static final String SETTINGS_VERSION_VIEW_MAP_KEY = "ctsmsSettingsVersion";
+	// set when the request itself changed the settings, it is not stale then:
+	public static final String SETTINGS_CHANGED_ATTRIBUTE = "ctsmsSettingsChanged";
 
 	private static SessionScopeBean getLoggedInSessionScopeBean(FacesContext context) {
 		Object session = context.getExternalContext().getSession(false);
@@ -43,9 +47,10 @@ public class SettingsVersionPhaseListener implements PhaseListener {
 
 	@Override
 	public void afterPhase(PhaseEvent event) {
-		if (PhaseId.RESTORE_VIEW.equals(event.getPhaseId())) {
+		PhaseId phaseId = event.getPhaseId();
+		if (PhaseId.RESTORE_VIEW.equals(phaseId) || PhaseId.APPLY_REQUEST_VALUES.equals(phaseId) || PhaseId.PROCESS_VALIDATIONS.equals(phaseId)) {
 			FacesContext context = event.getFacesContext();
-			if (context.getResponseComplete() || !context.isPostback()) {
+			if (context.getResponseComplete() || !context.isPostback() || context.getAttributes().containsKey(SETTINGS_CHANGED_ATTRIBUTE)) {
 				return;
 			}
 			UIViewRoot viewRoot = context.getViewRoot();

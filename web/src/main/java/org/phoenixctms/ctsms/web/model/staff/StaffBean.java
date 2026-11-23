@@ -167,6 +167,7 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 	private HashMap<String, Object> tabCountMap;
 	private HashMap<String, String> tabTitleMap;
 	private String deferredDeleteReason;
+	private boolean logoutRequired;
 
 	public StaffBean() {
 		super();
@@ -207,7 +208,9 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 
 	@Override
 	protected void appendRequestContextCallbackArgs(boolean operationSuccess, String outcome) {
-		if (DELETE_OUTCOME.equals(outcome) && WebUtil.isUserIdentityIdLoggedIn(in.getId())) {
+		if (logoutRequired || (DELETE_OUTCOME.equals(outcome) && WebUtil.isUserIdentityIdLoggedIn(in.getId()))) {
+			// (if the active user could not be reloaded after saving its identity, it is shown with the next logon)
+			logoutRequired = false;
 			WebUtil.logout();
 		} else {
 			RequestContext requestContext = RequestContext.getCurrentInstance();
@@ -796,7 +799,7 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_CHILDREN_DEPTH));
 			if (WebUtil.isUserIdentityIdLoggedIn(out.getId())) {
 				// the session shows the new name of the active user's identity, instead of a logout:
-				WebUtil.getSessionScopeBean().refreshLogon(false);
+				logoutRequired = !WebUtil.getSessionScopeBean().refreshLogon(false);
 			}
 			initIn();
 			initSets();

@@ -14,6 +14,7 @@ import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.vo.UserSettingsInVO;
+import org.phoenixctms.ctsms.web.model.SessionScopeBean;
 import org.phoenixctms.ctsms.web.model.shared.UserSettingsBeanBase;
 import org.phoenixctms.ctsms.web.util.JSValues;
 import org.phoenixctms.ctsms.web.util.MessageCodes;
@@ -59,6 +60,7 @@ public class UserSettingsBean extends UserSettingsBeanBase {
 	private UserOutVO out;
 	private String googleCalendarIcsUrl;
 	private Long settingsVersion;
+	private boolean logoutRequired;
 
 	public UserSettingsBean() {
 		super();
@@ -66,6 +68,13 @@ public class UserSettingsBean extends UserSettingsBeanBase {
 
 	@Override
 	protected void appendRequestContextCallbackArgs(boolean operationSuccess, String outcome) {
+		if (logoutRequired) {
+			// the saved settings could not be loaded into the session, so they apply with the next logon:
+			logoutRequired = false;
+			settingsVersion = null;
+			WebUtil.logout();
+			return;
+		}
 		RequestContext requestContext = RequestContext.getCurrentInstance();
 		if (requestContext != null) {
 			requestContext.addCallbackParam(JSValues.AJAX_OPERATION_SUCCESS.toString(), operationSuccess);
@@ -133,7 +142,12 @@ public class UserSettingsBean extends UserSettingsBeanBase {
 			out = WebUtil.getServiceLocator().getUserService().updateUserSettings(WebUtil.getAuthentication(), in);
 			if (WebUtil.isUserIdLoggedIn(out.getId())) {
 				// apply the new settings to the session, instead of a logout:
-				settingsVersion = WebUtil.getSessionScopeBean().refreshLogon(true);
+				SessionScopeBean sessionScopeBean = WebUtil.getSessionScopeBean();
+				if (sessionScopeBean.refreshLogon(true)) {
+					settingsVersion = sessionScopeBean.getSettingsVersion();
+				} else {
+					logoutRequired = true;
+				}
 			}
 			initIn();
 			initSets();
