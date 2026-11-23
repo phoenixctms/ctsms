@@ -37,6 +37,8 @@ import org.phoenixctms.ctsms.domain.Password;
 import org.phoenixctms.ctsms.domain.PasswordDao;
 import org.phoenixctms.ctsms.domain.Staff;
 import org.phoenixctms.ctsms.domain.StaffDao;
+import org.phoenixctms.ctsms.domain.TrustedDevice;
+import org.phoenixctms.ctsms.domain.TrustedDeviceDao;
 import org.phoenixctms.ctsms.domain.User;
 import org.phoenixctms.ctsms.domain.UserDao;
 import org.phoenixctms.ctsms.domain.UserPermissionProfile;
@@ -48,6 +50,7 @@ import org.phoenixctms.ctsms.enumeration.PermissionProfileGroup;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.security.CryptoUtil;
 import org.phoenixctms.ctsms.security.PasswordPolicy;
+import org.phoenixctms.ctsms.security.TrustedDeviceUtil;
 import org.phoenixctms.ctsms.security.otp.OTPAuthenticator;
 import org.phoenixctms.ctsms.util.AuthenticationExceptionCodes;
 import org.phoenixctms.ctsms.util.CheckIDUtil;
@@ -246,11 +249,16 @@ public class UserServiceImpl
 			user.getJournalEntries().clear();
 			checkActivityCount(userId, journalEntryDao);
 			PasswordDao passwordDao = this.getPasswordDao();
+			TrustedDeviceDao trustedDeviceDao = this.getTrustedDeviceDao();
 			Password password = passwordDao.findLastPassword(userId);
 			while (password != null) {
 				Password previousPassword = password.getPreviousPassword();
 				password.setUser(null);
 				ServiceUtil.removeNotifications(password.getNotifications(), notificationDao, notificationRecipientDao);
+				Iterator<TrustedDevice> trustedDevicesIt = new ArrayList<TrustedDevice>(password.getTrustedDevices()).iterator();
+				while (trustedDevicesIt.hasNext()) {
+					removeTrustedDevice(trustedDevicesIt.next(), trustedDeviceDao);
+				}
 				passwordDao.remove(password);
 				password = previousPassword;
 			}
@@ -822,11 +830,12 @@ public class UserServiceImpl
 	}
 
 	@Override
-	protected void handleVerifyOTP(AuthenticationVO auth, Long userId, String otpToken, String plainDepartmentPassword) throws Exception {
+	protected String handleVerifyOTP(AuthenticationVO auth, Long userId, String otpToken, String plainDepartmentPassword) throws Exception {
 		User user = CheckIDUtil.checkUserId(userId, this.getUserDao());
 		if (plainDepartmentPassword == null) {
 			plainDepartmentPassword = getPlainDepartmentPassword();
 		}
+		String deviceToken = null;
 		Password password = this.getPasswordDao().findLastPassword(user.getId());
 		if (password != null && password.isEnable2fa()) {
 			PasswordOutVO passwordVO = this.getPasswordDao().toPasswordOutVO(password);
@@ -844,7 +853,59 @@ public class UserServiceImpl
 				}
 				ServiceUtil.logSystemMessage(user, passwordVO.getInheritedUser(), now, user, SystemMessageCodes.SUCCESSFUL_LOGON, passwordVO, null, otp,
 						this.getJournalEntryDao());
+				if (TrustedDeviceUtil.isEnabled() && !CoreUtil.getUserContext().isTrustedHostIp()) {
+					deviceToken = addTrustedDevice(auth, user, password, passwordVO, now);
+				}
 			}
 		}
+		return deviceToken;
+	}
+
+	/**
+	 * Remembers the browser of a 2FA logon from outside the trusted ip ranges: stores the hash of a new random token and
+	 * returns the token for the device cookie. The device the call came with is replaced (a new 2FA renews it), expired
+	 * devices and those beyond trusted_devices_max (oldest first) are removed, as are the devices of the previous password.
+	 */
+	private String addTrustedDevice(AuthenticationVO auth, User user, Password password, PasswordOutVO passwordVO, Timestamp now) throws Exception {
+		TrustedDeviceDao trustedDeviceDao = this.getTrustedDeviceDao();
+		if (TrustedDeviceUtil.hasToken(auth.getDeviceToken())) {
+			TrustedDevice previousDevice = trustedDeviceDao.searchUniqueDeviceToken(TrustedDeviceUtil.hashToken(auth.getDeviceToken()));
+			if (previousDevice != null && user.equals(previousDevice.getPassword().getUser())) {
+				removeTrustedDevice(previousDevice, trustedDeviceDao);
+			}
+		}
+		if (password.getPreviousPassword() != null) {
+			Iterator<TrustedDevice> it = new ArrayList<TrustedDevice>(password.getPreviousPassword().getTrustedDevices()).iterator();
+			while (it.hasNext()) {
+				removeTrustedDevice(it.next(), trustedDeviceDao);
+			}
+		}
+		String token = TrustedDeviceUtil.createToken();
+		TrustedDevice device = TrustedDevice.Factory.newInstance();
+		device.setDeviceToken(TrustedDeviceUtil.hashToken(token));
+		device.setCreated(now);
+		device.setCreatedHost(TrustedDeviceUtil.clipColumnValue(auth.getHost()));
+		device.setUserAgent(TrustedDeviceUtil.clipColumnValue(auth.getUserAgent()));
+		device.setPassword(password);
+		device = trustedDeviceDao.create(device);
+		password.addTrustedDevices(device);
+		int max = TrustedDeviceUtil.getMax();
+		int count = 0;
+		Iterator<TrustedDevice> it = trustedDeviceDao.findByPassword(password.getId()).iterator();
+		while (it.hasNext()) {
+			TrustedDevice existing = it.next();
+			if (TrustedDeviceUtil.isExpired(existing, now) || ++count > max) {
+				removeTrustedDevice(existing, trustedDeviceDao);
+			}
+		}
+		ServiceUtil.logTrustedDeviceAdded(user, passwordVO, device, now, this.getJournalEntryDao());
+		return token;
+	}
+
+	private static void removeTrustedDevice(TrustedDevice device, TrustedDeviceDao trustedDeviceDao) {
+		Password password = device.getPassword();
+		password.removeTrustedDevices(device);
+		device.setPassword(null);
+		trustedDeviceDao.remove(device);
 	}
 }

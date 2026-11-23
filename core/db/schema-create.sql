@@ -1924,6 +1924,18 @@
         primary key (ID)
     );
 
+    create table TRUSTED_DEVICE (
+        ID BIGINT not null,
+        DEVICE_TOKEN CHARACTER VARYING(1024) not null unique,
+        USER_AGENT CHARACTER VARYING(1024),
+        CREATED TIMESTAMP WITHOUT TIME ZONE not null,
+        CREATED_HOST CHARACTER VARYING(1024),
+        LAST_USED TIMESTAMP WITHOUT TIME ZONE,
+        LAST_USED_HOST CHARACTER VARYING(1024),
+        PASSWORD_FK BIGINT not null,
+        primary key (ID)
+    );
+
     create table USER_PERMISSION_PROFILE (
         ID BIGINT not null,
         PROFILE CHARACTER VARYING(1024) not null,
@@ -3551,6 +3563,11 @@
         add constraint TRIAL_TAG_VALUE_TRIAL_FKC 
         foreign key (TRIAL_FK) 
         references TRIAL;
+
+    alter table TRUSTED_DEVICE 
+        add constraint TRUSTED_DEVICE_PASSWORD_FKC 
+        foreign key (PASSWORD_FK) 
+        references PASSWORD;
 
     alter table USER_PERMISSION_PROFILE 
         add constraint USER_PERMISSION_PROFILE_MODIFIED_USER_FKC 

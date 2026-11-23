@@ -42,6 +42,7 @@ public class UserContext extends VOCacheContext {
 	private boolean isPrivateKeySet;
 	private boolean isPublicKeySet;
 	private Boolean isTrustedHost;
+	private boolean trustedDevice;
 
 	public UserContext() {
 		super();
@@ -160,11 +161,32 @@ public class UserContext extends VOCacheContext {
 		return inheritedUser;
 	}
 
+	/**
+	 * The host is within the trusted ip ranges, or the call comes from a remembered device of the user.
+	 */
 	public boolean isTrustedHost() {
+		return trustedDevice || isTrustedHostIp();
+	}
+
+	/**
+	 * The host is within the trusted ip ranges.
+	 */
+	public boolean isTrustedHostIp() {
 		if (isTrustedHost == null) {
 			isTrustedHost = CoreUtil.checkHostIp(host);
 		}
 		return isTrustedHost;
+	}
+
+	/**
+	 * The call carries the token of a device remembered after a 2FA logon of the user (see TrustedDeviceUtil).
+	 */
+	public boolean isTrustedDevice() {
+		return trustedDevice;
+	}
+
+	public void setTrustedDevice(boolean trustedDevice) {
+		this.trustedDevice = trustedDevice;
 	}
 
 	@Override
@@ -179,6 +201,7 @@ public class UserContext extends VOCacheContext {
 		this.methodName = null;
 		this.jwtAudience = null;
 		isTrustedHost = null;
+		trustedDevice = false;
 		locale = null;
 		isLocaleSet = false;
 		timeZone = null;
@@ -209,6 +232,7 @@ public class UserContext extends VOCacheContext {
 	public void setHost(String host) {
 		this.host = host;
 		isTrustedHost = null;
+		trustedDevice = false;
 	}
 
 	public void setLastPassword(Password lastPassword) {
@@ -281,6 +305,7 @@ public class UserContext extends VOCacheContext {
 		copy.isPublicKeySet = isPublicKeySet;
 		copy.publicKey = publicKey;
 		copy.isTrustedHost = isTrustedHost;
+		copy.trustedDevice = trustedDevice;
 		copy.methodName = methodName;
 		copy.jwtAudience = jwtAudience;
 		return copy;

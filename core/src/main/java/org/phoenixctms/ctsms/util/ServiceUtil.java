@@ -4496,6 +4496,13 @@ public final class ServiceUtil {
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.USER_JOURNAL, null)) });
 	}
 
+	public static JournalEntry logTrustedDeviceAdded(User user, PasswordOutVO passwordVO, TrustedDevice device, Timestamp now, JournalEntryDao journalEntryDao)
+			throws Exception {
+		return journalEntryDao.addSystemMessage(user, now, user, SystemMessageCodes.TRUSTED_DEVICE_ADDED,
+				new Object[] { CommonUtil.userOutVOToString(passwordVO.getInheritedUser()), device.getCreatedHost(), device.getUserAgent() },
+				new Object[] { CoreUtil.getSystemMessageCommentContent(passwordVO, null, !CommonUtil.getUseJournalEncryption(JournalModule.USER_JOURNAL, null)) });
+	}
+
 	public static void notifyParticipationStatusUpdated(CourseParticipationStatusType oldStatus, CourseParticipationStatusEntry courseParticipation, boolean toLecturers, Date now,
 			NotificationDao notificationDao) throws Exception {
 		CourseParticipationStatusType newState = courseParticipation.getStatus();

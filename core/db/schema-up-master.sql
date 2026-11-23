@@ -924,5 +924,29 @@ if get_database_version() < '010901021' then
 
 end if;
 
+if get_database_version() < '010901022' then
+
+  -- browsers remembered after a 2FA logon from outside the trusted ip ranges (the hash of the device cookie token):
+  create table TRUSTED_DEVICE (
+    ID BIGINT not null,
+    DEVICE_TOKEN CHARACTER VARYING(1024) not null unique,
+    USER_AGENT CHARACTER VARYING(1024),
+    CREATED TIMESTAMP WITHOUT TIME ZONE not null,
+    CREATED_HOST CHARACTER VARYING(1024),
+    LAST_USED TIMESTAMP WITHOUT TIME ZONE,
+    LAST_USED_HOST CHARACTER VARYING(1024),
+    PASSWORD_FK BIGINT not null,
+    primary key (ID)
+  );
+  alter table TRUSTED_DEVICE
+    add constraint TRUSTED_DEVICE_PASSWORD_FKC
+    foreign key (PASSWORD_FK)
+    references PASSWORD;
+  CREATE INDEX trusted_device_password_fk ON trusted_device (password_fk);
+
+  perform set_database_version('010901022');
+
+end if;
+
 end
 $$;
