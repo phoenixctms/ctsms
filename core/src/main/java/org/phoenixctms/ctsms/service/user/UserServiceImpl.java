@@ -391,7 +391,12 @@ public class UserServiceImpl
 	protected PasswordOutVO handleGetPassword(AuthenticationVO auth, Long userId) throws Exception {
 		User user = CheckIDUtil.checkUserId(userId, this.getUserDao());
 		PasswordDao passwordDao = this.getPasswordDao();
-		return passwordDao.toPasswordOutVO(passwordDao.findLastPassword(user.getId()));
+		PasswordOutVO result = passwordDao.toPasswordOutVO(passwordDao.findLastPassword(user.getId()));
+		if (result != null && user.equals(CoreUtil.getUser())) {
+			// the own password: whether this call comes from a trusted host or a (still valid) remembered device of the user
+			result.setTrustedHost(CoreUtil.getUserContext().isTrustedHost());
+		}
+		return result;
 	}
 
 	@Override
