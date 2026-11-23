@@ -6,6 +6,10 @@ reviews:
     - "!repository/**"
     # build output
     - "!**/target/**"
+    # translated message bundles and notification templates other than the default (English) and German
+    # ones, so changes touching all languages stay below the review's file limit
+    - "!**/*_{ar,da,es,ff,fi,fr,hi,hr,hu,ig,it,ja,kg,ko,ln,nl,pt,ro,ru,sk,sl,sv,sw,tr,uk,yo,zh}.properties"
+    - "!**/*-{ar,da,es,ff,fi,fr,hi,hr,hu,ig,it,ja,kg,ko,ln,nl,pt,ro,ru,sk,sl,sv,sw,tr,uk,yo,zh}.vsl"
     # minified assets
     - "!**/*.min.js"
     - "!**/*.min.css"
