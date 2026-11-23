@@ -77,6 +77,7 @@ import com.google.gson.JsonParser;
 public class SessionScopeBean implements FilterItemsStore {
 
 	private static final String MENUITEM_CHECKED_STYLECLASS = "ui-icon ui-icon-check";
+	private static final String TRUSTED_DEVICE_REQUEST_ATTRIBUTE = SessionScopeBean.class.getName() + ".trustedDevice";
 
 	private static AnnouncementVO getAnnouncement() {
 		try {
@@ -1180,15 +1181,40 @@ public class SessionScopeBean implements FilterItemsStore {
 	}
 
 	/**
-	 * The host is within the trusted ip ranges, or the session was logged in from a remembered device of the user.
+	 * The host is within the trusted ip ranges, or the session comes from a remembered device of the user. The device is
+	 * checked by the core again (it may have expired since the logon), once per request.
 	 */
 	public boolean isTrustedHost() {
+		if (WebUtil.isTrustedHost()) {
+			return true;
+		}
+		AuthenticationVO deviceAuth = null;
+		Long userId = null;
 		synchronized (this) {
-			if (isLoggedIn() && logon.getTrustedHost()) {
-				return true;
+			if (isLoggedIn() && !CommonUtil.isEmptyString(auth.getDeviceToken())) {
+				deviceAuth = getAuthentication();
+				userId = logon.getInheritedUser().getId();
 			}
 		}
-		return WebUtil.isTrustedHost();
+		if (deviceAuth == null) {
+			return false;
+		}
+		FacesContext context = FacesContext.getCurrentInstance();
+		Boolean trustedDevice = context != null ? (Boolean) context.getAttributes().get(TRUSTED_DEVICE_REQUEST_ATTRIBUTE) : null;
+		if (trustedDevice == null) {
+			trustedDevice = false;
+			try {
+				PasswordOutVO password = WebUtil.getServiceLocator().getUserService().getPassword(deviceAuth, userId);
+				trustedDevice = password != null && password.getTrustedHost();
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+			} catch (AuthenticationException e) {
+				WebUtil.publishException(e);
+			}
+			if (context != null) {
+				context.getAttributes().put(TRUSTED_DEVICE_REQUEST_ATTRIBUTE, trustedDevice);
+			}
+		}
+		return trustedDevice;
 	}
 
 	public boolean isShowStatusBarInfo() {
