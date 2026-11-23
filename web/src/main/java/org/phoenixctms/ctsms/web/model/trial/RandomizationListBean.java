@@ -138,20 +138,22 @@ public class RandomizationListBean extends GenerateRandomListBean {
 	}
 
 	public List<IDVO> completeSelectionSetValue(String query) {
-		Iterator<Long> it = requiredFields.iterator();
-		if (it.hasNext()) {
+		ArrayList<IDVO> result = new ArrayList<IDVO>();
+		Iterator<Long> it = requiredFields.iterator(); // values of any stratification field without a value yet, in any order
+		while (it.hasNext()) {
 			try {
 				Collection selectionSetValueVOs = WebUtil.getServiceLocator().getToolsService().completeInputFieldSelectionSetValue(WebUtil.getAuthentication(), query, it.next(),
 						null);
 				IDVO.transformVoCollection(selectionSetValueVOs);
-				return (List<IDVO>) selectionSetValueVOs;
+				result.addAll((Collection<IDVO>) selectionSetValueVOs);
 			} catch (ClassCastException e) {
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
+				break;
 			}
 		}
-		return new ArrayList<IDVO>();
+		return result;
 	}
 
 	@Override
