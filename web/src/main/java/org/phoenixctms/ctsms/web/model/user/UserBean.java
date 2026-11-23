@@ -42,6 +42,7 @@ import org.phoenixctms.ctsms.web.util.Messages;
 import org.phoenixctms.ctsms.web.util.SettingCodes;
 import org.phoenixctms.ctsms.web.util.Settings;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
+import org.phoenixctms.ctsms.web.util.Urls;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
@@ -224,6 +225,8 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 	private HashMap<String, Object> tabCountMap;
 	private HashMap<String, String> tabTitleMap;
 	private String deferredDeleteReason;
+	private boolean logoutRequired;
+	private Long settingsVersion;
 	private String newDepartmentPassword;
 	private String oldDepartmentPassword;
 	private boolean decryptFromUntrustedHosts;
@@ -286,11 +289,21 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 
 	@Override
 	protected void appendRequestContextCallbackArgs(boolean operationSuccess, String outcome) {
-		if ((UPDATE_OUTCOME.equals(outcome) || DELETE_OUTCOME.equals(outcome)) && WebUtil.isPropertiesDescendantLoggedIn(in.getId())) {
+		if (logoutRequired || (DELETE_OUTCOME.equals(outcome) && WebUtil.isPropertiesDescendantLoggedIn(in.getId()))) {
+			logoutRequired = false;
+			settingsVersion = null;
 			WebUtil.logout();
 		} else {
 			RequestContext requestContext = RequestContext.getCurrentInstance();
 			if (requestContext != null) {
+				if (settingsVersion != null) {
+					// handleUserChanged() reloads this page and tells the other windows to reload:
+					requestContext.addCallbackParam(JSValues.AJAX_SETTINGS_VERSION.toString(), settingsVersion);
+					// the page url may still be the one of a user shown before:
+					requestContext.addCallbackParam(JSValues.AJAX_SETTINGS_RELOAD_URL.toString(),
+							WebUtil.createViewUrl(Urls.USER, false, GetParamNames.USER_ID, in.getId()));
+					settingsVersion = null;
+				}
 				requestContext.addCallbackParam(JSValues.AJAX_WINDOW_TITLE_BASE64.toString(), JsUtil.encodeBase64(getTitle(operationSuccess), false));
 				requestContext.addCallbackParam(JSValues.AJAX_WINDOW_NAME.toString(), getWindowName(operationSuccess));
 				requestContext.addCallbackParam(JSValues.AJAX_OPERATION_SUCCESS.toString(), operationSuccess);
@@ -621,7 +634,7 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 		loadRemoteUserInfo();
 		loadDepartment();
 		if (WebUtil.isPropertiesDescendantLoggedIn(in.getId())) {
-			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.EDITING_ANCESTOR_OF_ACTIVE_USER);
+			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.EDITING_ACTIVE_USER_OR_ANCESTOR);
 		}
 		deferredDeleteReason = (out == null ? null : out.getDeferredDeleteReason());
 		if (out != null && out.isDeferredDelete()) {
@@ -827,15 +840,40 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 		this.remoteUserOk = remoteUserOk;
 	}
 
+	private static boolean isLogonChanged(UserOutVO original, UserOutVO user) {
+		// changes the session cannot continue with, so they still require to logon again:
+		if (!original.getName().equals(user.getName())) {
+			return true;
+		}
+		if (!original.getAuthMethod().getMethod().equals(user.getAuthMethod().getMethod())) {
+			return true;
+		}
+		if (original.getDepartment().getId() != user.getDepartment().getId()) {
+			return true;
+		}
+		return original.getLocked() != user.getLocked() || original.getLockedUntrusted() != user.getLockedUntrusted();
+	}
+
 	@Override
 	public String updateAction() {
 		UserInVO backup = new UserInVO(in);
 		sanitizeInVals();
+		logoutRequired = false;
+		settingsVersion = null;
 		try {
+			UserOutVO activeUser = WebUtil.getUser();
 			out = WebUtil.getServiceLocator().getUserService().updateUser(WebUtil.getAuthentication(), in, newDepartmentPassword, oldDepartmentPassword,
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_USER_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_USER_INSTANCES),
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_USER_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_USER_PARENT_DEPTH),
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_USER_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_USER_CHILDREN_DEPTH));
+			if (WebUtil.isPropertiesDescendantLoggedIn(out.getId())) {
+				if (activeUser != null && activeUser.getId() == out.getId() && isLogonChanged(activeUser, out)) {
+					logoutRequired = true;
+				} else {
+					// apply the changes (settings inherited from a parent user, too) to the session, instead of a logout:
+					settingsVersion = WebUtil.getSessionScopeBean().refreshLogon(true);
+				}
+			}
 			initIn();
 			initSets();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
