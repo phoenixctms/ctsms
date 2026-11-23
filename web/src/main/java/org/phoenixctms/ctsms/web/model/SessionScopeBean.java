@@ -47,6 +47,7 @@ import org.phoenixctms.ctsms.vo.PasswordPolicyVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.TimeZoneVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
+import org.phoenixctms.ctsms.web.SettingsVersionPhaseListener;
 import org.phoenixctms.ctsms.web.component.datatable.ColumnManagementBean;
 import org.phoenixctms.ctsms.web.util.DateUtil;
 import org.phoenixctms.ctsms.web.util.DateUtil.DurationUnitOfTime;
@@ -1658,23 +1659,31 @@ public class SessionScopeBean implements FilterItemsStore {
 	}
 
 	private void setSettingsLogon(PasswordOutVO newLogon) {
-		setLogon(newLogon);
-		// time based, so a version of a previous session in the same browser is never mistaken for a newer one:
-		settingsVersion = Math.max(settingsVersion + 1l, System.currentTimeMillis());
+		if (newLogon != null) {
+			setLogon(newLogon);
+			// time based, so a version of a previous session in the same browser is never mistaken for a newer one:
+			settingsVersion = Math.max(settingsVersion + 1l, System.currentTimeMillis());
+			// this request already works with the new settings, so it must not be reloaded as stale (SettingsVersionPhaseListener):
+			FacesContext context = FacesContext.getCurrentInstance();
+			if (context != null) {
+				context.getAttributes().put(SettingsVersionPhaseListener.SETTINGS_CHANGED_ATTRIBUTE, Boolean.TRUE);
+			}
+		}
 	}
 
 	/**
 	 * Reloads the logged in user (with the inherited settings and the identity) after it was saved, so the changes
-	 * apply without a new login.
+	 * apply without a new login. The settings version is advanced only once the session holds the saved user.
 	 *
 	 * @param settingsChanged
 	 *            true if settings changed which the pages are rendered with (locale, time zone, date format, ...), so
-	 *            the pages of the session are reloaded
-	 * @return the new settings version if settingsChanged, else null; null if not logged in
+	 *            the pages of the session are reloaded (see {@link #getSettingsVersion()})
+	 * @return false if the user could not be reloaded: the session still has the old user then, so the caller should
+	 *         log out, like before
 	 */
-	public synchronized Long refreshLogon(boolean settingsChanged) {
+	public synchronized boolean refreshLogon(boolean settingsChanged) {
 		if (!isLoggedIn()) {
-			return null;
+			return false;
 		}
 		PasswordOutVO newLogon = null;
 		try {
@@ -1682,19 +1691,20 @@ public class SessionScopeBean implements FilterItemsStore {
 		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
-			return null;
+		}
+		if (newLogon == null) {
+			return false;
 		}
 		try {
 			if (settingsChanged) {
 				setSettingsLogon(newLogon);
-				return settingsVersion;
 			} else {
 				setLogon(newLogon);
-				return null;
 			}
 		} finally {
 			initSets();
 		}
+		return true;
 	}
 
 	public synchronized void updateLocale(String locale) {
