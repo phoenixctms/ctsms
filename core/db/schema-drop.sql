@@ -734,6 +734,9 @@
     alter table TRIAL_TAG_VALUE 
         drop constraint TRIAL_TAG_VALUE_TRIAL_FKC;
 
+    alter table TRUSTED_DEVICE 
+        drop constraint TRUSTED_DEVICE_PASSWORD_FKC;
+
     alter table USER_PERMISSION_PROFILE 
         drop constraint USER_PERMISSION_PROFILE_MODIFIED_USER_FKC;
 
@@ -1281,6 +1284,8 @@
     drop table TRIAL_TAG_VALUE cascade;
 
     drop table TRIAL_TYPE cascade;
+
+    drop table TRUSTED_DEVICE cascade;
 
     drop table USER_PERMISSION_PROFILE cascade;
 
