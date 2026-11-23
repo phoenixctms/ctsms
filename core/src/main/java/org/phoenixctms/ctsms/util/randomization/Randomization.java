@@ -276,6 +276,21 @@ public abstract class Randomization {
 		}
 	}
 
+	public final static boolean isGroupRandomization(RandomizationMode mode) {
+		if (mode != null) {
+			switch (mode) {
+				case GROUP_COIN:
+				case GROUP_ADAPTIVE:
+				case GROUP_LIST:
+				case GROUP_STRATIFIED:
+					return true;
+				default:
+					return false;
+			}
+		}
+		return false;
+	}
+
 	protected final static HashMap<Long, ProbandGroup> getProbandGroupIdMap(Collection<ProbandGroup> probandGroups) {
 		HashMap<Long, ProbandGroup> result = new HashMap<Long, ProbandGroup>();
 		Iterator<ProbandGroup> it = probandGroups.iterator();
