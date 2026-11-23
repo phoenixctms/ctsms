@@ -299,7 +299,7 @@
 					locale="#{sessionScopeBean.locale}" var="timelineEvent">
 
 					<pe:javascript event="rangechanged"
-						execute="if(handleTrialTimelineRangeChanged()){setSupressWait();changeTrial();}" />
+						execute="handleTrialTimelineRangeChanged()" />
 					<pe:javascript event="add" execute="handleTrialTimelineAdd()" />
 					<p:ajax event="edit"
 						listener="#{timelineTrialTimelineEventBean.onEdit}"
