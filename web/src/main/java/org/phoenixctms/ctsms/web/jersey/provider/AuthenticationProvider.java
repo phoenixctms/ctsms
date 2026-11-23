@@ -66,7 +66,7 @@ public class AuthenticationProvider
 			if (authHeaderValue.toLowerCase().startsWith(BASIC_AUTHENTICATION_SCHEME.toLowerCase() + " ")) {
 				String[] credentials = JsUtil.decodeBase64(authHeaderValue.substring(BASIC_AUTHENTICATION_SCHEME.length()).trim()).split(":", 2);
 				if (credentials.length == 2) {
-					return new AuthenticationVO(credentials[0], credentials[1], null, null, host, CommonUtil.API_REALM, null, otpRequired, null, null, null);
+					return new AuthenticationVO(credentials[0], credentials[1], null, null, host, CommonUtil.API_REALM, null, otpRequired, null, null, null, false);
 				}
 			} else if (authHeaderValue.toLowerCase().startsWith(BEARER_AUTHENTICATION_SCHEME.toLowerCase() + " ")) {
 				AuthenticationVO result = new AuthenticationVO();

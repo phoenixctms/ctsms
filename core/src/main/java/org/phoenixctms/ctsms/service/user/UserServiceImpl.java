@@ -858,7 +858,7 @@ public class UserServiceImpl
 				}
 				ServiceUtil.logSystemMessage(user, passwordVO.getInheritedUser(), now, user, SystemMessageCodes.SUCCESSFUL_LOGON, passwordVO, null, otp,
 						this.getJournalEntryDao());
-				if (TrustedDeviceUtil.isEnabled() && !CoreUtil.getUserContext().isTrustedHostIp()) {
+				if (auth.isRememberDevice() && TrustedDeviceUtil.isEnabled() && !CoreUtil.getUserContext().isTrustedHostIp()) {
 					deviceToken = addTrustedDevice(auth, user, password, passwordVO, now);
 				}
 			}

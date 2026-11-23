@@ -64,7 +64,7 @@ public class DBTool {
 			throw new IllegalArgumentException("password required");
 		}
 		return new AuthenticationVO(line.getOptionValue(DBToolOptions.USERNAME_OPT), line.getOptionValue(DBToolOptions.PASSWORD_OPT), null, null, "localhost",
-				CommonUtil.EXEC_REALM, null, false, null, null, null);
+				CommonUtil.EXEC_REALM, null, false, null, null, null, false);
 	}
 
 	private static String getUsernameOptionValue(CommandLine line) {
