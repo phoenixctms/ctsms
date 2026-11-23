@@ -2018,7 +2018,19 @@ function markUnsavedInputField(fieldset) {
 	});
 }
 
+// provide the theme's active color (the border color of ui-state-active, as of the bar of unsaved
+// field rows) to CSS as --ctsms-active-color, e.g. for the frame of a selected datatable row:
+function setThemeActiveColor() {
+	var probe = jQuery('<div class="ui-widget-content" style="position:absolute;visibility:hidden;"><span class="ui-state-active"></span></div>').appendTo("body");
+	var color = probe.children().css("border-top-color");
+	probe.remove();
+	if (color) {
+		document.documentElement.style.setProperty("--ctsms-active-color", color);
+	}
+}
+
 jQuery(document).ready(function() {
+	setThemeActiveColor();
 	updateUnsavedInputFields();
 });
 jQuery(document).ajaxComplete(function() {
