@@ -12,7 +12,7 @@ dies ist die Benachrichtigung für folgendes Ereignis:
 #if($notification.trial.status.lockdown)
    • Sperre: keine weiteren Änderungen der Studie und dazugehöriger Datensätze.
 #end
-#if($notification.trial.status.inquiryValueInputEnabled)
+#if(!$notification.trial.status.lockdown && $notification.trial.inquiryValueInputEnabled)
    • Eingabefelder der Erhebungen sind aktiviert.
 #else
    • Eingabefelder der Erhebungen sind deaktiviert.

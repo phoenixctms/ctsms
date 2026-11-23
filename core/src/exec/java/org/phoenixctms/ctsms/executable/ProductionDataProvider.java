@@ -2500,8 +2500,6 @@ public class ProductionDataProvider {
 			String nodeStyleClass,
 			boolean initial,
 			boolean lockdown,
-			boolean inquiryValueInputEnabled,
-			boolean ecrfValueInputEnabled,
 			boolean ignoreTimelineEvents,
 			boolean relevantForCourses,
 			Set<TrialStatusAction> actions) {
@@ -2512,8 +2510,6 @@ public class ProductionDataProvider {
 		trialStatusType.setLockdown(lockdown);
 		trialStatusType.setIgnoreTimelineEvents(ignoreTimelineEvents);
 		trialStatusType.setRelevantForCourses(relevantForCourses);
-		trialStatusType.setInquiryValueInputEnabled(inquiryValueInputEnabled);
-		trialStatusType.setEcrfValueInputEnabled(ecrfValueInputEnabled);
 		trialStatusType.setNameL10nKey(nameL10nKey);
 		trialStatusType.setActions(actions);
 		trialStatusType = trialStatusTypeDao.create(trialStatusType);
@@ -2526,15 +2522,11 @@ public class ProductionDataProvider {
 				true,
 				false,
 				false,
-				false,
-				false,
 				true,
 				getTrialStatusActions());
 		TrialStatusType fixedTrialStatusType = createTrialStatusType("fixed", Color.GREENYELLOW,
 				"ctsms-trialstatus-fixed",
 				true,
-				false,
-				false,
 				false,
 				false,
 				true,
@@ -2543,15 +2535,11 @@ public class ProductionDataProvider {
 				"ctsms-trialstatus-started",
 				false,
 				false,
-				true,
-				true,
 				false,
 				true,
 				getTrialStatusActions(org.phoenixctms.ctsms.enumeration.TrialStatusAction.NOTIFY_TRIAL_STATUS));
 		TrialStatusType closedTrialStatusType = createTrialStatusType("closed", Color.ORCHID,
 				"ctsms-trialstatus-closed",
-				false,
-				false,
 				false,
 				false,
 				false,
@@ -2564,15 +2552,11 @@ public class ProductionDataProvider {
 				true,
 				false,
 				false,
-				false,
-				false,
 				getTrialStatusActions(org.phoenixctms.ctsms.enumeration.TrialStatusAction.NOTIFY_TRIAL_STATUS, org.phoenixctms.ctsms.enumeration.TrialStatusAction.SIGN_TRIAL));
 		TrialStatusType cancelledTrialStatusType = createTrialStatusType("cancelled", Color.LIGHTGREY,
 				"ctsms-trialstatus-cancelled",
 				false,
 				true,
-				false,
-				false,
 				true,
 				false,
 				getTrialStatusActions(org.phoenixctms.ctsms.enumeration.TrialStatusAction.NOTIFY_TRIAL_STATUS));
@@ -2581,23 +2565,17 @@ public class ProductionDataProvider {
 				false,
 				true,
 				false,
-				false,
-				false,
 				true,
 				getTrialStatusActions(org.phoenixctms.ctsms.enumeration.TrialStatusAction.NOTIFY_TRIAL_STATUS));
 		TrialStatusType migrationStartedTrialStatusType = createTrialStatusType("migration_started", Color.DARKSEAGREEN,
 				"ctsms-trialstatus-migrationstarted",
 				true,
 				false,
-				true,
-				true,
 				false,
 				true,
 				getTrialStatusActions(org.phoenixctms.ctsms.enumeration.TrialStatusAction.NOTIFY_TRIAL_STATUS));
 		TrialStatusType migratedTrialStatusType = createTrialStatusType("migrated", Color.DARKGREY,
 				"ctsms-trialstatus-migrated",
-				false,
-				false,
 				false,
 				false,
 				false,

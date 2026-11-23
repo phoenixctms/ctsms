@@ -11,12 +11,12 @@
    • 평가판 상태: $trial_status
 #if($notification.trial.status.lockdown)
    • 잠금: 재판 및 관련 기록을 더 이상 수정하지 않습니다.
-#끝
-#if($notification.trial.status.inquiryValueInputEnabled)
+#end
+#if(!$notification.trial.status.lockdown && $notification.trial.inquiryValueInputEnabled)
    • 조회값 입력이 활성화됩니다.
-#또 다른
+#else
    • 조회값 입력이 비활성화됩니다.
-#끝
+#end
 
 준비 및/또는 적절한 조치를 취하시기 바랍니다.
 

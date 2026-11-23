@@ -476,6 +476,9 @@ public interface SettingCodes {
 	public static final String TRIAL_SIGNUP_PROBAND_LIST_PRESET = "trial_signup_proband_list_preset";
 	public static final String TRIAL_SIGNUP_INQUIRIES_PRESET = "trial_signup_inquiries_preset";
 	public static final String TRIAL_SIGNUP_RANDOMIZE_PRESET = "trial_signup_randomize_preset";
+	public static final String TRIAL_ECRF_VALUE_INPUT_ENABLED_PRESET = "trial_ecrf_value_input_enabled_preset";
+	public static final String TRIAL_INQUIRY_VALUE_INPUT_ENABLED_PRESET = "trial_inquiry_value_input_enabled_preset";
+	public static final String TRIAL_RANDOMIZATION_LOCKED_PRESET = "trial_randomization_locked_preset";
 	public static final String TRIAL_BLOCKING_PERIOD_PRESET = "trial_blocking_period_preset";
 	public static final String TRIAL_BLOCKING_PERIOD_DAYS_PRESET = "trial_blocking_period_days_preset";
 	public static final String GENERATE_RANDOMIZATION_LIST_N_PRESET = "generate_randomization_list_n_preset";

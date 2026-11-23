@@ -11,12 +11,12 @@ bu, aşağıdaki etkinlik için bir bildirimdir:
    • Deneme durumu: $trial_status
 #if($notification.trial.status.lockdown)
    • Kilitleme: deneyde ve ilgili kayıtlarda daha fazla değişiklik yapılmaz.
-#son
-#if($notification.trial.status.inquiryValueInputEnabled)
+#end
+#if(!$notification.trial.status.lockdown && $notification.trial.inquiryValueInputEnabled)
    • Sorgu değeri girişleri etkinleştirilir.
-#başka
+#else
    • Sorgu değeri girişleri devre dışı bırakılır.
-#son
+#end
 
 Lütfen gerekli önlemleri alın ve/veya hazırlayın.
 

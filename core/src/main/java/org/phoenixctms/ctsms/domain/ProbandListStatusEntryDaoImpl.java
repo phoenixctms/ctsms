@@ -173,6 +173,18 @@ public class ProbandListStatusEntryDaoImpl
 	}
 
 	@Override
+	protected long handleGetRandomizedCount(Long probandListEntryId, Boolean randomized) throws Exception {
+		org.hibernate.Criteria statusEntryCriteria = createStatusEntryCriteria(null);
+		if (probandListEntryId != null) {
+			statusEntryCriteria.add(Restrictions.eq("listEntry.id", probandListEntryId.longValue()));
+		}
+		if (randomized != null) {
+			statusEntryCriteria.add(Restrictions.eq("randomized", randomized.booleanValue()));
+		}
+		return (Long) statusEntryCriteria.setProjection(Projections.rowCount()).uniqueResult();
+	}
+
+	@Override
 	protected ProbandListStatusEntry handleFindLastStatus(
 			Long probandListEntryId) throws Exception {
 		org.hibernate.Criteria statusEntryCriteria = createStatusEntryCriteria(null);

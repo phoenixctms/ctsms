@@ -184,7 +184,7 @@ public class InventoryServiceImpl
 				};
 				l10nKey = reasonNoCalendarL10nKey;
 			}
-			return ServiceUtil.addProbandListStatusEntry(probandListEntry, null, l10nKey, args, now, probandListStatusTypeId, now, user,
+			return ServiceUtil.addProbandListStatusEntry(probandListEntry, null, l10nKey, args, now, probandListStatusTypeId, false, now, user,
 					this.getProbandDao(),
 					this.getProbandListEntryDao(),
 					this.getProbandListStatusEntryDao(),

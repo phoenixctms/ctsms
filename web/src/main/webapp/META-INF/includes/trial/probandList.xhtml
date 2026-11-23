@@ -744,9 +744,9 @@
 													id="updateProbandListEntryRandomized"
 													actionListener="#{probandListEntryBean.updateRandomized}"
 													oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);probandList.unselectAllRows();probandList.filter()"
-													disabled="#{!probandListEntryBean.editable}"
+													disabled="#{!probandListEntryBean.updateRandomizedEnabled}"
 													update=":tabView:probandlist_form:probandListTabView"
-													value="#{labels.update_randomize_button_label}"
+													value="#{probandListEntryBean.randomized ? labels.update_rerandomize_button_label : labels.update_randomize_button_label}"
 													icon="ctsms-menubar-icon ui-icon-gear">
 												</p:menuitem>
 											</p:splitButton>

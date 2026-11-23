@@ -1191,6 +1191,9 @@ public class DemoDataProvider {
 		newTrial.setSignupRandomize(false);
 		newTrial.setSignupDescription("");
 		newTrial.setExclusiveProbands(false);
+		newTrial.setEcrfValueInputEnabled(true);
+		newTrial.setInquiryValueInputEnabled(true);
+		newTrial.setRandomizationLocked(false);
 		newTrial.setProbandAliasFormat("");
 		newTrial.setDutySelfAllocationLocked(false);
 		newTrial.setTypeId(trialTypeDao.searchUniqueNameL10nKey("na").getId());
@@ -1428,6 +1431,9 @@ public class DemoDataProvider {
 		newTrial.setSignupRandomize(false);
 		newTrial.setSignupDescription("");
 		newTrial.setExclusiveProbands(false);
+		newTrial.setEcrfValueInputEnabled(true);
+		newTrial.setInquiryValueInputEnabled(true);
+		newTrial.setRandomizationLocked(false);
 		newTrial.setProbandAliasFormat("");
 		newTrial.setDutySelfAllocationLocked(false);
 		newTrial.setTypeId(trialTypeDao.searchUniqueNameL10nKey("na").getId());
@@ -2020,6 +2026,9 @@ public class DemoDataProvider {
 		newTrial.setSignupRandomize(false);
 		newTrial.setSignupDescription("");
 		newTrial.setExclusiveProbands(false);
+		newTrial.setEcrfValueInputEnabled(true);
+		newTrial.setInquiryValueInputEnabled(true);
+		newTrial.setRandomizationLocked(false);
 		newTrial.setProbandAliasFormat("");
 		newTrial.setDutySelfAllocationLocked(false);
 		TrialTypeVO trialType = null;

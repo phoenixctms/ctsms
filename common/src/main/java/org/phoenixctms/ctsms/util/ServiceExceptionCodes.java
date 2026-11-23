@@ -139,7 +139,7 @@ public interface ServiceExceptionCodes {
 	public final static String ECRF_FIELD_STATUS_ENTRY_NOT_LAST_ENTRY = "ecrf_field_status_entry_not_last_entry";
 	public final static String ECRF_FIELD_VALUES_FOR_DIFFERENT_ECRFS = "ecrf_field_values_for_different_ecrfs";
 	public final static String ECRF_FIELD_VALUE_INPUT_DISABLED_FOR_ECRF = "ecrf_field_value_input_disabled_for_ecrf";
-	public final static String ECRF_FIELD_VALUE_INPUT_DISABLED_FOR_TRIAL = "ecrf_field_value_input_disabled_for_trial";
+	public final static String ECRF_FIELD_VALUE_INPUT_NOT_ENABLED_FOR_TRIAL = "ecrf_field_value_input_not_enabled_for_trial";
 	public final static String ECRF_FIELD_VALUES_FOR_DIFFERENT_PROBAND_LIST_ENTRIES = "ecrf_field_values_for_different_proband_list_entries";
 	public final static String ECRF_FIELD_VALUE_INPUT_DISABLED_FOR_PROBAND_LIST_STATUS = "ecrf_field_value_input_disabled_for_proband_list_status";
 	public final static String ECRF_FIELD_VALUE_INPUT_LOCKED_FOR_ECRF_STATUS = "ecrf_field_value_input_locked_for_ecrf_status";
@@ -594,6 +594,7 @@ public interface ServiceExceptionCodes {
 	public final static String NO_RANDOMIZE_PROBAND_LIST_ENTRY_TAG = "no_randomize_proband_list_entry_tag";
 	public final static String RANDOMIZE_INPUT_FIELD_SELECTION_SET_VALUE_NOT_EMPTY = "randomize_input_field_selection_set_value_not_empty";
 	public final static String RANDOMIZE_INPUT_FIELD_TEXT_VALUE_NOT_EMPTY = "randomize_input_field_text_value_not_empty";
+	public final static String PROBAND_LIST_ENTRY_ALREADY_RANDOMIZED = "proband_list_entry_already_randomized";
 	public final static String RANDOMIZATION_PROBAND_LIST_ENTRY_TAG_VALUE_REQUIRED = "randomization_proband_list_entry_tag_value_required";
 	public final static String ECRF_WRONG_PROBAND_GROUP = "ecrf_wrong_proband_group";
 	public final static String ECRF_PROBAND_GROUP_ID_IS_NULL = "ecrf_proband_group_id_is_null";
@@ -808,6 +809,7 @@ public interface ServiceExceptionCodes {
 	public static final String TRIAL_SIGNUP_DESCRIPTION_EMPTY = "trial_signup_description_empty";
 	public static final String TRIAL_SIGNUP_PROBAND_LIST_DISABLED = "trial_signup_proband_list_disabled";
 	public static final String TRIAL_SIGNUP_RANDOMIZATION_NOT_DEFINED = "trial_signup_randomization_not_defined";
+	public static final String TRIAL_RANDOMIZATION_LOCKED_RANDOMIZATION_NOT_DEFINED = "trial_randomization_locked_randomization_not_defined";
 	public static final String TRIAL_RANDOMIZATION_LIST_REQUIRED = "trial_randomization_list_required";
 	public static final String PROBAND_LIST_ENTRY_PROBAND_BLOCKED = "proband_list_entry_proband_blocked";
 	public static final String ZERO_LDAP_USERS = "zero_ldap_users";

@@ -864,6 +864,9 @@ public class EcrfDataEntryTest extends SeleniumTestBase implements ProcessorJobO
 		newTrial.setSignupRandomize(false);
 		newTrial.setSignupDescription(null);
 		newTrial.setExclusiveProbands(false);
+		newTrial.setEcrfValueInputEnabled(true);
+		newTrial.setInquiryValueInputEnabled(true);
+		newTrial.setRandomizationLocked(false);
 		newTrial.setProbandAliasFormat("subject-{9,number,000}-" + getTestId());
 		newTrial.setDutySelfAllocationLocked(false);
 		return getTestDataProvider().createTrial(newTrial, "migration_started", "na", "na", "na");

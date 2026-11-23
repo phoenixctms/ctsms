@@ -9,14 +9,14 @@ Nke a bụ ọkwa maka mmemme a:
    • Ngalaba ikpe:  $trial_department
 
    • Ọkwa nnwale: $trial_status
-#ọ bụrụ ($notification.trial.status.lockdown)
+#if($notification.trial.status.lockdown)
    • Mkpọchi: enweghị mgbanwe ọzọ nke nnwale na ndekọ emetụtara.
-#njedebe
-#ọ bụrụ ($notification.trial.status.inquiryValueInputEnabled)
+#end
+#if(!$notification.trial.status.lockdown && $notification.trial.inquiryValueInputEnabled)
    • Agbanyere ntinye uru ajụjụ.
-#ọzọ
+#else
    • Agbanyụrụ ntinye uru ajụjụ.
-#njedebe
+#end
 
 Biko kwadebe na/ma ọ bụ mee ihe kwesịrị ekwesị.
 

@@ -260,7 +260,7 @@ public final class ServiceUtil {
 	}
 
 	public static ProbandListStatusEntryOutVO addProbandListStatusEntry(ProbandListEntry listEntry, Boolean signup, String reasonL10nKey, Object[] args, Timestamp realTimestamp,
-			Long probandListStatusTypeId, ECRF ecrf, ECRFStatusType newState,
+			Long probandListStatusTypeId, boolean randomized, ECRF ecrf, ECRFStatusType newState,
 			Timestamp now, User user,
 			ProbandDao probandDao, ProbandListEntryDao probandListEntryDao, ProbandListStatusEntryDao probandListStatusEntryDao, ProbandListStatusTypeDao probandListStatusTypeDao,
 			TrialDao trialDao, VisitScheduleItemDao visitScheduleItemDao, MassMailDao massMailDao, MassMailRecipientDao massMailRecipientDao,
@@ -285,7 +285,7 @@ public final class ServiceUtil {
 					newProbandListStatusEntry.setRealTimestamp(DateCalc.getMillisCleared(realTimestamp));
 					newProbandListStatusEntry.setReason(reason);
 					newProbandListStatusEntry.setStatusId(statusType.getId());
-					return addProbandListStatusEntry(newProbandListStatusEntry, signup, now, user, false, false, probandDao, probandListEntryDao, probandListStatusEntryDao,
+					return addProbandListStatusEntry(newProbandListStatusEntry, signup, now, user, false, false, randomized, probandDao, probandListEntryDao, probandListStatusEntryDao,
 							probandListStatusTypeDao,
 							trialDao, visitScheduleItemDao, massMailDao, massMailRecipientDao, journalEntryDao);
 				}
@@ -297,24 +297,26 @@ public final class ServiceUtil {
 	}
 
 	public static ProbandListStatusEntryOutVO addProbandListStatusEntry(ProbandListEntry listEntry, Boolean signup, String reasonL10nKey, Object[] args, Timestamp realTimestamp,
-			Long probandListStatusTypeId,
+			Long probandListStatusTypeId, boolean randomized,
 			Timestamp now, User user,
 			ProbandDao probandDao, ProbandListEntryDao probandListEntryDao, ProbandListStatusEntryDao probandListStatusEntryDao, ProbandListStatusTypeDao probandListStatusTypeDao,
 			TrialDao trialDao, VisitScheduleItemDao visitScheduleItemDao, MassMailDao massMailDao, MassMailRecipientDao massMailRecipientDao,
 			JournalEntryDao journalEntryDao) throws Exception {
-		return addProbandListStatusEntry(listEntry, signup, reasonL10nKey, args, now, probandListStatusTypeId, null, null, now, user, probandDao, probandListEntryDao,
+		return addProbandListStatusEntry(listEntry, signup, reasonL10nKey, args, now, probandListStatusTypeId, randomized, null, null, now, user, probandDao, probandListEntryDao,
 				probandListStatusEntryDao, probandListStatusTypeDao, trialDao, visitScheduleItemDao, massMailDao, massMailRecipientDao, journalEntryDao);
 	}
 
 	public static ProbandListStatusEntryOutVO addProbandListStatusEntry(ProbandListStatusEntryInVO newProbandListStatusEntry, Boolean signup, Timestamp now, User user,
 			boolean logTrial,
 			boolean logProband,
+			boolean randomized,
 			ProbandDao probandDao, ProbandListEntryDao probandListEntryDao, ProbandListStatusEntryDao probandListStatusEntryDao, ProbandListStatusTypeDao probandListStatusTypeDao,
 			TrialDao trialDao, VisitScheduleItemDao visitScheduleItemDao, MassMailDao massMailDao, MassMailRecipientDao massMailRecipientDao,
 			JournalEntryDao journalEntryDao) throws Exception {
 		checkAddProbandListStatusEntryInput(newProbandListStatusEntry, signup, trialDao, probandDao, probandListEntryDao, probandListStatusEntryDao, probandListStatusTypeDao,
 				visitScheduleItemDao);
 		ProbandListStatusEntry probandListStatusEntry = probandListStatusEntryDao.probandListStatusEntryInVOToEntity(newProbandListStatusEntry);
+		probandListStatusEntry.setRandomized(randomized);
 		CoreUtil.modifyVersion(probandListStatusEntry, now, user);
 		probandListStatusEntry = probandListStatusEntryDao.create(probandListStatusEntry);
 		ProbandListEntry listEntry = probandListStatusEntry.getListEntry();

@@ -2422,7 +2422,7 @@ public class ProbandServiceImpl
 		// inquiry.inquiryValues and can race on InputFieldValue deletes.
 		Trial trial = CheckIDUtil.checkTrialId(trialId, this.getTrialDao(), LockMode.PESSIMISTIC_WRITE);
 		ServiceUtil.checkTrialLocked(trial);
-		if (!trial.getStatus().isInquiryValueInputEnabled()) {
+		if (!trial.isInquiryValueInputEnabled()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INQUIRY_VALUE_INPUT_DISABLED_FOR_TRIAL,
 					CommonUtil.trialOutVOToString(this.getTrialDao().toTrialOutVO(trial)));
 		}
@@ -3067,7 +3067,7 @@ public class ProbandServiceImpl
 				if (trial == null) {
 					trial = inquiry.getTrial();
 					ServiceUtil.checkTrialLocked(trial);
-					if (!trial.getStatus().isInquiryValueInputEnabled()) {
+					if (!trial.isInquiryValueInputEnabled()) {
 						throw L10nUtil.initServiceException(ServiceExceptionCodes.INQUIRY_VALUE_INPUT_DISABLED_FOR_TRIAL,
 								CommonUtil.trialOutVOToString(this.getTrialDao().toTrialOutVO(trial)));
 					}

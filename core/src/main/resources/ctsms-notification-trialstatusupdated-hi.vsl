@@ -11,12 +11,12 @@
    • परीक्षण स्थिति: $trial_status
 #if($notification.trial.status.lockdown)
    • लॉकडाउन: परीक्षण और संबंधित रिकॉर्ड में कोई और संशोधन नहीं।
-#अंत
-#if($notification.trial.status.inquiryValueInputEnabled)
+#end
+#if(!$notification.trial.status.lockdown && $notification.trial.inquiryValueInputEnabled)
    • पूछताछ मूल्य इनपुट सक्षम हैं।
-#अन्य
+#else
    • पूछताछ मूल्य इनपुट अक्षम हैं।
-#अंत
+#end
 
 कृपया तैयारी करें और/या उचित कार्रवाई करें।
 

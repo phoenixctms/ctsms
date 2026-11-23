@@ -236,6 +236,15 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 		return (trial != null ? trial.getRandomization() != null : false);
 	}
 
+	// the loaded entry has a status entry written by a randomization:
+	public boolean isRandomized() {
+		return out != null && out.getRandomized();
+	}
+
+	public boolean isUpdateRandomizedEnabled() {
+		return isEditable() && !(isRandomized() && out.getTrial().getRandomizationLocked());
+	}
+
 	@Override
 	public boolean isRemovable() {
 		return isCreated() && !isTrialLocked() && !isProbandLocked();

@@ -11,12 +11,12 @@ to je obvestilo za naslednji dogodek:
    • Stanje preizkusa: $trial_status
 #if($notification.trial.status.lockdown)
    • Zaklepanje: brez nadaljnjega spreminjanja preskušanja in povezanih zapisov.
-#konec
-#if($notification.trial.status.inquiryValueInputEnabled)
+#end
+#if(!$notification.trial.status.lockdown && $notification.trial.inquiryValueInputEnabled)
    • Omogočeni so vnosi vrednosti povpraševanja.
-#drugo
+#else
    • Vnosi vrednosti poizvedbe so onemogočeni.
-#konec
+#end
 
 Pripravite se in/ali ustrezno ukrepajte.
 

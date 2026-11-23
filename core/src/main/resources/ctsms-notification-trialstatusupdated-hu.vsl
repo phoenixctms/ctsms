@@ -11,12 +11,12 @@ ez egy értesítés a következő eseményről:
    • Próbaállapot: $trial_status
 #if($notification.trial.status.lockdown)
    • Lezárás: nincs további módosítás a próbaverzión és a kapcsolódó rekordokon.
-#vége
-#if($notification.trial.status.inquiryValueInputEnabled)
+#end
+#if(!$notification.trial.status.lockdown && $notification.trial.inquiryValueInputEnabled)
    • A lekérdezési érték bevitele engedélyezett.
-#más
+#else
    • A lekérdezési érték bevitele le van tiltva.
-#vége
+#end
 
 Kérjük, készüljön fel és/vagy tegye meg a megfelelő intézkedéseket.
 

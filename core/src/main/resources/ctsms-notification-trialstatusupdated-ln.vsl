@@ -9,14 +9,14 @@ oyo ezali liyebisi mpo na likambo oyo elandi:
    • Departema ya bosambisi:  $trial_department
 
    • Ezalela ya bomekoli: $trial_status
-#soki($notification.ezalela ya bosambisami.bokangami)
+#if($notification.trial.status.lockdown)
    • Bokangami : mbongwana mosusu te ya bosambisami mpe mikanda oyo esangisi yango.
-#nsuka
-#soki($notification.ezalela.ya.ezalela.motuyaMotuyaBokotisiEfungolami)
+#end
+#if(!$notification.trial.status.lockdown && $notification.trial.inquiryValueInputEnabled)
    • Ba entrées ya valeur ya enquête e activé.
-#mosusu
+#else
    • Ba entrées ya valeur ya enquête ekangami.
-#nsuka
+#end
 
 Tosɛngi yo omibongisa mpe/to osala makambo oyo ebongi.
 

@@ -160,7 +160,7 @@ public class TrialDaoImpl
 						Restrictions.and(
 								Subqueries.exists(inquiriesSubQuery),
 								Restrictions.and(
-										Restrictions.eq("trialStatus.inquiryValueInputEnabled", true),
+										Restrictions.eq("inquiryValueInputEnabled", true),
 										Restrictions.eq("trialStatus.lockdown", false)))));
 		trialCriteria.addOrder(Order.asc("name"));
 		return trialCriteria.list();
@@ -213,7 +213,7 @@ public class TrialDaoImpl
 										: Restrictions.and(
 												Restrictions.eq("signupInquiries", true),
 												Subqueries.exists(subQuery)),
-								Restrictions.eq("trialStatus.inquiryValueInputEnabled", true))));
+								Restrictions.eq("inquiryValueInputEnabled", true))));
 		CriteriaUtil.applyPSFVO(criteriaMap, psf);
 		return trialCriteria.list();
 	}

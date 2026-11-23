@@ -4276,7 +4276,7 @@ public final class WebUtil {
 				} catch (AuthenticationException e) {
 					publishException(e);
 				}
-				if (inquiryValueCount > 0 || (!trialVO.getStatus().getLockdown() && trialVO.getStatus().getInquiryValueInputEnabled())) {
+				if (inquiryValueCount > 0 || (!trialVO.getStatus().getLockdown() && trialVO.getInquiryValueInputEnabled())) {
 					Long inquiryCount = 0L;
 					try {
 						inquiryCount = getServiceLocator().getProbandService().getInquiryCount(getAuthentication(), trialVO.getId(), active, activeSignup);

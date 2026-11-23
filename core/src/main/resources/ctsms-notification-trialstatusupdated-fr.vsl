@@ -11,12 +11,12 @@ il s'agit d'une notification pour l'événement suivant :
    • Statut de l'essai : $trial_status
 #if($notification.trial.status.lockdown)
    • Confinement : aucune autre modification de l'essai et des dossiers associés.
-#fin
-#if($notification.trial.status.inquiryValueInputEnabled)
+#end
+#if(!$notification.trial.status.lockdown && $notification.trial.inquiryValueInputEnabled)
    • Les entrées de valeur de requête sont activées.
-#autre
+#else
    • Les entrées de valeur d'interrogation sont désactivées.
-#fin
+#end
 
 Veuillez préparer et/ou prendre les mesures appropriées.
 

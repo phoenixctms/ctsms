@@ -9,14 +9,14 @@
    • 试用部：  $trial_department
 
    • 试用状态： $trial_status
-#if($notification.审判.状态.锁定)
+#if($notification.trial.status.lockdown)
    • 锁定：不再修改试验和相关记录。
-＃结尾
-#if($notification.Trial.status.inquiryValueInputEnabled)
+#end
+#if(!$notification.trial.status.lockdown && $notification.trial.inquiryValueInputEnabled)
    • 启用查询值输入。
-＃别的
+#else
    • 查询值输入被禁用。
-＃结尾
+#end
 
 请准备和/或采取适当的行动。
 

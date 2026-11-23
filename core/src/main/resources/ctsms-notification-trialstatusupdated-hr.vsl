@@ -11,12 +11,12 @@ ovo je obavijest za sljedeći događaj:
    • Status probe: $trial_status
 #if($notification.trial.status.lockdown)
    • Zaključavanje: nema daljnjih izmjena ispitivanja i povezanih zapisa.
-#kraj
-#if($notification.trial.status.inquiryValueInputEnabled)
+#end
+#if(!$notification.trial.status.lockdown && $notification.trial.inquiryValueInputEnabled)
    • Omogućeni su unosi vrijednosti upita.
-#drugo
+#else
    • Unosi vrijednosti upita su onemogućeni.
-#kraj
+#end
 
 Molimo pripremite se i/ili poduzmite odgovarajuće radnje.
 

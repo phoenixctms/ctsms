@@ -9,14 +9,14 @@ eyi jẹ iwifunni fun iṣẹlẹ atẹle:
    • Ẹka iwadii:  $trial_department
 
    • Ipo idanwo: $trial_status
-#ti o ba jẹ ($notification.trial.status.lockdown)
+#if($notification.trial.status.lockdown)
    • Titiipa: ko si iyipada siwaju sii ti idanwo ati awọn igbasilẹ ti o somọ.
-#opin
-#ti o ba jẹ ($notification.trial.status.inquiryValueInputEnabled)
+#end
+#if(!$notification.trial.status.lockdown && $notification.trial.inquiryValueInputEnabled)
    • Awọn igbewọle iye ibeere ti ṣiṣẹ.
-#miiran
+#else
    • Awọn igbewọle iye ibeere jẹ alaabo.
-#opin
+#end
 
 Jọwọ mura ati/tabi ṣe awọn iṣe ti o yẹ.
 
