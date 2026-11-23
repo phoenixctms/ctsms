@@ -1861,6 +1861,25 @@ jQuery(document).ajaxComplete(function() {
 	disableBrowserAutofill();
 });
 
+// A collapsed toggleable fieldset hides the messages and invalid inputs inside it, so a failed save
+// would show nothing; expand it through its widget (which also keeps the collapsed state holder in sync):
+function expandFieldsetsWithErrors() {
+	jQuery("fieldset.ui-fieldset").each(function() {
+		var widget = jQuery(this).data("widget");
+		if (widget && widget.cfg && widget.cfg.toggleable && widget.cfg.collapsed && widget.content
+				&& widget.content.find(".ui-messages-error, .ui-message-error, .ui-state-error").length > 0) {
+			widget.toggle();
+		}
+	});
+}
+
+jQuery(function() {
+	setTimeout(expandFieldsetsWithErrors, 0); // after the widgets of the page were created
+});
+jQuery(document).ajaxComplete(function() {
+	expandFieldsetsWithErrors();
+});
+
 var JOB_LIST_POLL_INTERVAL_MS = 3000;
 var JOB_LIST_POLL_MAX_COUNT = 600; // 30 min at the 3 s poll interval
 var jobListPollCount = 0;
