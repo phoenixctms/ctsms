@@ -130,7 +130,5 @@ public class ProbandListEntryGraph extends GraphCycle1Helper<ProbandListEntry, P
 			target.setModifiedUser(userDao.toUserOutVO(modifiedUser));
 		}
 		target.setInquirySignupUrl(getInquirySignupUrl(source));
-		// a status entry of the list entry was written by a randomization:
-		target.setRandomized(source.getId() != null && probandListStatusEntryDao.getRandomizedCount(source.getId(), true) > 0l);
 	}
 }

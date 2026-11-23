@@ -236,13 +236,29 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 		return (trial != null ? trial.getRandomization() != null : false);
 	}
 
-	// the loaded entry has a status entry written by a randomization:
+	// the loaded entry was randomized:
 	public boolean isRandomized() {
 		return out != null && out.getRandomized();
 	}
 
 	public boolean isUpdateRandomizedEnabled() {
 		return isEditable() && !(isRandomized() && out.getTrial().getRandomizationLocked());
+	}
+
+	// the group of the loaded entry is the result of a locked group randomization:
+	public boolean isGroupRandomizationLocked() {
+		if (isRandomized() && out.getTrial().isRandomizationLocked() && out.getTrial().getRandomization() != null) {
+			switch (out.getTrial().getRandomization().getMode()) {
+				case GROUP_COIN:
+				case GROUP_ADAPTIVE:
+				case GROUP_LIST:
+				case GROUP_STRATIFIED:
+					return true;
+				default:
+					return false;
+			}
+		}
+		return false;
 	}
 
 	@Override

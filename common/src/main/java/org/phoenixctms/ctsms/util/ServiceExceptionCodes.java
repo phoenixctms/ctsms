@@ -595,6 +595,8 @@ public interface ServiceExceptionCodes {
 	public final static String RANDOMIZE_INPUT_FIELD_SELECTION_SET_VALUE_NOT_EMPTY = "randomize_input_field_selection_set_value_not_empty";
 	public final static String RANDOMIZE_INPUT_FIELD_TEXT_VALUE_NOT_EMPTY = "randomize_input_field_text_value_not_empty";
 	public final static String PROBAND_LIST_ENTRY_ALREADY_RANDOMIZED = "proband_list_entry_already_randomized";
+	public final static String PROBAND_LIST_ENTRY_RANDOMIZED_GROUP_CHANGED = "proband_list_entry_randomized_group_changed";
+	public final static String PROBAND_LIST_ENTRY_RANDOMIZED_TAG_VALUE_CHANGED = "proband_list_entry_randomized_tag_value_changed";
 	public final static String RANDOMIZATION_PROBAND_LIST_ENTRY_TAG_VALUE_REQUIRED = "randomization_proband_list_entry_tag_value_required";
 	public final static String ECRF_WRONG_PROBAND_GROUP = "ecrf_wrong_proband_group";
 	public final static String ECRF_PROBAND_GROUP_ID_IS_NULL = "ecrf_proband_group_id_is_null";

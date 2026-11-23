@@ -107,6 +107,7 @@
 			<h:panelGroup>
 				<p:autoComplete id="probandListEntryProbandGroup" required="false"
 					value="#{probandListBean.group}"
+					disabled="#{probandListBean.groupRandomizationLocked}"
 					label="#{triallabels.proband_list_proband_group}"
 					styleClass="ctsms-control"
 					minQueryLength="#{autoCompleteMinQueryLengthProbandGroup}"

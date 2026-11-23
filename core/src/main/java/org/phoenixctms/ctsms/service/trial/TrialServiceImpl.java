@@ -502,12 +502,16 @@ public class TrialServiceImpl
 			}
 			listEntry.setPosition(position);
 		}
+		// the list entry remembers it was randomized, whether a status entry is written or not:
+		listEntry.setRandomized(randomized);
 		CoreUtil.modifyVersion(listEntry, now, user);
 		listEntry = probandListEntryDao.create(listEntry);
 		if (randomization != null) {
 			if (!RandomizationType.GROUP.equals(randomization.getType())) { // when created, not possible..
 				applyListEntryTagRandomization(trial, listEntry, null, randomization, now, user);
 				randomized = true;
+				listEntry.setRandomized(true);
+				probandListEntryDao.update(listEntry);
 			}
 		}
 		ProbandListStatusEntryOutVO probandListStatusEntryVO = null;
@@ -545,7 +549,6 @@ public class TrialServiceImpl
 				}
 				statusEntry.setRealTimestamp(CommonUtil.dateToTimestamp(DateCalc.getMillisCleared(now)));
 				statusEntry.setStatus(statusType);
-				statusEntry.setRandomized(randomized);
 				CoreUtil.modifyVersion(statusEntry, now, user);
 				ProbandListStatusEntryDao probandListStatusEntryDao = this.getProbandListStatusEntryDao();
 				statusEntry = probandListStatusEntryDao.create(statusEntry);
@@ -602,7 +605,7 @@ public class TrialServiceImpl
 	}
 
 	private ProbandListStatusEntryOutVO addProbandListEntryUpdatedProbandListStatusEntry(String reasonL10nKey, String reasonNoGroupL10nKey, ProbandListEntry probandListEntry,
-			Long probandListStatusTypeId, boolean randomized, Timestamp now, User user) throws Exception {
+			Long probandListStatusTypeId, Timestamp now, User user) throws Exception {
 		Object[] args;
 		String l10nKey;
 		ProbandGroup group = probandListEntry.getGroup();
@@ -621,7 +624,7 @@ public class TrialServiceImpl
 			};
 			l10nKey = reasonNoGroupL10nKey;
 		}
-		return ServiceUtil.addProbandListStatusEntry(probandListEntry, null, l10nKey, args, now, probandListStatusTypeId, randomized, now, user,
+		return ServiceUtil.addProbandListStatusEntry(probandListEntry, null, l10nKey, args, now, probandListStatusTypeId, now, user,
 				this.getProbandDao(),
 				this.getProbandListEntryDao(),
 				this.getProbandListStatusEntryDao(),
@@ -2894,7 +2897,7 @@ public class TrialServiceImpl
 						ServiceUtil.addProbandListStatusEntry(listEntry, null, ProbandListStatusReasonCodes.ECRF_STATUS, new Object[] {
 								this.getECRFDao().toECRFOutVO(ecrf).getUniqueName(),
 								L10nUtil.getEcrfStatusTypeName(Locales.PROBAND_LIST_STATUS_ENTRY_REASON, newState.getNameL10nKey())
-						}, now, probandListStatusTypeId, false, ecrf, newState, now, user,
+						}, now, probandListStatusTypeId, ecrf, newState, now, user,
 								this.getProbandDao(),
 								this.getProbandListEntryDao(),
 								this.getProbandListStatusEntryDao(),
@@ -3387,7 +3390,7 @@ public class TrialServiceImpl
 			AuthenticationVO auth, boolean signup, ProbandListStatusEntryInVO newProbandListStatusEntry) throws Exception {
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		return ServiceUtil.addProbandListStatusEntry(newProbandListStatusEntry, signup, now, user, true, true, false,
+		return ServiceUtil.addProbandListStatusEntry(newProbandListStatusEntry, signup, now, user, true, true,
 				this.getProbandDao(), this.getProbandListEntryDao(), this.getProbandListStatusEntryDao(), this.getProbandListStatusTypeDao(),
 				this.getTrialDao(), this.getVisitScheduleItemDao(), this.getMassMailDao(), this.getMassMailRecipientDao(),
 				this.getJournalEntryDao());
@@ -4477,7 +4480,7 @@ public class TrialServiceImpl
 			ProbandListEntry probandListEntry = probandListEntriesIt.next();
 			ProbandListEntryOutVO original = probandListEntryDao.toProbandListEntryOutVO(probandListEntry);
 			try {
-				addProbandListEntryUpdatedProbandListStatusEntry(ProbandListStatusReasonCodes.GROUP_DELETED, null, probandListEntry, probandListStatusTypeId, false, now, user);
+				addProbandListEntryUpdatedProbandListStatusEntry(ProbandListStatusReasonCodes.GROUP_DELETED, null, probandListEntry, probandListStatusTypeId, now, user);
 			} catch (ServiceException e) {
 				// already end state
 			}
@@ -9060,6 +9063,13 @@ public class TrialServiceImpl
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_TAG_VALUES_FOR_DIFFERENT_LIST_ENTRIES);
 				}
 				try {
+					// a locked tag randomization result cannot be overwritten by saving the tag values:
+					if (listEntryTag.isRandomize() && probandListEntryTagValueIn.getId() != null && trial.isRandomizationLocked() && listEntry.isRandomized()
+							&& !Randomization.isGroupRandomization(trial.getRandomization())
+							&& !ServiceUtil.probandListEntryTagValueEquals(probandListEntryTagValueIn,
+									CheckIDUtil.checkProbandListEntryTagValueId(probandListEntryTagValueIn.getId(), this.getProbandListEntryTagValueDao()).getValue(), false)) {
+						throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_RANDOMIZED_TAG_VALUE_CHANGED);
+					}
 					addUpdateProbandListEntryTagValue(probandListEntryTagValueIn, listEntry, listEntryTag, now, user, force,
 							Settings.getBoolean(SettingCodes.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_TRIAL, Bundle.SETTINGS, DefaultSettings.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_TRIAL),
 							Settings.getBoolean(SettingCodes.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_PROBAND, Bundle.SETTINGS, DefaultSettings.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_PROBAND),
@@ -9308,7 +9318,8 @@ public class TrialServiceImpl
 		boolean probandChanged = !modifiedProbandListEntry.getProbandId().equals(originalProbandListEntry.getProband().getId());
 		boolean groupChanged;
 		Trial trial = CheckIDUtil.checkTrialId(modifiedProbandListEntry.getTrialId(), this.getTrialDao());
-		if (randomize && trial.isRandomizationLocked() && this.getProbandListStatusEntryDao().getRandomizedCount(originalProbandListEntry.getId(), true) > 0l) {
+		boolean randomizationLocked = trial.isRandomizationLocked() && originalProbandListEntry.isRandomized();
+		if (randomize && randomizationLocked) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_ALREADY_RANDOMIZED);
 		}
 		Randomization randomization = getRandomization(trial, randomize, modifiedProbandListEntry.getGroupId());
@@ -9329,12 +9340,17 @@ public class TrialServiceImpl
 		} else {
 			groupChanged = false;
 		}
+		// a locked group randomization result cannot be overwritten by a plain save:
+		if (groupChanged && randomizationLocked && Randomization.isGroupRandomization(trial.getRandomization())) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_RANDOMIZED_GROUP_CHANGED);
+		}
 		ProbandListEntryOutVO original = probandListEntryDao.toProbandListEntryOutVO(originalProbandListEntry);
 		probandListEntryDao.evict(originalProbandListEntry);
 		ProbandListEntry probandListEntry = probandListEntryDao.probandListEntryInVOToEntity(modifiedProbandListEntry);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
 		if (randomization != null) {
+			probandListEntry.setRandomized(true);
 			if (RandomizationType.GROUP.equals(randomization.getType())) {
 				if (probandListEntry.getGroup() != null) {
 					probandListEntry.getGroup().removeProbandListEntries(probandListEntry);
@@ -9355,7 +9371,7 @@ public class TrialServiceImpl
 			addProbandListEntryUpdatedProbandListStatusEntry(
 					randomized ? ProbandListStatusReasonCodes.LIST_ENTRY_RANDOMIZED_AND_UPDATED : ProbandListStatusReasonCodes.LIST_ENTRY_UPDATED,
 					randomized ? ProbandListStatusReasonCodes.LIST_ENTRY_RANDOMIZED_AND_UPDATED_NO_GROUP : ProbandListStatusReasonCodes.LIST_ENTRY_UPDATED_NO_GROUP,
-					probandListEntry, probandListStatusTypeId, randomized, now, user);
+					probandListEntry, probandListStatusTypeId, now, user);
 		}
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		ProbandListEntryOutVO result = probandListEntryDao.toProbandListEntryOutVO(probandListEntry);
@@ -10200,7 +10216,7 @@ public class TrialServiceImpl
 		probandListEntryDao.update(listEntry);
 		try {
 			ServiceUtil.addProbandListStatusEntry(listEntry, null, ProbandListStatusReasonCodes.LIST_ENTRY_BEACON_RESET,
-					new Object[] {}, now, null, false, now, CoreUtil.getUser(),
+					new Object[] {}, now, null, now, CoreUtil.getUser(),
 					this.getProbandDao(),
 					this.getProbandListEntryDao(),
 					this.getProbandListStatusEntryDao(),
