@@ -207,7 +207,7 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 
 	@Override
 	protected void appendRequestContextCallbackArgs(boolean operationSuccess, String outcome) {
-		if ((UPDATE_OUTCOME.equals(outcome) || DELETE_OUTCOME.equals(outcome)) && WebUtil.isUserIdentityIdLoggedIn(in.getId())) {
+		if (DELETE_OUTCOME.equals(outcome) && WebUtil.isUserIdentityIdLoggedIn(in.getId())) {
 			WebUtil.logout();
 		} else {
 			RequestContext requestContext = RequestContext.getCurrentInstance();
@@ -611,9 +611,6 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 		//	} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		//	} catch (AuthenticationException e) {
 		//	}
-		if (WebUtil.isUserIdentityIdLoggedIn(in.getId())) {
-			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.EDITING_ACTIVE_USER_IDENTITY);
-		}
 		deferredDeleteReason = (out == null ? null : out.getDeferredDeleteReason());
 		if (out != null && out.isDeferredDelete()) {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.MARKED_FOR_DELETION, deferredDeleteReason);
@@ -797,6 +794,10 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_INSTANCES),
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_PARENT_DEPTH),
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_CHILDREN_DEPTH));
+			if (WebUtil.isUserIdentityIdLoggedIn(out.getId())) {
+				// the session shows the new name of the active user's identity, instead of a logout:
+				WebUtil.getSessionScopeBean().refreshLogon(false);
+			}
 			initIn();
 			initSets();
 			addOperationSuccessMessage("inputMessages", MessageCodes.UPDATE_OPERATION_SUCCESSFUL);

@@ -133,7 +133,7 @@ public class UserSettingsBean extends UserSettingsBeanBase {
 			out = WebUtil.getServiceLocator().getUserService().updateUserSettings(WebUtil.getAuthentication(), in);
 			if (WebUtil.isUserIdLoggedIn(out.getId())) {
 				// apply the new settings to the session, instead of a logout:
-				settingsVersion = WebUtil.getSessionScopeBean().refreshLogon();
+				settingsVersion = WebUtil.getSessionScopeBean().refreshLogon(true);
 			}
 			initIn();
 			initSets();

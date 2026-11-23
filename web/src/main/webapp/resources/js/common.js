@@ -223,13 +223,24 @@ function setHiddenField(targetField,value) {
 
 function handleReload(xhr, status, args) {
 
-	if (_testFlag(args, AJAX_OPERATION_SUCCESS)) {
-		if (_testPropertyExists(args, AJAX_SETTINGS_VERSION)) {
-			_broadcastSettingsVersion(args[AJAX_SETTINGS_VERSION]);
-		}
+	if (!handleSettingsChanged(args) && _testFlag(args, AJAX_OPERATION_SUCCESS)) {
 		location.reload(true);
 	}
 
+}
+
+function handleSettingsChanged(args) {
+	// the settings of the active user changed: reload this window, and tell the other windows to reload:
+	if (_testFlag(args, AJAX_OPERATION_SUCCESS) && _testPropertyExists(args, AJAX_SETTINGS_VERSION)) {
+		_broadcastSettingsVersion(args[AJAX_SETTINGS_VERSION]);
+		if (_testPropertyExists(args, AJAX_SETTINGS_RELOAD_URL) && args[AJAX_SETTINGS_RELOAD_URL]) {
+			location.href = args[AJAX_SETTINGS_RELOAD_URL];
+		} else {
+			location.reload(true);
+		}
+		return true;
+	}
+	return false;
 }
 
 function _getSettingsVersionStorageKey() {

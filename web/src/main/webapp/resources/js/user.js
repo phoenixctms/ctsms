@@ -54,6 +54,10 @@ function handleUserTabChange(index) {
 
 function handleUserChanged(xhr, status, args) {
 
+	if (handleSettingsChanged(args)) {
+		return;
+	}
+
 	if (_testFlag(args, AJAX_OPERATION_SUCCESS) && _testPropertyExists(args, AJAX_WINDOW_TITLE_BASE64)
 	        && _testPropertyExists(args, AJAX_ROOT_ENTITY_CREATED) && _testPropertyExists(args, AJAX_WINDOW_NAME)) {
 		window.name = args[AJAX_WINDOW_NAME];

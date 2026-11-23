@@ -487,8 +487,8 @@ public interface MessageCodes {
 	public static final String LOCAL_USER_CAN_LOGIN = "local_user_can_login";
 	public static final String LDAP_USER_CAN_LOGIN = "ldap_user_can_login";
 	public static final String EDITING_ACTIVE_USER = "editing_active_user";
-	public static final String EDITING_ACTIVE_USER_IDENTITY = "editing_active_user_identity";
 	public static final String EDITING_ANCESTOR_OF_ACTIVE_USER = "editing_ancestor_of_active_user";
+	public static final String EDITING_ACTIVE_USER_OR_ANCESTOR = "editing_active_user_or_ancestor";
 	public static final String RECENT_ENTITIES_MENU_LABEL = "recent_entities_menu_label";
 	public static final String INVENTORY_HOME_MENU_ITEM_LABEL = "inventory_home_menu_item_label";
 	public static final String STAFF_HOME_MENU_ITEM_LABEL = "staff_home_menu_item_label";

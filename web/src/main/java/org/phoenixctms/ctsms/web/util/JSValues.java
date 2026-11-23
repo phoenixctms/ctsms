@@ -365,6 +365,7 @@ public enum JSValues {
 	AJAX_REST_API_JWT("restApiJwt"),
 	SETTINGS_VERSION(""),
 	AJAX_SETTINGS_VERSION("settingsVersion"),
+	AJAX_SETTINGS_RELOAD_URL("settingsReloadUrl"),
 	// multiple window navigation:
 	INVENTORY_ENTITY_WINDOW_NAME("inventory"),
 	STAFF_ENTITY_WINDOW_NAME("staff"),

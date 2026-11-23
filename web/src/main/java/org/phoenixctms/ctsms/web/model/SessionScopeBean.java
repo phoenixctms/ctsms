@@ -1647,7 +1647,7 @@ public class SessionScopeBean implements FilterItemsStore {
 		return settingsVersion;
 	}
 
-	private void setSettingsLogon(PasswordOutVO newLogon) {
+	private void setLogon(PasswordOutVO newLogon) {
 		if (newLogon != null) {
 			if (logon != null && CommonUtil.isEmptyString(newLogon.getJwt())) {
 				newLogon.setJwt(logon.getJwt());
@@ -1655,31 +1655,46 @@ public class SessionScopeBean implements FilterItemsStore {
 			logon = newLogon;
 			ApplicationScopeBean.registerActiveUser(currentSessionId(), logon.getInheritedUser());
 		}
+	}
+
+	private void setSettingsLogon(PasswordOutVO newLogon) {
+		setLogon(newLogon);
 		// time based, so a version of a previous session in the same browser is never mistaken for a newer one:
 		settingsVersion = Math.max(settingsVersion + 1l, System.currentTimeMillis());
 	}
 
 	/**
-	 * Reloads the logged in user (with the inherited settings) after its settings were saved, so they apply without a
-	 * new login.
+	 * Reloads the logged in user (with the inherited settings and the identity) after it was saved, so the changes
+	 * apply without a new login.
 	 *
-	 * @return the new settings version, or null if not logged in
+	 * @param settingsChanged
+	 *            true if settings changed which the pages are rendered with (locale, time zone, date format, ...), so
+	 *            the pages of the session are reloaded
+	 * @return the new settings version if settingsChanged, else null; null if not logged in
 	 */
-	public synchronized Long refreshLogon() {
+	public synchronized Long refreshLogon(boolean settingsChanged) {
 		if (!isLoggedIn()) {
 			return null;
 		}
+		PasswordOutVO newLogon = null;
 		try {
-			setSettingsLogon(WebUtil.getServiceLocator().getUserService().getPassword(auth, logon.getInheritedUser().getId()));
+			newLogon = WebUtil.getServiceLocator().getUserService().getPassword(auth, logon.getInheritedUser().getId());
 		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
-			setSettingsLogon(null);
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 			return null;
+		}
+		try {
+			if (settingsChanged) {
+				setSettingsLogon(newLogon);
+				return settingsVersion;
+			} else {
+				setLogon(newLogon);
+				return null;
+			}
 		} finally {
 			initSets();
 		}
-		return settingsVersion;
 	}
 
 	public synchronized void updateLocale(String locale) {
