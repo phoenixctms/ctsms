@@ -1444,6 +1444,7 @@ public class SessionScopeBean implements FilterItemsStore {
 			boolean trustedHost2faRequired = Settings.getBoolean(SettingCodes.TRUSTED_HOST_2FA_REQUIRED, Bundle.SETTINGS, DefaultSettings.TRUSTED_HOST_2FA_REQUIRED);
 			auth.setOtpRequired(trustedHost2faRequired || !WebUtil.isTrustedHost());
 			// a device remembered after a 2FA logon needs no 2FA and may decrypt, unless 2FA is required everywhere:
+			auth.setRememberDevice(!trustedHost2faRequired);
 			auth.setDeviceToken(trustedHost2faRequired ? null : WebUtil.getTrustedDeviceToken(auth.getUsername()));
 			auth.setUserAgent(WebUtil.getUserAgent());
 			logon = WebUtil.getServiceLocator().getToolsService().logon(auth, true, WebUtil.getRestApiJwtValidityPeriodSecs());
