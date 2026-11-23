@@ -57,7 +57,7 @@
 										update="changesettings_input" />
 
 									<p:commandButton process="@this"
-										value="#{labels.restore_table_column_defaults_button_label} #{userlabels.and_logout_label}"
+										value="#{labels.restore_table_column_defaults_button_label}"
 										actionListener="#{userSettingsBean.clearTableColumns}"
 										icon="ui-icon ui-icon-arrowreturnthick-1-w" ajax="true"
 										disabled="#{!userSettingsBean.editable or userSettingsBean.tableColumnCount == 0}"
@@ -67,11 +67,12 @@
 
 
 									<p:commandButton process="@this,changesettings_input"
-										id="update" value="#{labels.update_button_label} #{userlabels.and_logout_label}"
+										id="update" value="#{labels.update_button_label}"
 										actionListener="#{userSettingsBean.update}"
 										icon="ui-icon ui-icon-disk" ajax="true"
 										disabled="#{!userSettingsBean.editable}"
-										update="changesettings_input" />
+										update="changesettings_input"
+										oncomplete="handleReload(xhr, status, args)" />
 
 								</p:toolbarGroup>
 								<p:separator />

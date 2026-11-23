@@ -41,6 +41,11 @@ public class ColumnManagementBean {
 		return getVisibleMap(dataTableClientId, null);
 	}
 
+	public void clear() {
+		// after the saved table columns were reset, the tables load them again:
+		cache.clear();
+	}
+
 	private void clearVisibleMap(String dataTableClientId) {
 		getVisibleMap(dataTableClientId, new ArrayList<DataTableColumnVO>());
 	}

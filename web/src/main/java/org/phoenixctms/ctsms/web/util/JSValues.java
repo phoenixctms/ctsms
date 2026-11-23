@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.phoenixctms.ctsms.js.JsUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.web.model.SessionScopeBean;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.primefaces.extensions.converter.LocaleConverter;
 
@@ -362,6 +363,8 @@ public enum JSValues {
 	REST_API_JWT(""),
 	JWT_REFRESH_SKEW_SECS(""),
 	AJAX_REST_API_JWT("restApiJwt"),
+	SETTINGS_VERSION(""),
+	AJAX_SETTINGS_VERSION("settingsVersion"),
 	// multiple window navigation:
 	INVENTORY_ENTITY_WINDOW_NAME("inventory"),
 	STAFF_ENTITY_WINDOW_NAME("staff"),
@@ -437,6 +440,7 @@ public enum JSValues {
 			case LIST_INITIAL_POSITION:
 			case FIELD_CALCULATION_DECODE_BASE64:
 			case JWT_REFRESH_SKEW_SECS:
+			case SETTINGS_VERSION:
 				return this.toString();
 			default:
 				return WebUtil.quoteJSString(this.toString(), true);
@@ -587,6 +591,12 @@ public enum JSValues {
 				return Integer.toString(Settings.getInt(SettingCodes.FIELD_CALCULATION_DEBUG_LEVEL, Bundle.SETTINGS, DefaultSettings.FIELD_CALCULATION_DEBUG_LEVEL));
 			case JWT_REFRESH_SKEW_SECS:
 				return Integer.toString(Settings.getInt(SettingCodes.JWT_REFRESH_SKEW_SECS, Bundle.SETTINGS, DefaultSettings.JWT_REFRESH_SKEW_SECS));
+			case SETTINGS_VERSION:
+				SessionScopeBean sessionScopeBean = WebUtil.getSessionScopeBean();
+				if (sessionScopeBean != null && sessionScopeBean.isLoggedIn()) {
+					return Long.toString(sessionScopeBean.getSettingsVersion());
+				}
+				return WebUtil.JS_NULL;
 			case PF_LOCALE_STRING:
 				try {
 					return LocaleConverter.getLocaleString(WebUtil.getLocale(), '_');

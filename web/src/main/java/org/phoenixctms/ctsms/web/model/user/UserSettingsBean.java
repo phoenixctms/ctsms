@@ -58,6 +58,7 @@ public class UserSettingsBean extends UserSettingsBeanBase {
 	private UserSettingsInVO in;
 	private UserOutVO out;
 	private String googleCalendarIcsUrl;
+	private Long settingsVersion;
 
 	public UserSettingsBean() {
 		super();
@@ -65,14 +66,25 @@ public class UserSettingsBean extends UserSettingsBeanBase {
 
 	@Override
 	protected void appendRequestContextCallbackArgs(boolean operationSuccess, String outcome) {
-		if ((UPDATE_OUTCOME.equals(outcome)) && WebUtil.isUserIdLoggedIn(in.getId())) {
-			WebUtil.logout();
-		} else {
-			RequestContext requestContext = RequestContext.getCurrentInstance();
-			if (requestContext != null) {
-				requestContext.addCallbackParam(JSValues.AJAX_OPERATION_SUCCESS.toString(), operationSuccess);
+		RequestContext requestContext = RequestContext.getCurrentInstance();
+		if (requestContext != null) {
+			requestContext.addCallbackParam(JSValues.AJAX_OPERATION_SUCCESS.toString(), operationSuccess);
+			if (settingsVersion != null) {
+				// handleReload() reloads this page and tells the other windows to reload:
+				requestContext.addCallbackParam(JSValues.AJAX_SETTINGS_VERSION.toString(), settingsVersion);
 			}
 		}
+		settingsVersion = null;
+	}
+
+	@Override
+	public String clearTableColumnsAction() {
+		String outcome = super.clearTableColumnsAction();
+		if (UPDATE_OUTCOME.equals(outcome) && WebUtil.isUserIdLoggedIn(getUserId())) {
+			// tables already loaded keep their columns until the page is reloaded:
+			WebUtil.getSessionScopeBean().getColumnManager().clear();
+		}
+		return outcome;
 	}
 
 	public UserSettingsInVO getIn() {
@@ -119,6 +131,10 @@ public class UserSettingsBean extends UserSettingsBeanBase {
 		sanitizeInVals();
 		try {
 			out = WebUtil.getServiceLocator().getUserService().updateUserSettings(WebUtil.getAuthentication(), in);
+			if (WebUtil.isUserIdLoggedIn(out.getId())) {
+				// apply the new settings to the session, instead of a logout:
+				settingsVersion = WebUtil.getSessionScopeBean().refreshLogon();
+			}
 			initIn();
 			initSets();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
