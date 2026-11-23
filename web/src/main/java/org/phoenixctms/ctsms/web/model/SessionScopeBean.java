@@ -1179,6 +1179,18 @@ public class SessionScopeBean implements FilterItemsStore {
 		return logon != null && !otpRequired;
 	}
 
+	/**
+	 * The host is within the trusted ip ranges, or the session was logged in from a remembered device of the user.
+	 */
+	public boolean isTrustedHost() {
+		synchronized (this) {
+			if (isLoggedIn() && logon.getTrustedHost()) {
+				return true;
+			}
+		}
+		return WebUtil.isTrustedHost();
+	}
+
 	public boolean isShowStatusBarInfo() {
 		// not synchronized, so the announcement service call does not block the other requests of the session.
 		// works on a snapshot of the logon instead
@@ -1403,13 +1415,16 @@ public class SessionScopeBean implements FilterItemsStore {
 		auth.setHost(WebUtil.getRemoteHost());
 		String outcome;
 		try {
-			auth.setOtpRequired(Settings.getBoolean(SettingCodes.TRUSTED_HOST_2FA_REQUIRED, Bundle.SETTINGS, DefaultSettings.TRUSTED_HOST_2FA_REQUIRED)
-					|| !WebUtil.isTrustedHost());
+			boolean trustedHost2faRequired = Settings.getBoolean(SettingCodes.TRUSTED_HOST_2FA_REQUIRED, Bundle.SETTINGS, DefaultSettings.TRUSTED_HOST_2FA_REQUIRED);
+			auth.setOtpRequired(trustedHost2faRequired || !WebUtil.isTrustedHost());
+			// a device remembered after a 2FA logon needs no 2FA and may decrypt, unless 2FA is required everywhere:
+			auth.setDeviceToken(trustedHost2faRequired ? null : WebUtil.getTrustedDeviceToken(auth.getUsername()));
+			auth.setUserAgent(WebUtil.getUserAgent());
 			logon = WebUtil.getServiceLocator().getToolsService().logon(auth, true, WebUtil.getRestApiJwtValidityPeriodSecs());
 			auth.setLocalPassword(null);
 			auth.setJwt(logon.getJwt());
 			clearAuthenticationFailedMessage();
-			if (logon.getEnable2fa() && auth.isOtpRequired()) {
+			if (logon.getOtpRequired()) {
 				otpRequired = true;
 				outcome = getLoginOutcome(false);
 			} else {
@@ -1472,7 +1487,13 @@ public class SessionScopeBean implements FilterItemsStore {
 		String outcome;
 		if (logon != null && otpRequired) {
 			try {
-				WebUtil.getServiceLocator().getUserService().verifyOTP(auth, logon.getInheritedUser().getId(), logon.getOtpToken(), null);
+				String deviceToken = WebUtil.getServiceLocator().getUserService().verifyOTP(auth, logon.getInheritedUser().getId(), logon.getOtpToken(), null);
+				if (deviceToken != null) {
+					// remember this browser; the rest of the session already counts as a trusted device:
+					WebUtil.setTrustedDeviceToken(auth.getUsername(), deviceToken);
+					auth.setDeviceToken(deviceToken);
+					logon.setTrustedHost(true);
+				}
 				ApplicationScopeBean.registerActiveUser(currentSessionId(), logon.getInheritedUser());
 				WebUtil.setSessionTimeout();
 				renewRestApiJwtIfRequired();
