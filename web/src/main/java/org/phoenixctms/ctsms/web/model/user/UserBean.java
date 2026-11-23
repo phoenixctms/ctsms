@@ -848,7 +848,7 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 		if (!original.getAuthMethod().getMethod().equals(user.getAuthMethod().getMethod())) {
 			return true;
 		}
-		if (original.getDepartment().getId() != user.getDepartment().getId()) {
+		if (!original.getDepartment().getId().equals(user.getDepartment().getId())) {
 			return true;
 		}
 		return original.getLocked() != user.getLocked() || original.getLockedUntrusted() != user.getLockedUntrusted();
