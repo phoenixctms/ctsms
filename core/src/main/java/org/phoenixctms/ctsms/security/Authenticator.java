@@ -14,6 +14,8 @@ import org.phoenixctms.ctsms.UserContext;
 import org.phoenixctms.ctsms.domain.JournalEntryDao;
 import org.phoenixctms.ctsms.domain.Password;
 import org.phoenixctms.ctsms.domain.PasswordDao;
+import org.phoenixctms.ctsms.domain.TrustedDevice;
+import org.phoenixctms.ctsms.domain.TrustedDeviceDao;
 import org.phoenixctms.ctsms.domain.User;
 import org.phoenixctms.ctsms.domain.UserDao;
 import org.phoenixctms.ctsms.enumeration.AuthenticationType;
@@ -55,6 +57,7 @@ public class Authenticator {
 	}
 
 	private PasswordDao passwordDao;
+	private TrustedDeviceDao trustedDeviceDao;
 	private UserDao userDao;
 	private JournalEntryDao journalEntryDao;
 	private LdapService ldapService1;
@@ -188,6 +191,7 @@ public class Authenticator {
 
 	public Password authenticate(AuthenticationVO auth, boolean logon, String methodName) throws Exception {
 		if (auth != null && (auth.getUsername() != null || !CommonUtil.isEmptyString(auth.getJwt()))) {
+			boolean jwtCredentials = !CommonUtil.isEmptyString(auth.getJwt()) && CommonUtil.isEmptyString(auth.getUsername());
 			String jwtAudience = resolveCredentialsFromJwt(auth);
 			if (CommonUtil.DUTYROSTER_ICS_REALM.equals(jwtAudience)
 					&& (methodName == null || !DUTYROSTER_ICS_METHODS.contains(methodName))) {
@@ -242,16 +246,23 @@ public class Authenticator {
 					throw L10nUtil.initAuthenticationException(AuthenticationExceptionCodes.API_2FA_NOT_SUPPORTED);
 				}
 			}
+			Password lastPassword;
 			switch (user.getAuthMethod()) {
 				case LOCAL:
-					return authenticateLocal(auth, user, logon);
+					lastPassword = authenticateLocal(auth, user, logon);
+					break;
 				case LDAP1:
 				case LDAP2:
-					return authenticateLdap(auth, user, logon);
+					lastPassword = authenticateLdap(auth, user, logon);
+					break;
 				default:
 					throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.UNSUPPORTED_AUTHENTICATION_TYPE, DefaultMessages.UNSUPPORTED_AUTHENTICATION_TYPE,
 							new Object[] { user.getAuthMethod().toString() }));
 			}
+			if (!jwtCredentials) {
+				checkTrustedDevice(auth, lastPassword, logon);
+			}
+			return lastPassword;
 		} else {
 			throw L10nUtil.initAuthenticationException(AuthenticationExceptionCodes.AUTHENTICATION_REQUIRED);
 		}
@@ -363,6 +374,26 @@ public class Authenticator {
 		return lastPassword;
 	}
 
+	/**
+	 * Marks the call as coming from a remembered device of the user (see TrustedDeviceUtil), if it carries a valid
+	 * device token and the host is outside the trusted ip ranges.
+	 */
+	private void checkTrustedDevice(AuthenticationVO auth, Password lastPassword, boolean logon) throws Exception {
+		UserContext userContext = CoreUtil.getUserContext();
+		if (TrustedDeviceUtil.hasToken(auth.getDeviceToken()) && !userContext.isTrustedHostIp() && TrustedDeviceUtil.isEnabled()) {
+			TrustedDevice device = trustedDeviceDao.searchUniqueDeviceToken(TrustedDeviceUtil.hashToken(auth.getDeviceToken()));
+			Timestamp now = new Timestamp(System.currentTimeMillis());
+			if (TrustedDeviceUtil.isValid(device, lastPassword, now)) {
+				userContext.setTrustedDevice(true);
+				if (logon) {
+					device.setLastUsed(now);
+					device.setLastUsedHost(auth.getHost());
+					trustedDeviceDao.update(device);
+				}
+			}
+		}
+	}
+
 	private boolean ckeckLocalPassword(Password lastPassword, String plainPassword) throws AuthenticationException {
 		try {
 			return CryptoUtil.checkPassword(lastPassword, plainPassword);
@@ -417,6 +448,10 @@ public class Authenticator {
 		lastPassword.setWrongPasswordAttemptsSinceLastSuccessfulLogon(0);
 		lastPassword.setLastSuccessfulLogonHost(auth.getHost());
 		lastPassword.setLastSuccessfulLogonTimestamp(now);
+	}
+
+	public void setTrustedDeviceDao(TrustedDeviceDao trustedDeviceDao) {
+		this.trustedDeviceDao = trustedDeviceDao;
 	}
 
 	public void setUserDao(UserDao userDao) {

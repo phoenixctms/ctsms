@@ -338,6 +338,7 @@ public interface SystemMessageCodes {
 	public final static String DEPARTMENT_PASSWORD_CHANGED = "department_password_changed";
 	public final static String FAILED_LOGON = "failed_logon";
 	public final static String SUCCESSFUL_LOGON = "successful_logon";
+	public final static String TRUSTED_DEVICE_ADDED = "trusted_device_added";
 	public final static String PASSWORD_CREATED = "password_created";
 	public final static String LOCAL_PASSWORD_CREATED = "local_password_created";
 	public static final String PROBAND_LETTER_PDF_RENDERED = "proband_letter_pdf_rendered";

@@ -30,6 +30,7 @@ import org.hibernate.Cache;
 import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.phoenixctms.ctsms.UserContext;
 import org.phoenixctms.ctsms.adapt.ReminderEntityAdapter;
 import org.phoenixctms.ctsms.compare.DepartmentVOComparator;
 import org.phoenixctms.ctsms.compare.EntityIDComparator;
@@ -1090,7 +1091,11 @@ public class ToolsServiceImpl
 			user = lastPassword.getUser();
 			now = lastPassword.getLastSuccessfulLogonTimestamp();
 			lastPasswordVO = passwordDao.toPasswordOutVO(lastPassword);
-			boolean effectiveOtp = lastPassword.isEnable2fa() && auth.isOtpRequired();
+			UserContext userContext = CoreUtil.getUserContext();
+			// a remembered device of the user needs no 2FA:
+			boolean effectiveOtp = lastPassword.isEnable2fa() && auth.isOtpRequired() && !userContext.isTrustedDevice();
+			lastPasswordVO.setOtpRequired(effectiveOtp);
+			lastPasswordVO.setTrustedHost(userContext.isTrustedHost());
 			if (effectiveOtp) {
 				OTPAuthenticator otpAuthenticator = OTPAuthenticator.getInstance(lastPassword.getOtpType());
 				lastPasswordVO.setOtpToken(otpAuthenticator.sendOtp(user));

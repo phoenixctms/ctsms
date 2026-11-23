@@ -58,7 +58,7 @@ public final class ExecUtil {
 
 	public static AuthenticationVO authenticationPrompt(Scanner in) throws IOException {
 		System.out.print("username:");
-		return new AuthenticationVO(in.nextLine(), readPassword(in, "password:"), null, null, "localhost", CommonUtil.EXEC_REALM, null, false, null);
+		return new AuthenticationVO(in.nextLine(), readPassword(in, "password:"), null, null, "localhost", CommonUtil.EXEC_REALM, null, false, null, null, null);
 	}
 
 	public static boolean confirmationPrompt(Scanner in, String msg) {
