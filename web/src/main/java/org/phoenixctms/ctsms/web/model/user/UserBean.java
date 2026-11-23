@@ -633,8 +633,9 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 		ldapEntry2 = null;
 		loadRemoteUserInfo();
 		loadDepartment();
-		if (WebUtil.isPropertiesDescendantLoggedIn(in.getId())) {
-			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.EDITING_ACTIVE_USER_OR_ANCESTOR);
+		if (WebUtil.isUserIdLoggedIn(in.getId())) {
+			// other changes to the active user (or a parent user) apply at once, without a new logon (see isLogonChanged):
+			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.EDITING_ACTIVE_USER_LOGON);
 		}
 		deferredDeleteReason = (out == null ? null : out.getDeferredDeleteReason());
 		if (out != null && out.isDeferredDelete()) {
