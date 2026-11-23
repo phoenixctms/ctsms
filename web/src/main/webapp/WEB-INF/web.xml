@@ -274,6 +274,9 @@
 	<listener>
 		<listener-class>org.phoenixctms.ctsms.web.LogoutListener</listener-class>
 	</listener>
+	<listener>
+		<listener-class>org.phoenixctms.ctsms.web.ServiceLocatorShutdownListener</listener-class>
+	</listener>
 	<context-param>
 		<param-name>javax.faces.FACELETS_LIBRARIES</param-name>
 		<param-value>/WEB-INF/ctsms-taglib.xml</param-value>
