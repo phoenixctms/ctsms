@@ -80,6 +80,7 @@
 	</validator>
 	<lifecycle>
 		<phase-listener>org.phoenixctms.ctsms.web.ResetInputAjaxActionListener</phase-listener>
+		<phase-listener>org.phoenixctms.ctsms.web.SettingsVersionPhaseListener</phase-listener>
 	</lifecycle>
 	<factory>
 		<exception-handler-factory>org.phoenixctms.ctsms.web.ExceptionHandlerFactory</exception-handler-factory>

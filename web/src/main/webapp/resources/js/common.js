@@ -224,10 +224,41 @@ function setHiddenField(targetField,value) {
 function handleReload(xhr, status, args) {
 
 	if (_testFlag(args, AJAX_OPERATION_SUCCESS)) {
+		if (_testPropertyExists(args, AJAX_SETTINGS_VERSION)) {
+			_broadcastSettingsVersion(args[AJAX_SETTINGS_VERSION]);
+		}
 		location.reload(true);
 	}
 
 }
+
+function _getSettingsVersionStorageKey() {
+	return 'ctsms_settings_version' + (typeof CONTEXT_PATH !== 'undefined' && CONTEXT_PATH != null ? CONTEXT_PATH : '');
+}
+
+function _broadcastSettingsVersion(settingsVersion) {
+	// the other windows of the session get a 'storage' event and reload with the new settings:
+	try {
+		window.localStorage.setItem(_getSettingsVersionStorageKey(), '' + settingsVersion);
+	} catch (e) {
+		// no local storage: the other windows are reloaded with their next request (SettingsVersionPhaseListener)
+	}
+}
+
+(function() {
+	try {
+		window.addEventListener('storage', function(event) {
+			if (event.key === _getSettingsVersionStorageKey() && event.newValue != null
+					&& typeof SETTINGS_VERSION !== 'undefined' && SETTINGS_VERSION != null
+					&& +event.newValue > SETTINGS_VERSION) {
+				SETTINGS_VERSION = +event.newValue;
+				location.reload(true);
+			}
+		});
+	} catch (e) {
+
+	}
+})();
 
 function handleKeepAliveCallback(xhr, status, args) {
 

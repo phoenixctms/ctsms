@@ -212,11 +212,14 @@ public class SessionScopeBean implements FilterItemsStore {
 	private String authenticationFailedMessage;
 	private MenuModel userMenuModel;
 	private final ColumnManagementBean columnManager;
+	// increases whenever the settings of the logged in user change, so pages rendered with the old settings are reloaded (SettingsVersionPhaseListener):
+	private long settingsVersion;
 
 	public SessionScopeBean() {
 		auth = new AuthenticationVO();
 		imageStore = new MaxSizeHashMap<Object, StreamedContent>(WebUtil.IMAGE_STORE_MAX_SIZE);
 		columnManager = new ColumnManagementBean();
+		settingsVersion = System.currentTimeMillis();
 		logon = null;
 		failedAttempts = 0;
 		authenticationFailed = false;
@@ -1640,10 +1643,49 @@ public class SessionScopeBean implements FilterItemsStore {
 		}
 	}
 
+	public synchronized long getSettingsVersion() {
+		return settingsVersion;
+	}
+
+	private void setSettingsLogon(PasswordOutVO newLogon) {
+		if (newLogon != null) {
+			if (logon != null && CommonUtil.isEmptyString(newLogon.getJwt())) {
+				newLogon.setJwt(logon.getJwt());
+			}
+			logon = newLogon;
+			ApplicationScopeBean.registerActiveUser(currentSessionId(), logon.getInheritedUser());
+		}
+		// time based, so a version of a previous session in the same browser is never mistaken for a newer one:
+		settingsVersion = Math.max(settingsVersion + 1l, System.currentTimeMillis());
+	}
+
+	/**
+	 * Reloads the logged in user (with the inherited settings) after its settings were saved, so they apply without a
+	 * new login.
+	 *
+	 * @return the new settings version, or null if not logged in
+	 */
+	public synchronized Long refreshLogon() {
+		if (!isLoggedIn()) {
+			return null;
+		}
+		try {
+			setSettingsLogon(WebUtil.getServiceLocator().getUserService().getPassword(auth, logon.getInheritedUser().getId()));
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+			setSettingsLogon(null);
+		} catch (AuthenticationException e) {
+			WebUtil.publishException(e);
+			return null;
+		} finally {
+			initSets();
+		}
+		return settingsVersion;
+	}
+
 	public synchronized void updateLocale(String locale) {
 		boolean success = false;
 		try {
-			logon = WebUtil.getServiceLocator().getUserService().updateLocale(auth, locale);
+			setSettingsLogon(WebUtil.getServiceLocator().getUserService().updateLocale(auth, locale));
 			success = true;
 		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
@@ -1654,13 +1696,16 @@ public class SessionScopeBean implements FilterItemsStore {
 		RequestContext requestContext = RequestContext.getCurrentInstance();
 		if (requestContext != null) {
 			requestContext.addCallbackParam(JSValues.AJAX_OPERATION_SUCCESS.toString(), success);
+			if (success) {
+				requestContext.addCallbackParam(JSValues.AJAX_SETTINGS_VERSION.toString(), settingsVersion);
+			}
 		}
 	}
 
 	public synchronized void updateShowTooltips(boolean showTooltips) {
 		boolean success = false;
 		try {
-			logon = WebUtil.getServiceLocator().getUserService().updateShowTooltips(auth, showTooltips);
+			setSettingsLogon(WebUtil.getServiceLocator().getUserService().updateShowTooltips(auth, showTooltips));
 			success = true;
 		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
@@ -1671,13 +1716,16 @@ public class SessionScopeBean implements FilterItemsStore {
 		RequestContext requestContext = RequestContext.getCurrentInstance();
 		if (requestContext != null) {
 			requestContext.addCallbackParam(JSValues.AJAX_OPERATION_SUCCESS.toString(), success);
+			if (success) {
+				requestContext.addCallbackParam(JSValues.AJAX_SETTINGS_VERSION.toString(), settingsVersion);
+			}
 		}
 	}
 
 	public synchronized void updateTheme(String theme) {
 		boolean success = false;
 		try {
-			logon = WebUtil.getServiceLocator().getUserService().updateTheme(auth, theme);
+			setSettingsLogon(WebUtil.getServiceLocator().getUserService().updateTheme(auth, theme));
 			success = true;
 		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
@@ -1688,13 +1736,16 @@ public class SessionScopeBean implements FilterItemsStore {
 		RequestContext requestContext = RequestContext.getCurrentInstance();
 		if (requestContext != null) {
 			requestContext.addCallbackParam(JSValues.AJAX_OPERATION_SUCCESS.toString(), success);
+			if (success) {
+				requestContext.addCallbackParam(JSValues.AJAX_SETTINGS_VERSION.toString(), settingsVersion);
+			}
 		}
 	}
 
 	public synchronized void updateTimeZone(String timeZone) {
 		boolean success = false;
 		try {
-			logon = WebUtil.getServiceLocator().getUserService().updateTimeZone(auth, timeZone);
+			setSettingsLogon(WebUtil.getServiceLocator().getUserService().updateTimeZone(auth, timeZone));
 			success = true;
 		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
@@ -1705,6 +1756,9 @@ public class SessionScopeBean implements FilterItemsStore {
 		RequestContext requestContext = RequestContext.getCurrentInstance();
 		if (requestContext != null) {
 			requestContext.addCallbackParam(JSValues.AJAX_OPERATION_SUCCESS.toString(), success);
+			if (success) {
+				requestContext.addCallbackParam(JSValues.AJAX_SETTINGS_VERSION.toString(), settingsVersion);
+			}
 		}
 	}
 
