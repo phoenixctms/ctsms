@@ -68,6 +68,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
@@ -83,8 +84,7 @@
 		</dependency>
 		<dependency>
 			<groupId>net.sf.ehcache</groupId>
-			<artifactId>ehcache</artifactId>
-			<type>pom</type>
+			<artifactId>ehcache-core</artifactId>
 		</dependency>
 		<!-- <dependency>
 			<groupId>cglib</groupId>
@@ -123,8 +123,8 @@
 			<artifactId>commons-codec</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>jboss</groupId>
-			<artifactId>jboss-j2ee</artifactId>
+			<groupId>javax.transaction</groupId>
+			<artifactId>jta</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.andromda</groupId>
@@ -167,6 +167,7 @@
 		    <groupId>org.xerial</groupId>
 		    <artifactId>sqlite-jdbc</artifactId>
 		    <version>3.41.2.2</version>
+		    <scope>test</scope>
 		</dependency>
 
 		<dependency>

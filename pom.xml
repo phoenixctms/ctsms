@@ -199,9 +199,9 @@
 			</dependency>
 			
 			<dependency>
-				<groupId>jboss</groupId>
-				<artifactId>jboss-j2ee</artifactId>
-				<version>4.2.3.GA</version>
+				<groupId>javax.transaction</groupId>
+				<artifactId>jta</artifactId>
+				<version>1.1</version>
 			</dependency>
 			<dependency>
 				<groupId>com.google.code.gson</groupId>
@@ -212,6 +212,13 @@
 				<groupId>org.hibernate</groupId>
 				<artifactId>hibernate-entitymanager</artifactId>
 				<version>3.5.6-Final</version>
+				<exclusions>
+					<!-- org.javassist:javassist is used instead -->
+					<exclusion>
+						<groupId>javassist</groupId>
+						<artifactId>javassist</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 
 			<!-- Hibernate c3p0 connection pool -->
@@ -238,9 +245,8 @@
 			</dependency>
 			<dependency>
 				<groupId>net.sf.ehcache</groupId>
-				<artifactId>ehcache</artifactId>
+				<artifactId>ehcache-core</artifactId>
 				<version>2.4.8</version>
-				<type>pom</type>
 			</dependency>
 			<dependency>
 				<groupId>org.javassist</groupId>
@@ -419,6 +425,13 @@
 				<groupId>net.sourceforge.jexcelapi</groupId>
 				<artifactId>jxl</artifactId>
 				<version>2.6.12</version>
+				<exclusions>
+					<!-- ch.qos.reload4j:reload4j is used instead -->
+					<exclusion>
+						<groupId>log4j</groupId>
+						<artifactId>log4j</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 
 			<dependency>
