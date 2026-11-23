@@ -8,11 +8,15 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.HashMap;
+import java.util.HexFormat;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -35,7 +39,9 @@ import javax.faces.event.ExceptionQueuedEvent;
 import javax.faces.event.ExceptionQueuedEventContext;
 import javax.faces.event.MethodExpressionActionListener;
 import javax.faces.model.SelectItem;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.codec.binary.Base64;
@@ -115,6 +121,10 @@ public final class WebUtil {
 	public final static Pattern TAB_ID_SEPARATOR_REGEXP = Pattern.compile(Pattern.quote(TAB_ID_SEPARATOR_STRING));
 	public final static int FACES_INITIAL_ROW_INDEX = 0;
 	private final static String REFERER_HEADER_NAME = "Referer";
+	private final static String USER_AGENT_HEADER_NAME = "User-Agent";
+	private final static String FORWARDED_PROTO_HEADER_NAME = "X-Forwarded-Proto";
+	private final static String TRUSTED_DEVICE_COOKIE_NAME_PREFIX = "ctsms_device_";
+	private final static int TRUSTED_DEVICE_COOKIE_MAX_AGE = 400 * 24 * 60 * 60; // browsers cap cookies at 400 days
 	private final static String HTTP_GET_METHOD = "GET";
 	public final static String EVENT_CONTEXT_VIEW_ID = "viewId";
 	public final static String FILE_TITLE_PSF_PROPERTY_NAME = "title";
@@ -3787,6 +3797,67 @@ public final class WebUtil {
 			return request.getRemoteHost();
 		}
 		return null;
+	}
+
+	public static String getUserAgent() {
+		FacesContext context = FacesContext.getCurrentInstance();
+		if (context != null) {
+			return ((HttpServletRequest) context.getExternalContext().getRequest()).getHeader(USER_AGENT_HEADER_NAME);
+		}
+		return null;
+	}
+
+	/**
+	 * One cookie per user, so several users can share a browser; the name does not reveal the username.
+	 */
+	private static String getTrustedDeviceCookieName(String username) {
+		try {
+			byte[] hash = MessageDigest.getInstance("SHA-256").digest(username.getBytes(StandardCharsets.UTF_8));
+			return TRUSTED_DEVICE_COOKIE_NAME_PREFIX + HexFormat.of().formatHex(hash, 0, 8);
+		} catch (NoSuchAlgorithmException e) {
+			throw new IllegalStateException(e);
+		}
+	}
+
+	/**
+	 * The token of the device cookie of a user (see core TrustedDeviceUtil), or null.
+	 */
+	public static String getTrustedDeviceToken(String username) {
+		FacesContext context = FacesContext.getCurrentInstance();
+		if (context != null && !CommonUtil.isEmptyString(username)) {
+			Cookie[] cookies = ((HttpServletRequest) context.getExternalContext().getRequest()).getCookies();
+			if (cookies != null) {
+				String name = getTrustedDeviceCookieName(username);
+				for (int i = 0; i < cookies.length; i++) {
+					if (name.equals(cookies[i].getName())) {
+						return cookies[i].getValue();
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Remembers the device of a user: HttpOnly, SameSite=Strict and (on https) Secure. The core checks the expiration
+	 * (trusted_device_days), the cookie itself is kept for the browser's maximum.
+	 */
+	public static void setTrustedDeviceToken(String username, String token) {
+		FacesContext context = FacesContext.getCurrentInstance();
+		if (context != null && !CommonUtil.isEmptyString(username) && !CommonUtil.isEmptyString(token)) {
+			HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
+			HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
+			String path = request.getContextPath();
+			StringBuilder cookie = new StringBuilder(getTrustedDeviceCookieName(username));
+			cookie.append('=').append(token);
+			cookie.append("; Max-Age=").append(TRUSTED_DEVICE_COOKIE_MAX_AGE);
+			cookie.append("; Path=").append(CommonUtil.isEmptyString(path) ? "/" : path);
+			cookie.append("; HttpOnly; SameSite=Strict");
+			if (request.isSecure() || "https".equalsIgnoreCase(request.getHeader(FORWARDED_PROTO_HEADER_NAME))) {
+				cookie.append("; Secure");
+			}
+			response.addHeader("Set-Cookie", cookie.toString());
+		}
 	}
 
 	public static Long getSelectionSetValueCount(Long inputFieldId) {

@@ -41,12 +41,12 @@
 							<f:param value="#{sessionScopeBean.inheritedUser.name}" />
 						</h:outputFormat>
 						<h:outputFormat styleClass="ctsms-text-green"
-							rendered="#{sessionScopeBean.inheritedUser.decryptUntrusted or applicationScopeBean.trustedHost}"
+							rendered="#{sessionScopeBean.inheritedUser.decryptUntrusted or sessionScopeBean.trustedHost}"
 							value="#{labels.trusted_host_message}">
 							<f:param value="#{applicationScopeBean.remoteHost}" />
 						</h:outputFormat>
 						<h:outputFormat styleClass="ctsms-text-red"
-							rendered="#{!sessionScopeBean.inheritedUser.decryptUntrusted and !applicationScopeBean.trustedHost}"
+							rendered="#{!sessionScopeBean.inheritedUser.decryptUntrusted and !sessionScopeBean.trustedHost}"
 							value="#{labels.untrusted_host_message}">
 							<f:param value="#{applicationScopeBean.remoteHost}" />
 						</h:outputFormat>
