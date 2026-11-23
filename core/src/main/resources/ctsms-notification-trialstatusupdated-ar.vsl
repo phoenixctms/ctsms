@@ -11,12 +11,12 @@
    • حالة التجربة: $trial_status
 #if($notification.trial.status.lockdown)
    • الإغلاق: لا يوجد أي تعديل آخر للمحاكمة والسجلات المرتبطة بها.
-#نهاية
-#if($notification.trial.status.inquiryValueInputEnabled)
+#end
+#if(!$notification.trial.status.lockdown && $notification.trial.inquiryValueInputEnabled)
    • تم تمكين مدخلات قيمة الاستعلام.
-#آخر
+#else
    • تم تعطيل مدخلات قيمة الاستعلام.
-#نهاية
+#end
 
 يرجى الاستعداد و/أو اتخاذ الإجراءات المناسبة.
 

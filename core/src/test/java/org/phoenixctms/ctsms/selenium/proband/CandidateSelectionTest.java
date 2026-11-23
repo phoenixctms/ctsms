@@ -896,6 +896,9 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 		newTrial.setSignupRandomize(false);
 		newTrial.setSignupDescription(null);
 		newTrial.setExclusiveProbands(false);
+		newTrial.setEcrfValueInputEnabled(true);
+		newTrial.setInquiryValueInputEnabled(true);
+		newTrial.setRandomizationLocked(false);
 		newTrial.setProbandAliasFormat(null);
 		newTrial.setDutySelfAllocationLocked(false);
 		return getTestDataProvider().createTrial(newTrial, "migration_started", "na", "na", "na");

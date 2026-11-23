@@ -11,12 +11,12 @@ tämä on ilmoitus seuraavasta tapahtumasta:
    • Kokeilutila: $trial_status
 #if($notification.trial.status.lockdown)
    • Lukitus: kokeilua ja siihen liittyviä tietueita ei tehdä enempää.
-#loppu
-#if($notification.trial.status.inquiryValueInputEnabled)
+#end
+#if(!$notification.trial.status.lockdown && $notification.trial.inquiryValueInputEnabled)
    • Kyselyarvojen syötteet ovat käytössä.
-#muu
+#else
    • Kyselyarvojen syötteet eivät ole käytössä.
-#loppu
+#end
 
 Valmistaudu ja/tai ryhdy tarvittaviin toimiin.
 

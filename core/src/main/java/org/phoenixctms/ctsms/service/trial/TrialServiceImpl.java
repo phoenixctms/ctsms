@@ -545,6 +545,7 @@ public class TrialServiceImpl
 				}
 				statusEntry.setRealTimestamp(CommonUtil.dateToTimestamp(DateCalc.getMillisCleared(now)));
 				statusEntry.setStatus(statusType);
+				statusEntry.setRandomized(randomized);
 				CoreUtil.modifyVersion(statusEntry, now, user);
 				ProbandListStatusEntryDao probandListStatusEntryDao = this.getProbandListStatusEntryDao();
 				statusEntry = probandListStatusEntryDao.create(statusEntry);
@@ -601,7 +602,7 @@ public class TrialServiceImpl
 	}
 
 	private ProbandListStatusEntryOutVO addProbandListEntryUpdatedProbandListStatusEntry(String reasonL10nKey, String reasonNoGroupL10nKey, ProbandListEntry probandListEntry,
-			Long probandListStatusTypeId, Timestamp now, User user) throws Exception {
+			Long probandListStatusTypeId, boolean randomized, Timestamp now, User user) throws Exception {
 		Object[] args;
 		String l10nKey;
 		ProbandGroup group = probandListEntry.getGroup();
@@ -620,7 +621,7 @@ public class TrialServiceImpl
 			};
 			l10nKey = reasonNoGroupL10nKey;
 		}
-		return ServiceUtil.addProbandListStatusEntry(probandListEntry, null, l10nKey, args, now, probandListStatusTypeId, now, user,
+		return ServiceUtil.addProbandListStatusEntry(probandListEntry, null, l10nKey, args, now, probandListStatusTypeId, randomized, now, user,
 				this.getProbandDao(),
 				this.getProbandListEntryDao(),
 				this.getProbandListStatusEntryDao(),
@@ -1186,9 +1187,9 @@ public class TrialServiceImpl
 		}
 		ECRF ecrf = ecrfField.getEcrf();
 		ServiceUtil.checkTrialLocked(ecrf.getTrial());
-		if (!ecrf.getTrial().getStatus().isEcrfValueInputEnabled()) {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INPUT_DISABLED_FOR_TRIAL,
-					L10nUtil.getTrialStatusTypeName(Locales.USER, ecrf.getTrial().getStatus().getNameL10nKey()));
+		if (!ecrf.getTrial().isEcrfValueInputEnabled()) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INPUT_NOT_ENABLED_FOR_TRIAL,
+					ecrf.getTrial().getName());
 		}
 		if (ecrf.isDisabled()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INPUT_DISABLED_FOR_ECRF, ecrf.getName());
@@ -1274,9 +1275,9 @@ public class TrialServiceImpl
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_STATUS_ENTRY_DIFFERENT_TRIALS);
 		}
 		ServiceUtil.checkTrialLocked(listEntry.getTrial());
-		if (!listEntry.getTrial().getStatus().isEcrfValueInputEnabled()) {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INPUT_DISABLED_FOR_TRIAL,
-					L10nUtil.getTrialStatusTypeName(Locales.USER, listEntry.getTrial().getStatus().getNameL10nKey()));
+		if (!listEntry.getTrial().isEcrfValueInputEnabled()) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INPUT_NOT_ENABLED_FOR_TRIAL,
+					listEntry.getTrial().getName());
 		}
 		ServiceUtil.checkProbandLocked(listEntry.getProband());
 		if (listEntry.getLastStatus() != null && !listEntry.getLastStatus().getStatus().isEcrfValueInputEnabled()) {
@@ -1350,9 +1351,9 @@ public class TrialServiceImpl
 			visit = CheckIDUtil.checkVisitId(visitId, this.getVisitDao());
 		}
 		ServiceUtil.checkTrialLocked(ecrf.getTrial());
-		if (!ecrf.getTrial().getStatus().isEcrfValueInputEnabled()) {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INPUT_DISABLED_FOR_TRIAL,
-					L10nUtil.getTrialStatusTypeName(Locales.USER, ecrf.getTrial().getStatus().getNameL10nKey()));
+		if (!ecrf.getTrial().isEcrfValueInputEnabled()) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INPUT_NOT_ENABLED_FOR_TRIAL,
+					ecrf.getTrial().getName());
 		}
 		if (ecrf.isDisabled()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INPUT_DISABLED_FOR_ECRF, ecrf.getName());
@@ -2054,6 +2055,9 @@ public class TrialServiceImpl
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.TRIAL_SIGNUP_RANDOMIZATION_NOT_DEFINED);
 			}
 		}
+		if (trialIn.getRandomizationLocked() && trialIn.getRandomization() == null) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.TRIAL_RANDOMIZATION_LOCKED_RANDOMIZATION_NOT_DEFINED);
+		}
 	}
 
 	private String getNewEcrfRevision(Long trialId, String ecrfName, String revisionFormat) throws Exception {
@@ -2383,9 +2387,9 @@ public class TrialServiceImpl
 	private void checkUpdateEcrfStatusEntry(ECRFStatusEntry originalStatusEntry, ECRFStatusType statusType, Long version, User user) throws Exception {
 		ProbandListEntry listEntry = originalStatusEntry.getListEntry();
 		ServiceUtil.checkTrialLocked(listEntry.getTrial());
-		if (!listEntry.getTrial().getStatus().isEcrfValueInputEnabled()) {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INPUT_DISABLED_FOR_TRIAL,
-					L10nUtil.getTrialStatusTypeName(Locales.USER, listEntry.getTrial().getStatus().getNameL10nKey()));
+		if (!listEntry.getTrial().isEcrfValueInputEnabled()) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INPUT_NOT_ENABLED_FOR_TRIAL,
+					listEntry.getTrial().getName());
 		}
 		ServiceUtil.checkProbandLocked(listEntry.getProband());
 		if (listEntry.getLastStatus() != null && !listEntry.getLastStatus().getStatus().isEcrfValueInputEnabled()) {
@@ -2890,7 +2894,7 @@ public class TrialServiceImpl
 						ServiceUtil.addProbandListStatusEntry(listEntry, null, ProbandListStatusReasonCodes.ECRF_STATUS, new Object[] {
 								this.getECRFDao().toECRFOutVO(ecrf).getUniqueName(),
 								L10nUtil.getEcrfStatusTypeName(Locales.PROBAND_LIST_STATUS_ENTRY_REASON, newState.getNameL10nKey())
-						}, now, probandListStatusTypeId, ecrf, newState, now, user,
+						}, now, probandListStatusTypeId, false, ecrf, newState, now, user,
 								this.getProbandDao(),
 								this.getProbandListEntryDao(),
 								this.getProbandListStatusEntryDao(),
@@ -3383,7 +3387,7 @@ public class TrialServiceImpl
 			AuthenticationVO auth, boolean signup, ProbandListStatusEntryInVO newProbandListStatusEntry) throws Exception {
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		return ServiceUtil.addProbandListStatusEntry(newProbandListStatusEntry, signup, now, user, true, true,
+		return ServiceUtil.addProbandListStatusEntry(newProbandListStatusEntry, signup, now, user, true, true, false,
 				this.getProbandDao(), this.getProbandListEntryDao(), this.getProbandListStatusEntryDao(), this.getProbandListStatusTypeDao(),
 				this.getTrialDao(), this.getVisitScheduleItemDao(), this.getMassMailDao(), this.getMassMailRecipientDao(),
 				this.getJournalEntryDao());
@@ -4287,9 +4291,9 @@ public class TrialServiceImpl
 		ECRF ecrf = ecrfField.getEcrf();
 		Visit visit = fieldStatus.getVisit();
 		ServiceUtil.checkTrialLocked(ecrf.getTrial());
-		if (!ecrf.getTrial().getStatus().isEcrfValueInputEnabled()) {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INPUT_DISABLED_FOR_TRIAL,
-					L10nUtil.getTrialStatusTypeName(Locales.USER, ecrf.getTrial().getStatus().getNameL10nKey()));
+		if (!ecrf.getTrial().isEcrfValueInputEnabled()) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INPUT_NOT_ENABLED_FOR_TRIAL,
+					ecrf.getTrial().getName());
 		}
 		if (ecrf.isDisabled()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INPUT_DISABLED_FOR_ECRF, ecrf.getName());
@@ -4473,7 +4477,7 @@ public class TrialServiceImpl
 			ProbandListEntry probandListEntry = probandListEntriesIt.next();
 			ProbandListEntryOutVO original = probandListEntryDao.toProbandListEntryOutVO(probandListEntry);
 			try {
-				addProbandListEntryUpdatedProbandListStatusEntry(ProbandListStatusReasonCodes.GROUP_DELETED, null, probandListEntry, probandListStatusTypeId, now, user);
+				addProbandListEntryUpdatedProbandListStatusEntry(ProbandListStatusReasonCodes.GROUP_DELETED, null, probandListEntry, probandListStatusTypeId, false, now, user);
 			} catch (ServiceException e) {
 				// already end state
 			}
@@ -9304,6 +9308,9 @@ public class TrialServiceImpl
 		boolean probandChanged = !modifiedProbandListEntry.getProbandId().equals(originalProbandListEntry.getProband().getId());
 		boolean groupChanged;
 		Trial trial = CheckIDUtil.checkTrialId(modifiedProbandListEntry.getTrialId(), this.getTrialDao());
+		if (randomize && trial.isRandomizationLocked() && this.getProbandListStatusEntryDao().getRandomizedCount(originalProbandListEntry.getId(), true) > 0l) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_ALREADY_RANDOMIZED);
+		}
 		Randomization randomization = getRandomization(trial, randomize, modifiedProbandListEntry.getGroupId());
 		ProbandGroup group;
 		boolean randomized = false;
@@ -9348,7 +9355,7 @@ public class TrialServiceImpl
 			addProbandListEntryUpdatedProbandListStatusEntry(
 					randomized ? ProbandListStatusReasonCodes.LIST_ENTRY_RANDOMIZED_AND_UPDATED : ProbandListStatusReasonCodes.LIST_ENTRY_UPDATED,
 					randomized ? ProbandListStatusReasonCodes.LIST_ENTRY_RANDOMIZED_AND_UPDATED_NO_GROUP : ProbandListStatusReasonCodes.LIST_ENTRY_UPDATED_NO_GROUP,
-					probandListEntry, probandListStatusTypeId, now, user);
+					probandListEntry, probandListStatusTypeId, randomized, now, user);
 		}
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		ProbandListEntryOutVO result = probandListEntryDao.toProbandListEntryOutVO(probandListEntry);
@@ -9883,9 +9890,9 @@ public class TrialServiceImpl
 						jsEcrfFieldValues = new ArrayList<ECRFFieldValueJsonVO>(ecrfFieldValuesIn.size());
 					}
 					ServiceUtil.checkTrialLocked(ecrf.getTrial());
-					if (!ecrf.getTrial().getStatus().isEcrfValueInputEnabled()) {
-						throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INPUT_DISABLED_FOR_TRIAL,
-								L10nUtil.getTrialStatusTypeName(Locales.USER, ecrf.getTrial().getStatus().getNameL10nKey()));
+					if (!ecrf.getTrial().isEcrfValueInputEnabled()) {
+						throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INPUT_NOT_ENABLED_FOR_TRIAL,
+								ecrf.getTrial().getName());
 					}
 					if (ecrf.isDisabled()) {
 						throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INPUT_DISABLED_FOR_ECRF, ecrf.getName());
@@ -10193,7 +10200,7 @@ public class TrialServiceImpl
 		probandListEntryDao.update(listEntry);
 		try {
 			ServiceUtil.addProbandListStatusEntry(listEntry, null, ProbandListStatusReasonCodes.LIST_ENTRY_BEACON_RESET,
-					new Object[] {}, now, null, now, CoreUtil.getUser(),
+					new Object[] {}, now, null, false, now, CoreUtil.getUser(),
 					this.getProbandDao(),
 					this.getProbandListEntryDao(),
 					this.getProbandListStatusEntryDao(),

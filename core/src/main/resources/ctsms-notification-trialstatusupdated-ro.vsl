@@ -11,12 +11,12 @@ aceasta este o notificare pentru următorul eveniment:
    • Starea de încercare: $trial_status
 #if($notification.trial.status.lockdown)
    • Blocare: nicio modificare ulterioară a procesului și a înregistrărilor asociate.
-#Sfârşit
-#if($notification.trial.status.inquiryValueInputEnabled)
+#end
+#if(!$notification.trial.status.lockdown && $notification.trial.inquiryValueInputEnabled)
    • Intrările valorii de interogare sunt activate.
-#altfel
+#else
    • Intrările valorii de interogare sunt dezactivate.
-#Sfârşit
+#end
 
 Vă rugăm să pregătiți și/sau să luați măsurile adecvate.
 

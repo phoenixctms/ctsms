@@ -889,5 +889,40 @@ if get_database_version() < '010901020' then
 
 end if;
 
+if get_database_version() < '010901021' then
+
+  -- eCRF and inquiry value input is switched on per trial instead of by its status; trials keep what their current status allowed:
+  alter table TRIAL add column ECRF_VALUE_INPUT_ENABLED BOOLEAN;
+  alter table TRIAL add column INQUIRY_VALUE_INPUT_ENABLED BOOLEAN;
+  update TRIAL set ECRF_VALUE_INPUT_ENABLED = TRIAL_STATUS_TYPE.ECRF_VALUE_INPUT_ENABLED,
+    INQUIRY_VALUE_INPUT_ENABLED = TRIAL_STATUS_TYPE.INQUIRY_VALUE_INPUT_ENABLED
+    from TRIAL_STATUS_TYPE where TRIAL.STATUS_FK = TRIAL_STATUS_TYPE.ID;
+  alter table TRIAL alter ECRF_VALUE_INPUT_ENABLED set not null;
+  alter table TRIAL alter INQUIRY_VALUE_INPUT_ENABLED set not null;
+  alter table TRIAL_STATUS_TYPE drop column ECRF_VALUE_INPUT_ENABLED;
+  alter table TRIAL_STATUS_TYPE drop column INQUIRY_VALUE_INPUT_ENABLED;
+
+  -- a trial can refuse to randomize a proband list entry again:
+  alter table TRIAL add column RANDOMIZATION_LOCKED BOOLEAN;
+  update TRIAL set RANDOMIZATION_LOCKED = 'f';
+  alter table TRIAL alter RANDOMIZATION_LOCKED set not null;
+
+  -- the proband list status entry written by a randomization is marked; existing ones are found by the
+  -- "randomized and created/updated" journal entry written by the same request (same modified timestamp):
+  alter table PROBAND_LIST_STATUS_ENTRY add column RANDOMIZED BOOLEAN;
+  update PROBAND_LIST_STATUS_ENTRY set RANDOMIZED = 'f';
+  update PROBAND_LIST_STATUS_ENTRY set RANDOMIZED = 't'
+    from PROBAND_LIST_ENTRY
+    where PROBAND_LIST_STATUS_ENTRY.LIST_ENTRY_FK = PROBAND_LIST_ENTRY.ID
+    and exists (select 1 from JOURNAL_ENTRY
+      where JOURNAL_ENTRY.SYSTEM_MESSAGE_CODE in ('proband_list_entry_randomized_and_created', 'proband_list_entry_randomized_and_updated')
+      and JOURNAL_ENTRY.MODIFIED_TIMESTAMP = PROBAND_LIST_STATUS_ENTRY.MODIFIED_TIMESTAMP
+      and (JOURNAL_ENTRY.PROBAND_FK = PROBAND_LIST_ENTRY.PROBAND_FK or JOURNAL_ENTRY.TRIAL_FK = PROBAND_LIST_ENTRY.TRIAL_FK));
+  alter table PROBAND_LIST_STATUS_ENTRY alter RANDOMIZED set not null;
+
+  perform set_database_version('010901021');
+
+end if;
+
 end
 $$;

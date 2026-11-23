@@ -9,14 +9,14 @@ hii ni arifa ya tukio lifuatalo:
    • Idara ya majaribio:  $trial_department
 
    • Hali ya majaribio: $trial_status
-#kama($notification.trial.status.lockdown)
+#if($notification.trial.status.lockdown)
    • Kufungiwa: hakuna marekebisho zaidi ya jaribio na rekodi zinazohusiana.
-#mwisho
-#kama($notification.trial.status.inquiryValueInputEnabled)
+#end
+#if(!$notification.trial.status.lockdown && $notification.trial.inquiryValueInputEnabled)
    • Ingizo la thamani ya swali limewezeshwa.
-#vingine
+#else
    • Ingizo la thamani ya swali limezimwa.
-#mwisho
+#end
 
 Tafadhali jitayarishe na/au chukua hatua zinazofaa.
 

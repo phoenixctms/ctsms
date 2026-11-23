@@ -86,6 +86,11 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 			in.setDutySelfAllocationLockedFrom(null);
 			in.setRandomization(Settings.getRandomizationMode(SettingCodes.TRIAL_RANDOMIZATION_PRESET, Bundle.SETTINGS, DefaultSettings.TRIAL_RANDOMIZATION_PRESET));
 			in.setRandomizationList(null);
+			in.setRandomizationLocked(Settings.getBoolean(SettingCodes.TRIAL_RANDOMIZATION_LOCKED_PRESET, Bundle.SETTINGS, DefaultSettings.TRIAL_RANDOMIZATION_LOCKED_PRESET));
+			in.setEcrfValueInputEnabled(
+					Settings.getBoolean(SettingCodes.TRIAL_ECRF_VALUE_INPUT_ENABLED_PRESET, Bundle.SETTINGS, DefaultSettings.TRIAL_ECRF_VALUE_INPUT_ENABLED_PRESET));
+			in.setInquiryValueInputEnabled(
+					Settings.getBoolean(SettingCodes.TRIAL_INQUIRY_VALUE_INPUT_ENABLED_PRESET, Bundle.SETTINGS, DefaultSettings.TRIAL_INQUIRY_VALUE_INPUT_ENABLED_PRESET));
 		}
 	}
 
@@ -622,6 +627,10 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 		return this.in.getSignupProbandList();
 	}
 
+	public boolean isRandomizationLockedEnabled() {
+		return this.in.getRandomization() != null;
+	}
+
 	public boolean isTabEmphasized(String tab) {
 		return WebUtil.isTabCountEmphasized(tabCountMap.get(tab));
 	}
@@ -715,6 +724,7 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 		}
 		if (in.getRandomization() == null) {
 			in.setRandomizationList(null);
+			in.setRandomizationLocked(false);
 		}
 		if (!in.getSignupProbandList()) {
 			in.setSignupRandomize(false);

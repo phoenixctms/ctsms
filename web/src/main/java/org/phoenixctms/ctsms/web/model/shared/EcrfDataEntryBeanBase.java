@@ -46,8 +46,8 @@ public abstract class EcrfDataEntryBeanBase extends ManagedBeanBase {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.PROBAND_LOCKED);
 		} else if (WebUtil.isTrialLocked(probandListEntry)) {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.TRIAL_LOCKED);
-		} else if (probandListEntry != null && !probandListEntry.getTrial().getStatus().getEcrfValueInputEnabled()) {
-			Messages.addLocalizedMessage(FacesMessage.SEVERITY_INFO, MessageCodes.ECRF_VALUE_INPUT_DISABLED_FOR_TRIAL, probandListEntry.getTrial().getStatus().getName());
+		} else if (probandListEntry != null && !probandListEntry.getTrial().getEcrfValueInputEnabled()) {
+			Messages.addLocalizedMessage(FacesMessage.SEVERITY_INFO, MessageCodes.ECRF_VALUE_INPUT_NOT_ENABLED_FOR_TRIAL);
 		} else if (ecrf != null && ecrf.getDisabled()) {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_INFO, MessageCodes.ECRF_VALUE_INPUT_DISABLED_FOR_ECRF);
 		} else if (probandListEntry != null && probandListEntry.getLastStatus() != null && !probandListEntry.getLastStatus().getStatus().getEcrfValueInputEnabled()) {
@@ -186,7 +186,7 @@ public abstract class EcrfDataEntryBeanBase extends ManagedBeanBase {
 			return false;
 		} else if (ecrf != null && ecrf.getDisabled()) {
 			return false;
-		} else if (probandListEntry != null && !probandListEntry.getTrial().getStatus().getEcrfValueInputEnabled()) {
+		} else if (probandListEntry != null && !probandListEntry.getTrial().getEcrfValueInputEnabled()) {
 			return false;
 		} else if (probandListEntry.getLastStatus() != null && !probandListEntry.getLastStatus().getStatus().getEcrfValueInputEnabled()) {
 			return false;

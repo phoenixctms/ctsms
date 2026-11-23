@@ -11,12 +11,12 @@
    • Статус пробной версии: $trial_status
 #if($notification.trial.status.lockdown)
    • Блокировка: никаких дальнейших изменений в исследовании и связанных с ним записях.
-#конец
-#if($notification.trial.status.inquiryValueInputEnabled)
+#end
+#if(!$notification.trial.status.lockdown && $notification.trial.inquiryValueInputEnabled)
    • Вводы значений запроса включены.
-#еще
+#else
    • Вводы значений запроса отключены.
-#конец
+#end
 
 Пожалуйста, подготовьтесь и/или примите соответствующие меры.
 

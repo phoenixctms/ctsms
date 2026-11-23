@@ -11,12 +11,12 @@
    • Статус випробування: $trial_status
 #if($notification.trial.status.lockdown)
    • Блокування: жодних подальших змін до випробування та пов’язаних з ним записів.
-#кінець
-#if($notification.trial.status.inquiryValueInputEnabled)
+#end
+#if(!$notification.trial.status.lockdown && $notification.trial.inquiryValueInputEnabled)
    • Увімкнено введення значень запиту.
-#інше
+#else
    • Введення значення запиту вимкнено.
-#кінець
+#end
 
 Будь ласка, підготуйтеся та/або зробіть відповідні дії.
 

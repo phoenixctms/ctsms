@@ -11,12 +11,12 @@ $trial_name 試験チームのメンバーまたは部門のメンバーの皆�
    • トライアルステータス: $trial_status
 #if($notification.trial.status.lockdown)
    • ロックダウン: 治験および関連記録をこれ以上変更しない。
-＃終わり
-#if($notification.trial.status.inquiryValueInputEnabled)
+#end
+#if(!$notification.trial.status.lockdown && $notification.trial.inquiryValueInputEnabled)
    ・問い合わせ値の入力が可能です。
-＃それ以外
+#else
    ・問合せ値入力は無効となります。
-＃終わり
+#end
 
 適切な準備や対応を行ってください。
 

@@ -11,12 +11,12 @@ Esta es una notificación para el siguiente evento:
    • Estado de prueba: $trial_status
 #if($notification.trial.status.lockdown)
    • Bloqueo: no se permitirán modificaciones adicionales del ensayo y los registros asociados.
-#fin
-#if($notification.trial.status.inquiryValueInputEnabled)
+#end
+#if(!$notification.trial.status.lockdown && $notification.trial.inquiryValueInputEnabled)
    • Las entradas de valores de consulta están habilitadas.
-#demás
+#else
    • Las entradas de valores de consulta están deshabilitadas.
-#fin
+#end
 
 Por favor prepare y/o tome las acciones apropiadas.
 

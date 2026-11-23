@@ -110,9 +110,8 @@ public abstract class EcrfFieldStatusEntryBeanBase extends ManagedBeanBase {
 		} else if (WebUtil.isTrialLocked(probandListEntry)) {
 			Messages.addLocalizedMessageClientId(getMessagesId(), FacesMessage.SEVERITY_WARN,
 					MessageCodes.TRIAL_LOCKED);
-		} else if (probandListEntry != null && !probandListEntry.getTrial().getStatus().getEcrfValueInputEnabled()) {
-			Messages.addLocalizedMessageClientId(getMessagesId(), FacesMessage.SEVERITY_INFO, MessageCodes.ECRF_VALUE_INPUT_DISABLED_FOR_TRIAL, probandListEntry.getTrial()
-					.getStatus().getName());
+		} else if (probandListEntry != null && !probandListEntry.getTrial().getEcrfValueInputEnabled()) {
+			Messages.addLocalizedMessageClientId(getMessagesId(), FacesMessage.SEVERITY_INFO, MessageCodes.ECRF_VALUE_INPUT_NOT_ENABLED_FOR_TRIAL);
 		} else if (probandListEntry != null && probandListEntry.getLastStatus() != null && !probandListEntry.getLastStatus().getStatus().getEcrfValueInputEnabled()) {
 			Messages.addLocalizedMessageClientId(getMessagesId(), FacesMessage.SEVERITY_INFO,
 					MessageCodes.ECRF_VALUE_INPUT_DISABLED_FOR_PROBAND_LIST_ENTRY, probandListEntry.getLastStatus().getStatus().getName());
@@ -333,7 +332,7 @@ public abstract class EcrfFieldStatusEntryBeanBase extends ManagedBeanBase {
 			return false;
 		} else if (WebUtil.isProbandLocked(probandListEntry)) {
 			return false;
-		} else if (probandListEntry != null && !probandListEntry.getTrial().getStatus().getEcrfValueInputEnabled()) {
+		} else if (probandListEntry != null && !probandListEntry.getTrial().getEcrfValueInputEnabled()) {
 			return false;
 		} else if (probandListEntry != null && probandListEntry.getLastStatus() != null && !probandListEntry.getLastStatus().getStatus().getEcrfValueInputEnabled()) {
 			return false;

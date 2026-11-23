@@ -243,7 +243,7 @@ public class InquiryValueBean extends InquiryValueBeanBase {
 			TrialStatusTypeVO trialStatusType = trial.getStatus();
 			if (trialStatusType.getLockdown()) {
 				Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.TRIAL_LOCKED);
-			} else if (!trialStatusType.getInquiryValueInputEnabled()) {
+			} else if (!trial.getInquiryValueInputEnabled()) {
 				Messages.addLocalizedMessage(FacesMessage.SEVERITY_INFO, MessageCodes.INQUIRY_VALUE_INPUT_DISABLED);
 			}
 		}
@@ -348,7 +348,7 @@ public class InquiryValueBean extends InquiryValueBeanBase {
 	private boolean isProbandEditable() {
 		if (trial != null && proband != null) {
 			TrialStatusTypeVO trialStatusType = trial.getStatus();
-			if (!trialStatusType.getLockdown() && trialStatusType.getInquiryValueInputEnabled()) {
+			if (!trialStatusType.getLockdown() && trial.getInquiryValueInputEnabled()) {
 				return !WebUtil.isProbandLocked(proband);
 			}
 		}

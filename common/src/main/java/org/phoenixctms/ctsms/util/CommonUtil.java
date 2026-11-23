@@ -686,6 +686,9 @@ public final class CommonUtil {
 			in.setSponsoringId(sponsoringVO == null ? null : sponsoringVO.getId());
 			in.setSurveyStatusId(surveyStatusVO == null ? null : surveyStatusVO.getId());
 			in.setExclusiveProbands(out.getExclusiveProbands());
+			in.setEcrfValueInputEnabled(out.getEcrfValueInputEnabled());
+			in.setInquiryValueInputEnabled(out.getInquiryValueInputEnabled());
+			in.setRandomizationLocked(out.getRandomizationLocked());
 			in.setProbandAliasFormat(out.getProbandAliasFormat());
 			in.setBlockingPeriod(blockingPeriodVO == null ? null : blockingPeriodVO.getPeriod());
 			in.setBlockingPeriodDays(out.getBlockingPeriodDays());

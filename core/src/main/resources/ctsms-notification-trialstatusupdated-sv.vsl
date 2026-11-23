@@ -11,12 +11,12 @@ detta är ett meddelande för följande händelse:
    • Provstatus: $trial_status
 #if($notification.trial.status.lockdown)
    • Lockdown: ingen ytterligare ändring av testversionen och tillhörande poster.
-#slutet
-#if($notification.trial.status.inquiryValueInputEnabled)
+#end
+#if(!$notification.trial.status.lockdown && $notification.trial.inquiryValueInputEnabled)
    • Inmatningar av förfrågningsvärde är aktiverade.
-#annan
+#else
    • Inmatningar av förfrågningsvärde är avaktiverade.
-#slutet
+#end
 
 Förbered och/eller vidta lämpliga åtgärder.
 

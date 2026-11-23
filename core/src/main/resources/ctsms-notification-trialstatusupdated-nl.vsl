@@ -9,14 +9,14 @@ dit is een melding voor de volgende gebeurtenis:
    • Proefafdeling:  $trial_department
 
    • Proefstatus: $trial_status
-#if($notification.proefstatus.lockdown)
+#if($notification.trial.status.lockdown)
    • Lockdown: geen verdere wijziging van de proef en bijbehorende dossiers.
-#einde
-#if($notification.trial.status.inquiryValueInputEnabled)
+#end
+#if(!$notification.trial.status.lockdown && $notification.trial.inquiryValueInputEnabled)
    • Invoer van opvraagwaarde is ingeschakeld.
-#anders
+#else
    • Invoer van opvraagwaarde is uitgeschakeld.
-#einde
+#end
 
 Bereid passende maatregelen voor en/of onderneem passende maatregelen.
 

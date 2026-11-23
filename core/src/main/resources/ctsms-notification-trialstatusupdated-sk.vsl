@@ -11,12 +11,12 @@ toto je upozornenie na nasledujúcu udalosť:
    • Stav skúšobnej verzie: $trial_status
 #if($notification.trial.status.lockdown)
    • Uzamknutie: žiadne ďalšie úpravy pokusu a súvisiacich záznamov.
-#koniec
-#if($notification.trial.status.inquiryValueInputEnabled)
+#end
+#if(!$notification.trial.status.lockdown && $notification.trial.inquiryValueInputEnabled)
    • Vstupy dopytovej hodnoty sú povolené.
 #else
    • Vstupy hodnoty dopytu sú vypnuté.
-#koniec
+#end
 
 Pripravte sa a/alebo vykonajte príslušné kroky.
 

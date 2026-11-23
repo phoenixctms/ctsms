@@ -11,12 +11,12 @@ dette er en notifikation for følgende begivenhed:
    • Prøvestatus: $trial_status
 #if($notification.trial.status.lockdown)
    • Lockdown: ingen yderligere ændring af prøveperioden og tilhørende registreringer.
-#ende
-#if($notification.trial.status.inquiryValueInputEnabled)
+#end
+#if(!$notification.trial.status.lockdown && $notification.trial.inquiryValueInputEnabled)
    • Forespørgselsværdiinput er aktiveret.
-#andet
+#else
    • Indtastning af forespørgselsværdier er deaktiveret.
-#ende
+#end
 
 Forbered venligst og/eller tag passende handlinger.
 

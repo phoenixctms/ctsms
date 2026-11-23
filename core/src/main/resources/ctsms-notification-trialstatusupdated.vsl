@@ -12,7 +12,7 @@ this is a notification for the following event:
 #if($notification.trial.status.lockdown)
    • Lockdown: no further modification of the trial and associated records.
 #end
-#if($notification.trial.status.inquiryValueInputEnabled)
+#if(!$notification.trial.status.lockdown && $notification.trial.inquiryValueInputEnabled)
    • Inquiry value inputs are enabled.
 #else
    • Inquiry value inputs are disabled.

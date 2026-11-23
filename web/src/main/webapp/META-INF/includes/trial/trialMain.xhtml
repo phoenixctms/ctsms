@@ -244,7 +244,7 @@
 										var="selectItem" itemLabel="#{selectItem.label}"
 										itemValue="#{selectItem.value}" />
 									<p:ajax
-										update="trialStatusType_terminal_state_message,trialStatusType_lockdown_message,trialStatusType_inquiryValueInputEnabled_message,trialStatusType_ecrfValueInputEnabled_message,toolbar"
+										update="trialStatusType_terminal_state_message,trialStatusType_lockdown_message,toolbar"
 										listener="#{trialBean.handleStatusTypeChange}" />
 								</p:selectOneMenu>
 								<p:tooltip rendered="#{enableTooltips}" for="trialStatusType">
@@ -261,14 +261,34 @@
 								<h:outputText
 									value="#{trialBean.trialStatusType.lockdown ? triallabels.trial_status_lockdown_message : ''}"
 									id="trialStatusType_lockdown_message" />
-								<h:outputText
-									value="#{trialBean.trialStatusType.inquiryValueInputEnabled ? triallabels.trial_status_inquiry_value_input_enabled_message : triallabels.trial_status_inquiry_value_input_disabled_message}"
-									id="trialStatusType_inquiryValueInputEnabled_message" />
-								<h:outputText
-									value="#{trialBean.trialStatusType.ecrfValueInputEnabled ? triallabels.trial_status_ecrf_value_input_enabled_message : triallabels.trial_status_ecrf_value_input_disabled_message}"
-									id="trialStatusType_ecrfValueInputEnabled_message" />
 							</h:panelGrid>
 							<h:outputLabel />
+							<h:outputLabel for="ecrfValueInputEnabled"
+								value="#{triallabels.trial_ecrf_value_input_enabled_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox id="ecrfValueInputEnabled"
+									value="#{trialBean.in.ecrfValueInputEnabled}" />
+								<p:tooltip rendered="#{enableTooltips}"
+									for="ecrfValueInputEnabled">
+									<h:outputText
+										value="#{triallabels.trial_ecrf_value_input_enabled_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="ecrfValueInputEnabled" />
+							<h:outputLabel for="inquiryValueInputEnabled"
+								value="#{triallabels.trial_inquiry_value_input_enabled_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox id="inquiryValueInputEnabled"
+									value="#{trialBean.in.inquiryValueInputEnabled}" />
+								<p:tooltip rendered="#{enableTooltips}"
+									for="inquiryValueInputEnabled">
+									<h:outputText
+										value="#{triallabels.trial_inquiry_value_input_enabled_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="inquiryValueInputEnabled" />
 							<h:outputLabel for="dutySelfAllocationLocked"
 								value="#{triallabels.trial_duty_self_allocation_locked_label}" />
 							<h:panelGroup>
@@ -448,7 +468,7 @@
 								</p:tooltip>
 							</h:panelGroup>
 						</h:panelGrid>
-						<p:fieldset toggleable="true" collapsed="false">
+						<p:fieldset toggleable="true" collapsed="true">
 							<f:facet name="legend">
 								<h:outputText
 									value="#{triallabels.trial_randomization_field_set}" />
@@ -460,24 +480,41 @@
 									columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
 									<h:outputLabel for="trialrandomization"
 										value="#{triallabels.trial_randomization_label}" />
-									<p:selectOneMenu id="trialrandomization"
-										value="#{trialBean.randomization.randomizationMode}"
-										required="false" label="#{triallabels.trial_randomization}"
-										styleClass="ctsms-control-largest">
-										<f:selectItem itemLabel="#{labels.no_selection_label}"
-											itemValue="#{applicationScopeBean.noSelectionValue}" />
-										<f:selectItems
-											value="#{trialBean.randomization.randomizationModes}"
-											var="selectItem" itemLabel="#{selectItem.label}"
-											itemValue="#{selectItem.value}" />
-										<p:ajax update="generaterandomizationlisttoolbar" />
-									</p:selectOneMenu>
-									<p:tooltip rendered="#{enableTooltips}"
-										for="trialrandomization">
-										<h:outputText
-											value="#{triallabels.trial_randomization_tooltip}"
-											escape="false" />
-									</p:tooltip>
+									<h:panelGroup>
+										<p:selectOneMenu id="trialrandomization"
+											value="#{trialBean.randomization.randomizationMode}"
+											required="false" label="#{triallabels.trial_randomization}"
+											styleClass="ctsms-control-largest">
+											<f:selectItem itemLabel="#{labels.no_selection_label}"
+												itemValue="#{applicationScopeBean.noSelectionValue}" />
+											<f:selectItems
+												value="#{trialBean.randomization.randomizationModes}"
+												var="selectItem" itemLabel="#{selectItem.label}"
+												itemValue="#{selectItem.value}" />
+											<p:ajax update="generaterandomizationlisttoolbar,randomizationLocked" />
+										</p:selectOneMenu>
+										<p:tooltip rendered="#{enableTooltips}"
+											for="trialrandomization">
+											<h:outputText
+												value="#{triallabels.trial_randomization_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="trialrandomization" />
+									<h:outputLabel for="randomizationLocked"
+										value="#{triallabels.trial_randomization_locked_label}" />
+									<h:panelGroup>
+										<p:selectBooleanCheckbox id="randomizationLocked"
+											value="#{trialBean.in.randomizationLocked}"
+											disabled="#{!trialBean.randomizationLockedEnabled}" />
+										<p:tooltip rendered="#{enableTooltips}"
+											for="randomizationLocked">
+											<h:outputText
+												value="#{triallabels.trial_randomization_locked_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="randomizationLocked" />
 								</h:panelGrid>
 								<h:panelGrid columns="1" cellpadding="0"
 									styleClass="ctsms-input-panelgrid"
@@ -510,7 +547,7 @@
 								</h:panelGrid>
 							</h:panelGrid>
 						</p:fieldset>
-						<p:fieldset toggleable="true" collapsed="false">
+						<p:fieldset toggleable="true" collapsed="true">
 							<f:facet name="legend">
 								<h:outputText value="#{triallabels.trial_signup_field_set}" />
 							</f:facet>
