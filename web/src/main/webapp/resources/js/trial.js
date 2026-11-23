@@ -395,13 +395,33 @@ function handleTimelineEventTypeSelected(xhr, status, args) {
 
 }
 
+var TRIAL_TIMELINE_RANGE_CHANGED_DELAY = 300;
+var trialTimelineRangeChangedTimer = null;
+var trialTimelineRangeExtended = false;
+
 function handleTrialTimelineRangeChanged() {
-	var range = trialTimeline.getVisibleRange();
-	var params = {};
-	params[AJAX_TIMELINE_RANGE_START] = range.start.toUTCString();
-	params[AJAX_TIMELINE_RANGE_END] = range.end.toUTCString();
-	updateTrialTimelineRange(prepareRemoteCommandParameters(params));
-	return range.extended;
+	// zooming with the mouse wheel fires one rangechanged per wheel step:
+	// send the range (and reload the events if it grew) only once the wheel settled.
+	if (trialTimeline.getVisibleRange().extended) {
+		trialTimelineRangeExtended = true;
+	}
+	if (trialTimelineRangeChangedTimer != null) {
+		clearTimeout(trialTimelineRangeChangedTimer);
+	}
+	trialTimelineRangeChangedTimer = setTimeout(function() {
+		trialTimelineRangeChangedTimer = null;
+		var extended = trialTimelineRangeExtended;
+		trialTimelineRangeExtended = false;
+		var range = trialTimeline.getVisibleRange();
+		var params = {};
+		params[AJAX_TIMELINE_RANGE_START] = range.start.toUTCString();
+		params[AJAX_TIMELINE_RANGE_END] = range.end.toUTCString();
+		updateTrialTimelineRange(prepareRemoteCommandParameters(params));
+		if (extended) {
+			setSupressWait();
+			changeTrial();
+		}
+	}, TRIAL_TIMELINE_RANGE_CHANGED_DELAY);
 }
 
 function handleTrialTimelineAdd() {
