@@ -6,20 +6,20 @@ to je obvestilo za naslednji dogodek:
 
    • Preizkus:      $visitscheduleitem_trial_name
    • Obiščite:      $visitscheduleitem_name
-#če($visit_schedule_item_day_date)
+#if($visit_schedule_item_day_date)
    • Datum:       $visit_schedule_item_day_date
-#drugo
+#else
    • Obisk od: $visitscheduleitem_start
    • Obisk:   $visitscheduleitem_stop
-#konec
+#end
 
    • Prag:  $inactive_staff_limit
 
 $inactive_staff.size() zaposleni N/A:
 
 #foreach($employee in $inactive_staff)
-   • $employee.ime
-#konec
+   • $employee.name
+#end
 
 Pripravite se in/ali ustrezno ukrepajte.
 

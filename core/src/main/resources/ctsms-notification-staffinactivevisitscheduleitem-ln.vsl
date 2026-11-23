@@ -6,20 +6,20 @@ oyo ezali liyebisi mpo na likambo oyo elandi:
 
    • Kosambisa:      $visitscheduleitem_trial_name
    • Kotala:      $visitscheduleitem_name
-#soki($visit_schedule_item_day_date) .
+#if($visit_schedule_item_day_date)
    • Mokolo:       $visit_schedule_item_day_date
-#mosusu
+#else
    • Kotala uta na: $visitscheduleitem_start
    • Kotala na:   $visitscheduleitem_stop
-#nsuka
+#end
 
    • Liziba:  $inactive_staff_limit
 
 $inactive_staff.size() basali N/A:
 
-#koyebisa liboso($employee na $inactive_staff)
-   • $employee.kombo
-#nsuka
+#foreach($employee in $inactive_staff)
+   • $employee.name
+#end
 
 Tosɛngi yo omibongisa mpe/to osala makambo oyo ebongi.
 

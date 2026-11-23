@@ -11,15 +11,15 @@ $ecrffieldstatusentry_listentry_trial_name 試験チームのメンバーまた�
    • eCRF:               $ecrffieldstatusentry_ecrffield_ecrf_name
 #if($notification.ecrfFieldStatusEntry.listEntry.group)
    • 発端者グループ:      $notification.ecrfFieldStatusEntry.listEntry.group.title
-＃終わり
+#end
 #if($notification.ecrfFieldStatusEntry.visit)
    • アクセス:              $notification.ecrfFieldStatusEntry.visit.title
-＃終わり
+#end
    • eCRF セクション:       $ecrffieldstatusentry_ecrffield_section
    • 入力フィールド:        ${ecrffieldstatusentry_ecrffield_position}。 $ecrffieldstatusentry_ecrffield_field_name
 #if($notification.ecrfFieldStatusEntry.ecrfField.series)
    • インデックス:              $ecrffieldstatusentry_index
-＃終わり
+#end
 
    • eCRF 発行ステータス:  $ecrffieldstatusentry_status
 
@@ -37,16 +37,16 @@ $ecrffieldstatusentry_comment
    • $log.status.name: $!log.comment
 #elseif(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO")
    • saved (#if($string_utils.isEmpty($log.reasonForChange))version $log.version#{else}$log.reasonForChange#end): $ecrf_input_field_value_adapter.toString($log)
-＃終わり
-＃終わり
+#end
+#end
 
 #end#if(!$notification.ecrfFieldStatusEntry.status.resolved)
 eCRF の問題を解決するには、データ入力を確認してください。
 
    $http_base_url/shared/ecrfSection.jsf?issueid=$ecrffieldstatusentry_id
-＃それ以外
+#else
 eCRFの問題は終了しました。
-＃終わり
+#end
 
 ありがとう！
 

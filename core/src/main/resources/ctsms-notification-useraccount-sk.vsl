@@ -8,7 +8,7 @@ váš ${application.abbreviation} účet bol #if($new_user)vytvorený#{else}zmen
    • Správca vás bude informovať o aktuálnom hesle.
 #else
    • Heslo zostáva nezmenené.
-#koniec
+#end
 #elseif($ldap_auth_method)
    • Heslo na použitie je vaše heslo do hrnčeka.
 
@@ -16,15 +16,15 @@ váš ${application.abbreviation} účet bol #if($new_user)vytvorený#{else}zmen
 Pri prvom prihlásení zadajte heslo dané administrátorom ako povinné „miestne heslo“.
 #else
 Pri ďalšom prihlásení zadajte svoje aktuálne heslo ako povinné „miestne heslo“.
-#koniec
-#koniec
+#end
+#end
 
 #if($new_user)
 Systém je dostupný na nižšie uvedenej stránke:
 
    $http_base_url
 
-#koniec
+#end
 DÔLEŽITÉ: Účet vám umožňuje čítať osobné údaje subjektov zaregistrovaných používateľmi oddelenia "$user_department". Ak chcete zachovať súkromie údajov, poverenia účtu musia zostať v tajnosti. Nikdy nebudete požiadaní o poskytnutie poverení prostredníctvom e-mailu alebo iných serverov ako „$http_domain_name“.
 
 Ďakujem!

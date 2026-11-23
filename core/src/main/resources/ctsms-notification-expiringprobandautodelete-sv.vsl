@@ -4,7 +4,7 @@ detta är ett meddelande för följande händelse:
 
    $type
 
-   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#slut
+   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
    • Probandsavdelning:     $proband_department
    • Probandkategori:        $proband_category

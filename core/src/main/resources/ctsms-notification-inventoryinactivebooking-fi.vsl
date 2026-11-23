@@ -11,7 +11,7 @@ tämä on ilmoitus seuraavasta tapahtumasta:
    • Tilatyyppi:     $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
    • Alkuperäinen:      $inventorystatusentry_originator_name
-#loppu
+#end
    • Tila alkaen:     $inventorystatusentry_start
    • Tila:       $inventorystatusentry_stop
 

@@ -9,21 +9,21 @@ Nke a bụ ọkwa maka mmemme a:
    • Proband:            #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#end
 
    • eCRF:               $ecrffieldstatusentry_ecrffield_ecrf_name
-#ọ bụrụ ($notification.ecrfFieldStatusEntry.listEntry.group)
+#if($notification.ecrfFieldStatusEntry.listEntry.group)
    • Ndị otu:      $notification.ecrfFieldStatusEntry.listEntry.group.title
-#njedebe
-#ọ bụrụ ($notification.ecrfFieldStatusEntry.viit)
+#end
+#if($notification.ecrfFieldStatusEntry.visit)
    • Gaa na:              $notification.ecrfFieldStatusEntry.visit.title.
-#njedebe
+#end
    • ngalaba eCRF:       $ecrffieldstatusentry_ecrffield_section
    • Oghere ntinye:        ${ecrffieldstatusentry_ecrffield_position}. $ecrffieldstatusentry_ecrffield_field_name
-#ọ bụrụ ($notification.ecrfFieldStatusEntry.ecrfField.series)
+#if($notification.ecrfFieldStatusEntry.ecrfField.series)
    • Ndekọ:              $ecrffieldstatusentry_index
-#njedebe
+#end
 
    • Ọnọdụ mbipụta eCRF:  $ecrffieldstatusentry_status
 
-   • gbanwetụrụ: #if ($notification.ecrfFieldStatusEntry.modifiedUser.identity)$ecrffieldstatusentry_modifieduser_identity_name#{else}$ecrffieldstatusentry_modifieduser_name# ngwụcha
+   • gbanwetụrụ: #if($notification.ecrfFieldStatusEntry.modifiedUser.identity)$ecrffieldstatusentry_modifieduser_identity_name#{else}$ecrffieldstatusentry_modifieduser_name#end
 
 
 Okwu:
@@ -32,21 +32,21 @@ $ecrffieldstatusentry_comment
 
 #if(${index_field_log.size()} > 0) Akụkọ:
 
-#foreach($log na $index_field_log)
-#ma (${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldStatusEntryOutVO")
-   • $log.status.aha: $!log.comment
+#foreach($log in $index_field_log)
+#if(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldStatusEntryOutVO")
+   • $log.status.name: $!log.comment
 #elseif(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO")
    • saved (#if($string_utils.isEmpty($log.reasonForChange))version $log.version#{else}$log.reasonForChange#end): $ecrf_input_field_value_adapter.toString($log)
-#njedebe
-#njedebe
+#end
+#end
 
-#njedebe#ma ọ bụrụ (!$notification.ecrfFieldStatusEntry.status.resolved)
+#end#if(!$notification.ecrfFieldStatusEntry.status.resolved)
 Biko lelee ntinye data iji dozie okwu eCRF:
 
    $http_base_url/shared/ecrfSection.jsf?issueid=$ecrffieldstatusentry_id
-#ọzọ
+#else
 Okwu eCRF mechiri.
-#njedebe
+#end
 
 Daalụ!
 

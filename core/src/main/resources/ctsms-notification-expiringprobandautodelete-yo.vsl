@@ -4,7 +4,7 @@ eyi jẹ iwifunni fun iṣẹlẹ atẹle:
 
    $type
 
-   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#opin
+   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
    • Ẹka ile-iṣẹ Proband:     $proband_department
    • Ẹka Proband:        $proband_category

@@ -11,15 +11,15 @@ questa è una notifica per il seguente evento:
    • eCRF:               $ecrffieldstatusentry_ecrffield_ecrf_name
 #if($notification.ecrfFieldStatusEntry.listEntry.group)
    • Gruppo probando:      $notification.ecrfFieldStatusEntry.listEntry.group.title
-#FINE
+#end
 #if($notification.ecrfFieldStatusEntry.visit)
    • Visita:              $notification.ecrfFieldStatusEntry.visit.title
-#FINE
+#end
    • Sezione eCRF:       $ecrffieldstatusentry_ecrffield_section
    • Campo di immissione:        ${ecrffieldstatusentry_ecrffield_position}. $ecrffieldstatusentry_ecrffield_field_name
 #if($notification.ecrfFieldStatusEntry.ecrfField.series)
    • Indice:              $ecrffieldstatusentry_index
-#FINE
+#end
 
    • Stato emissione eCRF:  $ecrffieldstatusentry_status
 
@@ -34,19 +34,19 @@ $ecrffieldstatusentry_comment
 
 #foreach($log in $index_field_log)
 #if(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldStatusEntryOutVO")
-   • $log.status.nome: $!log.commento
+   • $log.status.name: $!log.comment
 #elseif(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO")
    • saved (#if($string_utils.isEmpty($log.reasonForChange))version $log.version#{else}$log.reasonForChange#end): $ecrf_input_field_value_adapter.toString($log)
-#FINE
-#FINE
+#end
+#end
 
 #end#if(!$notification.ecrfFieldStatusEntry.status.resolved)
 Controlla l'inserimento dei dati per risolvere il problema eCRF:
 
    $http_base_url/shared/ecrfSection.jsf?issueid=$ecrffieldstatusentry_id
-#altro
+#else
 La questione eCRF è chiusa.
-#FINE
+#end
 
 Grazie!
 

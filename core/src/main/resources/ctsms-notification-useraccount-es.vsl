@@ -1,30 +1,30 @@
 Estimado $user_identity_firstname,
 
-su cuenta ${application.abbreviation} fue #si($new_user)creada#{else}cambió#final.
+su cuenta ${application.abbreviation} fue #if($new_user)creada#{else}cambió#end.
 
    • Nombre de usuario:   $user_name
-#si($local_auth_method)
-#si($new_user)
+#if($local_auth_method)
+#if($new_user)
    • Un administrador le informará la contraseña real.
-#demás
+#else
    • La contraseña permanece sin cambios.
-#fin
+#end
 #elseif($ldap_auth_method)
    • La contraseña a utilizar es su contraseña MUG.
 
-#si($new_user)
+#if($new_user)
 Al iniciar sesión por primera vez, ingrese la contraseña proporcionada por el administrador como "contraseña local" obligatoria.
-#demás
+#else
 La próxima vez que inicie sesión, ingrese su contraseña actual como la "contraseña local" obligatoria.
-#fin
-#fin
+#end
+#end
 
-#si($new_user)
+#if($new_user)
 Se puede acceder al sistema en el siguiente sitio:
 
    $http_base_url
 
-#fin
+#end
 IMPORTANTE: La cuenta le permite leer información de identificación personal de los sujetos registrados por los usuarios del departamento "$user_department". Para mantener la privacidad de los datos, las credenciales de la cuenta deben mantenerse en secreto. Nunca se le pedirá que proporcione credenciales por correo electrónico o servidores distintos de "$http_domain_name".
 
 ¡Gracias!

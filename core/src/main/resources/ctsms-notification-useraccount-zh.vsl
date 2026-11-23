@@ -6,25 +6,25 @@
 #if($local_auth_method)
 #if($new_user)
    • 管理员将告知您实际的密码。
-＃别的
+#else
    • 密码保持不变。
-＃结尾
+#end
 #elseif($ldap_auth_method)
    • 使用的密码是您的MUG 密码。
 
 #if($new_user)
 首次登录时，请输入管理员给出的密码作为必填的“本地密码”。
-＃别的
+#else
 下次登录时，请输入您当前的密码作为必填的“本地密码”。
-＃结尾
-＃结尾
+#end
+#end
 
 #if($new_user)
 该系统可通过以下站点访问：
 
    $http_base_url
 
-＃结尾
+#end
 重要提示：该帐户允许您读取“$user_department”部门用户注册的主题的个人身份信息。 为了维护数据隐私，帐户凭据必须保密。 除了“$http_domain_name”之外，您永远不会被要求通过电子邮件或服务器提供凭据。
 
 谢谢你！

@@ -8,18 +8,18 @@
    • 방문:      $visitscheduleitem_name
 #if($visit_schedule_item_day_date)
    • 날짜:       $visit_schedule_item_day_date
-#또 다른
+#else
    • 방문 출발지: $visitscheduleitem_start
    • 방문 장소:   $visitscheduleitem_stop
-#끝
+#end
 
    • 임계값:  $inactive_staff_limit
 
 $inactive_staff.size() 직원 N/A:
 
-#foreach($employee $inactive_staff)
+#foreach($employee in $inactive_staff)
    • $employee.name
-#끝
+#end
 
 준비 및/또는 적절한 조치를 취하시기 바랍니다.
 

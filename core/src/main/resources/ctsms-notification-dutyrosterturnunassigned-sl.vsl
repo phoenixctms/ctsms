@@ -15,9 +15,9 @@ to je obvestilo za naslednji dogodek:
    • Novo osebje:      $dutyrosterturn_staff_name
 #if($notification.dutyRosterTurn.selfAllocatable)
    • Samododelljivi.
-#drugo
+#else
    • Brez samododeljevanja.
-#konec
+#end
 
    • Spremenjeno: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
 

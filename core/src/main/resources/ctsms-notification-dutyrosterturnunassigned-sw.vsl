@@ -13,13 +13,13 @@ hii ni arifa ya tukio lifuatalo:
    • Tembelea:          $dutyrosterturn_visitscheduleitem_name
 
    • Wafanyakazi wapya:      $dutyrosterturn_staff_name
-#kama($notification.dutyRosterTurn.selfAllocatable)
+#if($notification.dutyRosterTurn.selfAllocatable)
    • Kujitenga.
-#vingine
+#else
    • Hakuna kujitenga.
-#mwisho
+#end
 
-   • Iliyorekebishwa: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#mwisho
+   • Iliyorekebishwa: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
 
 
 Maoni ya wajibu:

@@ -1,30 +1,30 @@
 Ezigbo $user_identity_firstname,
 
-Akaụntụ gị ${application.abbreviation} bụ #ma ($new_user) emepụta#{else}gbanwere# ọgwụgwụ.
+Akaụntụ gị ${application.abbreviation} bụ #if($new_user) emepụta#{else}gbanwere#end.
 
    • Aha njirimara:   $user_name
-#ọ bụrụ ($local_auth_method)
-#ọ bụrụ ($new_user)
+#if($local_auth_method)
+#if($new_user)
    • Onye nchịkwa ga-agwa gị maka paswọọdụ n'ezie.
-#ọzọ
+#else
    • Okwuntughe agaghị agbanwe agbanwe.
-#njedebe
+#end
 #elseif($ldap_auth_method)
    • Okwuntughe ị ga-eji bụ MUG-paswọọdụ gị.
 
-#ọ bụrụ ($new_user)
+#if($new_user)
 Mgbe ị na-abanye na nke mbụ, tinye paswọọdụ nke onye nchịkwa nyere dị ka "paswọọdụ mpaghara" amanyere iwu.
-#ọzọ
+#else
 Mgbe ị na-abanye na oge ọzọ, tinye paswọọdụ gị ugbu a dị ka "paswọọdụ mpaghara" amanyere iwu.
-#njedebe
-#njedebe
+#end
+#end
 
-#ọ bụrụ ($new_user)
+#if($new_user)
 Enwere ike ịnweta sistemụ ahụ na saịtị dị n'okpuru:
 
    $http_base_url
 
-#njedebe
+#end
 DỊ MKPA: Akaụntụ ahụ na-enye gị ohere ịgụ ozi nke isiokwu ndị ọrụ nke ngalaba "$user_department" debanyere aha n'onwe gị. Iji dokwaa nzuzo data, ekwesịrị idobe nzere akaụntụ na nzuzo. Agaghị arịọ gị ka ịnye nzere site na email ma ọ bụ sava ndị ọzọ karịa "$http_domain_name".
 
 Daalụ!

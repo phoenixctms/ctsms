@@ -15,9 +15,9 @@
    • 새로운 직원:      $dutyrosterturn_staff_name
 #if($notification.dutyRosterTurn.selfAllocatable)
    • 자체 할당 가능.
-#또 다른
+#else
    • 자체 할당이 없습니다.
-#끝
+#end
 
    • 수정됨: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
 

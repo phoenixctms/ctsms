@@ -11,10 +11,10 @@ bu, aşağıdaki etkinlik için bir bildirimdir:
    • eCRF:                 $ecrfstatusentry_ecrf_name
 #if($notification.ecrfStatusEntry.listEntry.group)
    • Proband grubu:        $notification.ecrfStatusEntry.listEntry.group.title
-#son
+#end
 #if($notification.ecrfStatusEntry.visit)
    • Ziyaret edin:                $notification.ecrfStatusEntry.visit.title
-#son
+#end
 
    • eCRF durumu:          $ecrfstatusentry_status
 #if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "OK")
@@ -23,22 +23,22 @@ bu, aşağıdaki etkinlik için bir bildirimdir:
 #elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "FAILED")
    • $ecrfstatusentry_validationresponsemsg
    • Zaman damgası:            $ecrfstatusentry_validationtimestamp
-#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "BEKLEMEDE")
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "PENDING")
    • Giriş doğrulaması bekleniyor.
-#son
+#end
 
    • Değiştirildi: #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
 
 
 #if(!$notification.ecrfStatusEntry.status.done)
 eCRF veri girişini tamamlamak için lütfen sonraki adımlarla devam edin.
-#başka
+#else
 eCRF veri girişi tamamlandı.
-#son
+#end
 
 Teşekkür ederim!
 
-Bu $generated_ontarihinde oluşturulan, sistem tarafından oluşturulan bir e-postadır, bu arada güncelliğini yitirmiş olabilir. Cevap yok.
+Bu $generated_on tarihinde oluşturulan, sistem tarafından oluşturulan bir e-postadır, bu arada güncelliğini yitirmiş olabilir. Cevap yok.
 
 -------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}

@@ -8,18 +8,18 @@
    • 访问：      $visitscheduleitem_name
 #if($visit_schedule_item_day_date)
    • 日期：       $visit_schedule_item_day_date
-＃别的
+#else
    • 访问时间： $visitscheduleitem_start
    • 访问：   $visitscheduleitem_stop
-＃结尾
+#end
 
    • 阈值：  $inactive_staff_limit
 
 $inactive_staff.size() 员工 不适用：
 
-#foreach($employee 在 $inactive_staff)
+#foreach($employee in $inactive_staff)
    • $employee.name
-＃结尾
+#end
 
 请准备和/或采取适当的行动。
 

@@ -11,30 +11,30 @@
    • eCRF:                 $ecrfstatusentry_ecrf_name
 #if($notification.ecrfStatusEntry.listEntry.group)
    • Группа пробандов:        $notification.ecrfStatusEntry.listEntry.group.title.
-#конец
+#end
 #if($notification.ecrfStatusEntry.visit)
    • Посетите:                $notification.ecrfStatusEntry.visit.title.
-#конец
+#end
 
    • Статус eCRF:          $ecrfstatusentry_status
-#if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "ОК")
+#if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "OK")
    • Проверка ввода:     $ecrfstatusentry_validationresponsemsg
    • Временная метка проверки: $ecrfstatusentry_validationtimestamp.
 #elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "FAILED")
    • $ecrfstatusentry_validationresponsemsg
    • Временная метка:            $ecrfstatusentry_validationtimestamp
-#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "ОЖИДАНИЕ")
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "PENDING")
    • Ожидается проверка ввода.
-#конец
+#end
 
    • Изменено: #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
 
 
 #if(!$notification.ecrfStatusEntry.status.done)
 Пожалуйста, перейдите к следующим шагам, чтобы завершить ввод данных в eCRF.
-#еще
+#else
 Ввод данных eCRF завершен.
-#конец
+#end
 
 Спасибо!
 

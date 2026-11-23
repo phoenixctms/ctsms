@@ -8,11 +8,11 @@ Nke a bụ ọkwa maka mmemme a:
    • Gaa na:         $visitscheduleitem_name
    • Gaa na:    $visitscheduleitem_start
    • Gaa na:      $visitscheduleitem_stop
-#ọ bụrụ ($notification.proband)
+#if($notification.proband)
 
    • Proband:       #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
-#njedebe
+#end
 
 Biko kwadebe na/ma ọ bụ mee ihe kwesịrị ekwesị.
 

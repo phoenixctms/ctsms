@@ -13,11 +13,11 @@ il s'agit d'une notification pour l'événement suivant :
    • Visite :          $dutyrosterturn_visitscheduleitem_name
 
    • Personnel :          $dutyrosterturn_staff_name
-#if($notification.dutyRosterTurn.selfAllocable)
+#if($notification.dutyRosterTurn.selfAllocatable)
    • Auto-attribuable.
-#autre
+#else
    • Pas d'auto-allocation.
-#fin
+#end
 
    • Modifié : #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
 

@@ -11,7 +11,7 @@ questa è una notifica per il seguente evento:
    • Tipo di stato:     $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
    • Origine:      $inventorystatusentry_originator_name
-#FINE
+#end
    • Stato da:     $inventorystatusentry_start
    • Stato a:       $inventorystatusentry_stop
 

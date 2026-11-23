@@ -6,15 +6,15 @@ dette er en notifikation for følgende begivenhed:
 
    • Prøveversion:                $ecrfstatusentry_listentry_trial_name
    • Prøveafdeling:     $ecrfstatusentry_listentry_trial_department
-   • Proband: #if($string_utils.isEmpty($ecrfstatusentry_listentry_proband_alias))$ecrfstatusentry_listentry_proband_id#{else}$ecrfstatusentry_listentry_proband_alias#slut
+   • Proband: #if($string_utils.isEmpty($ecrfstatusentry_listentry_proband_alias))$ecrfstatusentry_listentry_proband_id#{else}$ecrfstatusentry_listentry_proband_alias#end
 
    • eCRF:                 $ecrfstatusentry_ecrf_name
 #if($notification.ecrfStatusEntry.listEntry.group)
    • Probandgruppe:        $notification.ecrfStatusEntry.listEntry.group.title
-#ende
+#end
 #if($notification.ecrfStatusEntry.visit)
    • Besøg:                $notification.ecrfStatusEntry.visit.title
-#ende
+#end
 
    • eCRF-status:          $ecrfstatusentry_status
 #if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "OK")
@@ -23,18 +23,18 @@ dette er en notifikation for følgende begivenhed:
 #elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "FAILED")
    • $ecrfstatusentry_validationresponsemsg
    • Tidsstempel:            $ecrfstatusentry_validationtimestamp
-#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "VENTENDE")
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "PENDING")
    • Inputvalidering afventer.
-#ende
+#end
 
    • Ændret: #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
 
 
 #if(!$notification.ecrfStatusEntry.status.done)
 Fortsæt venligst med de næste trin for at fuldføre eCRF-dataindtastningen.
-#andet
+#else
 eCRF-dataindtastningen er fuldført.
-#ende
+#end
 
 Tak skal du have!
 

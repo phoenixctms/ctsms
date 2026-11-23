@@ -4,7 +4,7 @@ oyo ezali liyebisi mpo na likambo oyo elandi:
 
    $type
 
-   • Proband: #soki($string_utils.ezali Pamba($proband_alias))$proband_id#{else}$proband_alias#nsuka
+   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
    • Departema ya Proband:     $proband_department
    • Catégorie ya proband:        $proband_category

@@ -6,20 +6,20 @@ dette er en notifikation for følgende begivenhed:
 
    • Prøveversion:      $visitscheduleitem_trial_name
    • Besøg:      $visitscheduleitem_name
-#hvis($visit_schedule_item_day_date)
+#if($visit_schedule_item_day_date)
    • Dato:       $visit_schedule_item_day_date
-#andet
+#else
    • Besøg fra: $visitscheduleitem_start
    • Besøg på:   $visitscheduleitem_stop
-#ende
+#end
 
    • Tærskel:  $inactive_staff_limit
 
 $inactive_staff.size() medarbejdere N/A:
 
-#foreach($employee i $inactive_staff)
-   • $employee.navn
-#ende
+#foreach($employee in $inactive_staff)
+   • $employee.name
+#end
 
 Forbered venligst og/eller tag passende handlinger.
 

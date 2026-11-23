@@ -9,32 +9,32 @@ Nke a bụ ọkwa maka mmemme a:
    • Proband:              #if($string_utils.isEmpty($ecrfstatusentry_listentry_proband_alias))$ecrfstatusentry_listentry_proband_id#{else}$ecrfstatusentry_listentry_proband_alias#end
 
    • eCRF:                 $ecrfstatusentry_ecrf_name
-#ọ bụrụ ($notification.ecrfStatusEntry.listEntry.group)
+#if($notification.ecrfStatusEntry.listEntry.group)
    • Ndị otu:        $notification.ecrfStatusEntry.listEntry.group.title
-#njedebe
-#ọ bụrụ ($notification.ecrfStatusEntry.visit)
+#end
+#if($notification.ecrfStatusEntry.visit)
    • Gaa na:                $notification.ecrfStatusEntry.visit.title
-#njedebe
+#end
 
    • Ọkwa eCRF:          $ecrfstatusentry_status
 #if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "OK")
    • Ntinye ntinye:     $ecrfstatusentry_validationresponsemsg
    • akara oge nkwado: $ecrfstatusentry_validationtimestamp
-#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "EDERE")
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "FAILED")
    • $ecrfstatusentry_validationresponsemsg
    • akara oge:            $ecrfstatusentry_validationtimestamp
-#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "na-echere")
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "PENDING")
    • Ntinye nkwado na-echere.
-#njedebe
+#end
 
-   • gbanwetụrụ: #if ($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name# ọgwụgwụ
+   • gbanwetụrụ: #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
 
 
-#ma (!$notification.ecrfStatusEntry.status.mere)
+#if(!$notification.ecrfStatusEntry.status.done)
 Biko gaa n'ihu na usoro ndị ọzọ iji mechaa ntinye data eCRF.
-#ọzọ
+#else
 E dechara ntinye data eCRF.
-#njedebe
+#end
 
 Daalụ!
 

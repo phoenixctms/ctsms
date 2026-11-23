@@ -8,18 +8,18 @@ detta är ett meddelande för följande händelse:
    • Besök:      $visitscheduleitem_name
 #if($visit_schedule_item_day_date)
    • Datum:       $visit_schedule_item_day_date
-#annan
+#else
    • Besök från: $visitscheduleitem_start
    • Besök på:   $visitscheduleitem_stop
-#slutet
+#end
 
    • Tröskel:  $inactive_staff_limit
 
 $inactive_staff.size() anställda N/A:
 
-#foreach($employee i $inactive_staff)
-   • $employee.namn
-#slutet
+#foreach($employee in $inactive_staff)
+   • $employee.name
+#end
 
 Förbered och/eller vidta lämpliga åtgärder.
 

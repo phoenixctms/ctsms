@@ -9,9 +9,9 @@ oyo ezali liyebisi mpo na likambo oyo elandi:
    • Inventaire cat.:  $inventorystatusentry_inventory_category
 
    • Lolenge:            $inventorystatusentry_type
-#if($notification.Entrée yaEtat ya inventaire.mobandisi)
+#if($notification.inventoryStatusEntry.originator)
    • Mobandisi:      $inventorystatusentry_originator_name
-#nsuka
+#end
    • Euti na:            $inventorystatusentry_start
    • Na:              $inventorystatusentry_stop
 

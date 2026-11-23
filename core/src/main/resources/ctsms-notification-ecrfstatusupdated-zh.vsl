@@ -11,30 +11,30 @@
    • eCRF：                 $ecrfstatusentry_ecrf_name
 #if($notification.ecrfStatusEntry.listEntry.group)
    • 先证者组：        $notification.ecrfStatusEntry.listEntry.group.title
-＃结尾
+#end
 #if($notification.ecrfStatusEntry.visit)
    • 访问：                $notification.ecrfStatusEntry.visit.title
-＃结尾
+#end
 
    • eCRF 状态：          $ecrfstatusentry_status
-#if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "确定")
+#if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "OK")
    • 输入验证：     $ecrfstatusentry_validationresponsemsg
    • 验证时间戳： $ecrfstatusentry_validationtimestamp
-#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "失败")
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "FAILED")
    • $ecrfstatusentry_validationresponsemsg
    • 时间戳：            $ecrfstatusentry_validationtimestamp
-#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "待处理")
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "PENDING")
    • 输入验证待处理。
-＃结尾
+#end
 
    • 修改：#if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
 
 
 #if(!$notification.ecrfStatusEntry.status.done)
 请继续执行后续步骤以完成 eCRF 数据输入。
-＃别的
+#else
 eCRF 数据输入完成。
-＃结尾
+#end
 
 谢谢你！
 

@@ -1,4 +1,4 @@
-Sayın $visitscheduleitem_trial_name deneme ekibi üyesi veya $staff_namesüpervizörü,
+Sayın $visitscheduleitem_trial_name deneme ekibi üyesi veya $staff_name süpervizörü,
 
 bu, aşağıdaki etkinlik için bir bildirimdir:
 
@@ -8,24 +8,24 @@ bu, aşağıdaki etkinlik için bir bildirimdir:
    • Ziyaret edin:      $visitscheduleitem_name
 #if($visit_schedule_item_day_date)
    • Tarih:       $visit_schedule_item_day_date
-#başka
+#else
    • Ziyaret yeri: $visitscheduleitem_start
    • Şurayı ziyaret edin:   $visitscheduleitem_stop
-#son
+#end
 
    • Eşik:  $inactive_staff_limit
 
 $inactive_staff.size() çalışanları Yok:
 
 #foreach($employee in $inactive_staff)
-   • $employee.isim
-#son
+   • $employee.name
+#end
 
 Lütfen gerekli önlemleri alın ve/veya hazırlayın.
 
 Teşekkür ederim!
 
-Bu $generated_ontarihinde oluşturulan, sistem tarafından oluşturulan bir e-postadır, bu arada güncelliğini yitirmiş olabilir. Cevap yok.
+Bu $generated_on tarihinde oluşturulan, sistem tarafından oluşturulan bir e-postadır, bu arada güncelliğini yitirmiş olabilir. Cevap yok.
 
 -------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}

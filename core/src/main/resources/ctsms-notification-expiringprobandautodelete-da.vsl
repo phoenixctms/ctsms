@@ -4,7 +4,7 @@ dette er en notifikation for følgende begivenhed:
 
    $type
 
-   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#slut
+   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
    • Proband-afdeling:     $proband_department
    • Proband kategori:        $proband_category

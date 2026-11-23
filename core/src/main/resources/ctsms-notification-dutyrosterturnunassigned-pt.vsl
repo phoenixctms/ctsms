@@ -15,9 +15,9 @@ esta é uma notificação para o seguinte evento:
    • Nova equipe:      $dutyrosterturn_staff_name
 #if($notification.dutyRosterTurn.selfAllocatable)
    • Autoalocável.
-#outro
+#else
    • Sem auto-alocação.
-#fim
+#end
 
    • Modificado: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
 

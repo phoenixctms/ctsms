@@ -11,15 +11,15 @@
    • eCRF:               $ecrffieldstatusentry_ecrffield_ecrf_name
 #if($notification.ecrfFieldStatusEntry.listEntry.group)
    • Группа пробандов:      $notification.ecrfFieldStatusEntry.listEntry.group.title.
-#конец
+#end
 #if($notification.ecrfFieldStatusEntry.visit)
    • Посетите:              $notification.ecrfFieldStatusEntry.visit.title.
-#конец
+#end
    • Раздел электроннойИРК:       $ecrffieldstatusentry_ecrffield_section
    • Поле ввода:        ${ecrffieldstatusentry_ecrffield_position}. $ecrffieldstatusentry_ecrffield_field_name
 #if($notification.ecrfFieldStatusEntry.ecrfField.series)
    • Индекс:              $ecrffieldstatusentry_index
-#конец
+#end
 
    • Статус выпуска eCRF:  $ecrffieldstatusentry_status
 
@@ -32,21 +32,21 @@ $ecrffieldstatusentry_comment
 
 #if(${index_field_log.size()} > 0)История:
 
-#foreach($log в $index_field_log)
+#foreach($log in $index_field_log)
 #if(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldStatusEntryOutVO")
    • $log.status.name: $!log.comment
 #elseif(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO")
    • saved (#if($string_utils.isEmpty($log.reasonForChange))version $log.version#{else}$log.reasonForChange#end): $ecrf_input_field_value_adapter.toString($log)
-#конец
-#конец
+#end
+#end
 
 #end#if(!$notification.ecrfFieldStatusEntry.status.resolved)
 Пожалуйста, проверьте ввод данных, чтобы решить проблему с eCRF:
 
    $http_base_url/shared/ecrfSection.jsf?issueid=$ecrffieldstatusentry_id
-#еще
+#else
 Вопрос по eCRF закрыт.
-#конец
+#end
 
 Спасибо!
 

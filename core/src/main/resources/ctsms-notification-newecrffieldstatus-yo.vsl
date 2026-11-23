@@ -6,24 +6,24 @@ eyi jẹ iwifunni fun iṣẹlẹ atẹle:
 
    • Idanwo:              $ecrffieldstatusentry_listentry_trial_name
    • Ẹka idanwo:   $ecrffieldstatusentry_listentry_trial_department
-   • Proband: #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#opin
+   • Proband: #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#end
 
    • eCRF:               $ecrffieldstatusentry_ecrffield_ecrf_name
-#ti o ba jẹ ($notification.ecrfFieldStatusEntry.listEntry.group)
+#if($notification.ecrfFieldStatusEntry.listEntry.group)
    • Ẹgbẹ Proband:      $notification.ecrfFieldStatusEntry.listEntry.group.title
-#opin
-#ti o ba jẹ ($notification.ecrfFieldStatusEntry.ibewo)
+#end
+#if($notification.ecrfFieldStatusEntry.visit)
    • Ṣabẹwo:              $notification.ecrfFieldStatusEntry.visit.title
-#opin
+#end
    • apakan eCRF:       $ecrffieldstatusentry_ecrffield_section
    • Aaye igbewọle:        ${ecrffieldstatusentry_ecrffield_position}. $ecrffieldstatusentry_ecrffield_field_name
-#ti o ba jẹ ($notification.ecrfFieldStatusEntry.ecrfField.series)
+#if($notification.ecrfFieldStatusEntry.ecrfField.series)
    • Atọka:              $ecrffieldstatusentry_index
-#opin
+#end
 
    • Ipo Oro eCRF:  $ecrffieldstatusentry_status
 
-   • Títúnṣe: #if($notification.ecrfFieldStatusEntry.modifiedUser.identity)$ecrffieldstatusentry_modifieduser_identity_name#{else}$ecrffieldstatusentry_modifieduser_name#opin
+   • Títúnṣe: #if($notification.ecrfFieldStatusEntry.modifiedUser.identity)$ecrffieldstatusentry_modifieduser_identity_name#{else}$ecrffieldstatusentry_modifieduser_name#end
 
 
 Ọrọìwòye:
@@ -37,16 +37,16 @@ $ecrffieldstatusentry_comment
    • $log.status.name: $!log.comment
 #elseif(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO")
    • saved (#if($string_utils.isEmpty($log.reasonForChange))version $log.version#{else}$log.reasonForChange#end): $ecrf_input_field_value_adapter.toString($log)
-#opin
-#opin
+#end
+#end
 
-#opin#ti o ba jẹ (!$notification.ecrfFieldStatusEntry.status.resolved)
+#end#if(!$notification.ecrfFieldStatusEntry.status.resolved)
 Jọwọ ṣayẹwo titẹsi data lati yanju ọrọ eCRF:
 
    $http_base_url/shared/ecrfSection.jsf?issueid=$ecrffieldstatusentry_id
-#miiran
+#else
 Ọrọ eCRF ti wa ni pipade.
-#opin
+#end
 
 E dupe!
 

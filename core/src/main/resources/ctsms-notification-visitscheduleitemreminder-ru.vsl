@@ -8,11 +8,11 @@
    • Посетите:         $visitscheduleitem_name
    • Посетитель:    $visitscheduleitem_start
    • Посещение:      $visitscheduleitem_stop
-#if($notification.пробанд)
+#if($notification.proband)
 
    • Пробанд: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
-#конец
+#end
 
 Пожалуйста, подготовьтесь и/или примите соответствующие меры.
 

@@ -6,30 +6,30 @@ ${application.abbreviation} hesabınız #if($new_user)oluşturuldu#{else}değiş
 #if($local_auth_method)
 #if($new_user)
    • Bir yönetici size gerçek şifreyi bildirecektir.
-#başka
+#else
    • Şifre değişmeden kalır.
-#son
+#end
 #elseif($ldap_auth_method)
    • Kullanılacak şifre MUG şifrenizdir.
 
 #if($new_user)
 İlk kez oturum açarken zorunlu "yerel şifre" olarak yönetici tarafından verilen şifreyi girin.
-#başka
+#else
 Bir sonraki oturum açışınızda zorunlu "yerel şifre" olarak mevcut şifrenizi girin.
-#son
-#son
+#end
+#end
 
 #if($new_user)
 Sisteme aşağıdaki siteden ulaşılabilir:
 
    $http_base_url
 
-#son
+#end
 ÖNEMLİ: Hesap, "$user_department" bölümünün kullanıcıları tarafından kaydedilen kişilerin kişisel olarak tanımlanabilir bilgilerini okumanıza olanak tanır. Veri gizliliğini korumak için hesap kimlik bilgilerinin gizli tutulması gerekir. Hiçbir zaman e-posta veya "$http_domain_name" dışındaki sunucular aracılığıyla kimlik bilgileri sağlamanız istenmeyecektir.
 
 Teşekkür ederim!
 
-Bu $generated_ontarihinde oluşturulan, sistem tarafından oluşturulan bir e-postadır, bu arada güncelliğini yitirmiş olabilir. Cevap yok.
+Bu $generated_on tarihinde oluşturulan, sistem tarafından oluşturulan bir e-postadır, bu arada güncelliğini yitirmiş olabilir. Cevap yok.
 
 -------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}

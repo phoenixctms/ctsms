@@ -6,35 +6,35 @@ eyi jẹ iwifunni fun iṣẹlẹ atẹle:
 
    • Idanwo:                $ecrfstatusentry_listentry_trial_name
    • Ẹka idanwo:     $ecrfstatusentry_listentry_trial_department
-   • Proband: #if($string_utils.isEmpty($ecrfstatusentry_listentry_proband_alias))$ecrfstatusentry_listentry_proband_id#{else}$ecrfstatusentry_listentry_proband_alias#opin
+   • Proband: #if($string_utils.isEmpty($ecrfstatusentry_listentry_proband_alias))$ecrfstatusentry_listentry_proband_id#{else}$ecrfstatusentry_listentry_proband_alias#end
 
    • eCRF:                 $ecrfstatusentry_ecrf_name
-#ti o ba jẹ ($notification.ecrfStatusEntry.listEntry.group)
+#if($notification.ecrfStatusEntry.listEntry.group)
    • Ẹgbẹ Proband:        $notification.ecrfStatusEntry.listEntry.group.title
-#opin
-#ti o ba jẹ ($notification.ecrfStatusEntry.ibewo)
+#end
+#if($notification.ecrfStatusEntry.visit)
    • Ṣabẹwo:                $notification.ecrfStatusEntry.visit.title
-#opin
+#end
 
    • ipo eCRF:          $ecrfstatusentry_status
-#if($notification.ecrfStatusEntry.status.ti afọwọsi && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "DARA")
+#if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "OK")
    • Afọwọsi igbewọle:     $ecrfstatusentry_validationresponsemsg
    • Aago Ifọwọsi: $ecrfstatusentry_validationtimestamp
 #elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "FAILED")
    • $ecrfstatusentry_validationresponsemsg
    • Aami akoko:            $ecrfstatusentry_validationtimestamp
-#elseif($notification.ecrfStatusEntry.status.ti afọwọsi && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "NI isunmọtosi")
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "PENDING")
    • Ifọwọsi igbewọle ni isunmọtosi.
-#opin
+#end
 
-   • Títúnṣe: #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#opin
+   • Títúnṣe: #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
 
 
-#ti o ba jẹ (!$notification.ecrfStatusEntry.status.ti ṣe)
+#if(!$notification.ecrfStatusEntry.status.done)
 Jọwọ tẹsiwaju pẹlu awọn igbesẹ atẹle lati pari titẹsi data eCRF.
-#miiran
+#else
 Akọsilẹ data eCRF ti pari.
-#opin
+#end
 
 E dupe!
 

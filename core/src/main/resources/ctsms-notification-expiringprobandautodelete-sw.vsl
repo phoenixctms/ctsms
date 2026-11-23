@@ -4,7 +4,7 @@ hii ni arifa ya tukio lifuatalo:
 
    $type
 
-   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#mwisho
+   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
    • Idara ya Proband:     $proband_department
    • Aina ya proband:        $proband_category

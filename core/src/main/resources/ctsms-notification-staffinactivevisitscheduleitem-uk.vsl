@@ -6,20 +6,20 @@
 
    • Випробування:      $visitscheduleitem_trial_name
    • Відвідайте:      $visitscheduleitem_name
-#якщо($visit_schedule_item_day_date)
+#if($visit_schedule_item_day_date)
    • Дата:       $visit_schedule_item_day_date
-#інше
+#else
    • Відвідайте з: $visitscheduleitem_start
    • Відвідайте:   $visitscheduleitem_stop
-#кінець
+#end
 
    • Поріг:  $inactive_staff_limit
 
 $inactive_staff.size() співробітників Н/Д:
 
-#foreach($employee в $inactive_staff)
+#foreach($employee in $inactive_staff)
    • $employee.name
-#кінець
+#end
 
 Будь ласка, підготуйтеся та/або зробіть відповідні дії.
 

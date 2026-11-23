@@ -11,15 +11,15 @@ ez egy értesítés a következő eseményről:
    • eCRF:               $ecrffieldstatusentry_ecrffield_ecrf_name
 #if($notification.ecrfFieldStatusEntry.listEntry.group)
    • Proband csoport:      $notification.ecrfFieldStatusEntry.listEntry.group.title
-#vége
+#end
 #if($notification.ecrfFieldStatusEntry.visit)
    • Látogasson el:              $notification.ecrfFieldStatusEntry.visit.title
-#vége
+#end
    • eCRF szakasz:       $ecrffieldstatusentry_ecrffield_section
    • Beviteli mező:        ${ecrffieldstatusentry_ecrffield_position}. $ecrffieldstatusentry_ecrffield_field_name
 #if($notification.ecrfFieldStatusEntry.ecrfField.series)
    • Index:              $ecrffieldstatusentry_index
-#vége
+#end
 
    • eCRF probléma állapota:  $ecrffieldstatusentry_status
 
@@ -37,20 +37,20 @@ $ecrffieldstatusentry_comment
    • $log.status.name: $!log.comment
 #elseif(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO")
    • saved (#if($string_utils.isEmpty($log.reasonForChange))version $log.version#{else}$log.reasonForChange#end): $ecrf_input_field_value_adapter.toString($log)
-#vége
-#vége
+#end
+#end
 
 #end#if(!$notification.ecrfFieldStatusEntry.status.resolved)
 Kérjük, ellenőrizze az adatbevitelt az eCRF probléma megoldásához:
 
    $http_base_url/shared/ecrfSection.jsf?issueid=$ecrffieldstatusentry_id
-#más
+#else
 Az eCRF-kérdés lezárult.
-#vége
+#end
 
 Köszönöm!
 
-Ez egy rendszer által generált e-mail, amelyet a $generated_onnapon hoztak létre, és időközben elavult lehet. Ne válaszolj.
+Ez egy rendszer által generált e-mail, amelyet a $generated_on napon hoztak létre, és időközben elavult lehet. Ne válaszolj.
 
 -------------------------------------------------- -------------
 ${application.abbreviation} ${application.version}

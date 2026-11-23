@@ -8,24 +8,24 @@ dit is een melding voor de volgende gebeurtenis:
    • Bezoek:      $visitscheduleitem_name
 #if($visit_schedule_item_day_date)
    • Datum:       $visit_schedule_item_day_date
-#anders
+#else
    • Bezoek van: $visitscheduleitem_start
    • Bezoek aan:   $visitscheduleitem_stop
-#einde
+#end
 
    • Drempel:  $inactive_staff_limit
 
 $inactive_staff.size() werknemers N.v.t.:
 
 #foreach($employee in $inactive_staff)
-   • $employee.naam
-#einde
+   • $employee.name
+#end
 
 Bereid passende maatregelen voor en/of onderneem passende maatregelen.
 
 Bedankt!
 
-Dit is een door het systeem gegenereerde e-mail die is gemaakt op $generated_onen in de tussentijd mogelijk verouderd is. Niet antwoorden.
+Dit is een door het systeem gegenereerde e-mail die is gemaakt op $generated_on en in de tussentijd mogelijk verouderd is. Niet antwoorden.
 
 ---------------------------------------------- ------------
 ${application.abbreviation} ${application.version}

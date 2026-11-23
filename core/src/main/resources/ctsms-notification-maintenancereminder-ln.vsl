@@ -1,4 +1,4 @@
-Ndeko #soki($notification.Eloko ya Manaka ya bobateli.Moto oyo azali na mokumba)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#suka,
+Ndeko #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end,
 
 oyo ezali liyebisi mpo na likambo oyo elandi:
 
@@ -8,7 +8,7 @@ oyo ezali liyebisi mpo na likambo oyo elandi:
    • Departema ya inventaire: $maintenancescheduleitem_inventory_department
    • Inventaire cat.:  $maintenancescheduleitem_inventory_category
 
-   • Titre: '$notification.Eloko ya Manaka ya bobateli.titre'.
+   • Titre: '$notification.maintenanceScheduleItem.title'
    • Lolenge:            $maintenancescheduleitem_type
    • Mokolo:            $maintenancescheduleitem_nextrecurrence
 

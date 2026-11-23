@@ -11,7 +11,7 @@ bu, aşağıdaki etkinlik için bir bildirimdir:
    • Durum türü:     $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
    • Oluşturan:      $inventorystatusentry_originator_name
-#son
+#end
    • Durum:     $inventorystatusentry_start
    • Durum:       $inventorystatusentry_stop
 
@@ -35,7 +35,7 @@ Lütfen gerekli önlemleri alın ve/veya hazırlayın.
 
 Teşekkür ederim!
 
-Bu $generated_ontarihinde oluşturulan, sistem tarafından oluşturulan bir e-postadır, bu arada güncelliğini yitirmiş olabilir. Cevap yok.
+Bu $generated_on tarihinde oluşturulan, sistem tarafından oluşturulan bir e-postadır, bu arada güncelliğini yitirmiş olabilir. Cevap yok.
 
 -------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
