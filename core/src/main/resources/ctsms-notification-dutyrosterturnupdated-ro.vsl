@@ -15,9 +15,9 @@ aceasta este o notificare pentru următorul eveniment:
    • Personal:          $dutyrosterturn_staff_name
 #if($notification.dutyRosterTurn.selfAllocatable)
    • Auto-alocabil.
-#altfel
+#else
    • Fără autoalocare.
-#Sfârşit
+#end
 
    • Modificat: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
 

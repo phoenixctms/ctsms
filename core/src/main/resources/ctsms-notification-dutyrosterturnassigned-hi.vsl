@@ -13,11 +13,11 @@
    • विजिट करें:          $dutyrosterturn_visitscheduleitem_name
 
    • स्टाफ:          $dutyrosterturn_staff_name
-#if($notification.dutyRosterTurn.selfAlocatable)
+#if($notification.dutyRosterTurn.selfAllocatable)
    • स्वयं आवंटन योग्य।
-#अन्य
+#else
    • कोई स्व-आवंटन नहीं.
-#अंत
+#end
 
    • संशोधित: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
 

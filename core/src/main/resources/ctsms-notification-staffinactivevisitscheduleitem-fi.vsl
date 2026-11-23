@@ -1,4 +1,4 @@
-Hyvä $visitscheduleitem_trial_name kokeilutiimin jäsen tai $staff_namevalvoja,
+Hyvä $visitscheduleitem_trial_name kokeilutiimin jäsen tai $staff_name valvoja,
 
 tämä on ilmoitus seuraavasta tapahtumasta:
 
@@ -8,18 +8,18 @@ tämä on ilmoitus seuraavasta tapahtumasta:
    • Käy:      $visitscheduleitem_name
 #if($visit_schedule_item_day_date)
    • Päivämäärä:       $visit_schedule_item_day_date
-#muu
+#else
    • Vierailu alkaen: $visitscheduleitem_start
    • Vierailu osoitteessa:   $visitscheduleitem_stop
-#loppu
+#end
 
    • Kynnys:  $inactive_staff_limit
 
 $inactive_staff.size() työntekijää N/A:
 
 #foreach($employee in $inactive_staff)
-   • $employee.nimi
-#loppu
+   • $employee.name
+#end
 
 Valmistaudu ja/tai ryhdy tarvittaviin toimiin.
 

@@ -6,20 +6,20 @@ Nke a bụ ọkwa maka mmemme a:
 
    • Ọnwụnwa:      $visitscheduleitem_trial_name
    • Gaa na:      $visitscheduleitem_name
-#ọ bụrụ ($visit_schedule_item_day_date)
+#if($visit_schedule_item_day_date)
    • Ụbọchị:       $visit_schedule_item_day_date
-#ọzọ
+#else
    • Gaa na: $visitscheduleitem_start
    • Gaa na:   $visitscheduleitem_stop
-#njedebe
+#end
 
    • Ọnụ ụzọ:  $inactive_staff_limit
 
 $inactive_staff.size() ndị ọrụ N/A:
 
-#foreach($employee na $inactive_staff)
-   • $employee.aha
-#njedebe
+#foreach($employee in $inactive_staff)
+   • $employee.name
+#end
 
 Biko kwadebe na/ma ọ bụ mee ihe kwesịrị ekwesị.
 

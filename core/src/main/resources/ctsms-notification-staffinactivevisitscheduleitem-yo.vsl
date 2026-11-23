@@ -6,20 +6,20 @@ eyi jẹ iwifunni fun iṣẹlẹ atẹle:
 
    • Idanwo:      $visitscheduleitem_trial_name
    • Ṣabẹwo:      $visitscheduleitem_name
-#ti o ba jẹ ($visit_schedule_item_day_date)
+#if($visit_schedule_item_day_date)
    • Ọjọ:       $visit_schedule_item_day_date
-#miiran
+#else
    • Ṣabẹwo lati: $visitscheduleitem_start
    • Ṣabẹwo si:   $visitscheduleitem_stop
-#opin
+#end
 
    • Ipele:  $inactive_staff_limit
 
 $inactive_staff.size() abáni N/A:
 
 #foreach($employee in $inactive_staff)
-   • $employee.orukọ
-#opin
+   • $employee.name
+#end
 
 Jọwọ mura ati/tabi ṣe awọn iṣe ti o yẹ.
 

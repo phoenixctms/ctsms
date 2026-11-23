@@ -6,25 +6,25 @@ ${application.abbreviation} tilisi #if($new_user)luodin#{else}muutettiin #end.
 #if($local_auth_method)
 #if($new_user)
    • Järjestelmänvalvoja ilmoittaa sinulle todellisen salasanan.
-#muu
+#else
    • Salasana pysyy muuttumattomana.
-#loppu
+#end
 #elseif($ldap_auth_method)
    • Käytettävä salasana on MUG-salasanasi.
 
 #if($new_user)
 Kun kirjaudut sisään ensimmäistä kertaa, syötä pakolliseksi "paikalliseksi salasanaksi" ylläpitäjän antama salasana.
-#muu
+#else
 Kun kirjaudut sisään seuraavan kerran, kirjoita nykyinen salasanasi pakolliseksi "paikalliseksi salasanaksi".
-#loppu
-#loppu
+#end
+#end
 
 #if($new_user)
 Järjestelmään pääsee alla olevasta sivustosta:
 
    $http_base_url
 
-#loppu
+#end
 TÄRKEÄÄ: Tilin avulla voit lukea "$user_department" -osaston käyttäjien rekisteröimien aiheiden henkilökohtaisia tunnistetietoja. Tietosuojan säilyttämiseksi tilin tunnistetiedot on pidettävä salassa. Sinua ei koskaan pyydetä antamaan tunnistetietoja sähköpostitse tai muilla palvelimilla kuin "$http_domain_name".
 
 Kiitos!

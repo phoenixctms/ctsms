@@ -8,11 +8,11 @@
    • زيارة:         $visitscheduleitem_name
    • الزيارة من:    $visitscheduleitem_start
    • زيارة إلى:      $visitscheduleitem_stop
-#إذا($notification.proband)
+#if($notification.proband)
 
    • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
-#نهاية
+#end
 
 يرجى الاستعداد و/أو اتخاذ الإجراءات المناسبة.
 

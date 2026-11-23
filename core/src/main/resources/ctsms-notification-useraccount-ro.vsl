@@ -3,28 +3,28 @@ Dragă $user_identity_firstname,
 contul dvs. ${application.abbreviation} a fost #if($new_user)creat#{else}schimbat#end.
 
    • Nume de utilizator:   $user_name
-#dacă($local_auth_method)
-#dacă($new_user)
+#if($local_auth_method)
+#if($new_user)
    • Un administrator vă va informa despre parola reală.
-#altfel
+#else
    • Parola rămâne neschimbată.
-#Sfârşit
+#end
 #elseif($ldap_auth_method)
    • Parola de utilizat este parola dumneavoastră MUG.
 
-#dacă($new_user)
+#if($new_user)
 Când vă conectați pentru prima dată, introduceți parola dată de administrator ca „parolă locală” obligatorie.
-#altfel
+#else
 Când vă conectați data viitoare, introduceți parola curentă ca „parolă locală” obligatorie.
-#Sfârşit
-#Sfârşit
+#end
+#end
 
-#dacă($new_user)
+#if($new_user)
 Sistemul este accesibil pe site-ul de mai jos:
 
    $http_base_url
 
-#Sfârşit
+#end
 IMPORTANT: Contul vă permite să citiți informații de identificare personală ale subiecților înregistrați de utilizatorii departamentului „$user_department”. Pentru a menține confidențialitatea datelor, acreditările contului trebuie păstrate secrete. Nu vi se va cere niciodată să furnizați acreditări prin e-mail sau alte servere decât „$http_domain_name”.
 
 Mulțumesc!

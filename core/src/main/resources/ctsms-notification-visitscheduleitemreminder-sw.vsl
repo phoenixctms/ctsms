@@ -8,11 +8,11 @@ hii ni arifa ya tukio lifuatalo:
    • Tembelea:         $visitscheduleitem_name
    • Tembelea kutoka:    $visitscheduleitem_start
    • Tembelea:      $visitscheduleitem_stop
-#kama($notification.proband)
+#if($notification.proband)
 
-   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#mwisho
+   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
-#mwisho
+#end
 
 Tafadhali jitayarishe na/au chukua hatua zinazofaa.
 

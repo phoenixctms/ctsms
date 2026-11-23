@@ -6,20 +6,20 @@ ovo je obavijest za sljedeći događaj:
 
    • Proba:      $visitscheduleitem_trial_name
    • Posjetite:      $visitscheduleitem_name
-#ako($visit_schedule_item_day_date)
+#if($visit_schedule_item_day_date)
    • Datum:       $visit_schedule_item_day_date
-#drugo
+#else
    • Posjet od: $visitscheduleitem_start
    • Posjetite:   $visitscheduleitem_stop
-#kraj
+#end
 
    • Prag:  $inactive_staff_limit
 
 $inactive_staff.size() zaposlenici N/A:
 
-#foreach($employee u $inactive_staff)
-   • $employee.ime
-#kraj
+#foreach($employee in $inactive_staff)
+   • $employee.name
+#end
 
 Molimo pripremite se i/ili poduzmite odgovarajuće radnje.
 

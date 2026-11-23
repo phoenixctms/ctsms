@@ -9,9 +9,9 @@ Nke a bụ ọkwa maka mmemme a:
    • Nwamba ngwa ahịa.:  $inventorybooking_inventory_category
 
    • Ụdị ọnọdụ:     $inventorystatusentry_type
-#ọ bụrụ ($notification.inventoryStatusEntry.originator)
+#if($notification.inventoryStatusEntry.originator)
    • Onye malitere:      $inventorystatusentry_originator_name
-#njedebe
+#end
    • Ọnọdụ si:     $inventorystatusentry_start
    • Ọnọdụ ka:       $inventorystatusentry_stop
 

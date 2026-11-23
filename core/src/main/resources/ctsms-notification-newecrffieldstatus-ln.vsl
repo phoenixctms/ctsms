@@ -6,47 +6,47 @@ oyo ezali liyebisi mpo na likambo oyo elandi:
 
    • Kosambisa:              $ecrffieldstatusentry_listentry_trial_name
    • Departema ya bosambisami:   $ecrffieldstatusentry_listentry_trial_department
-   • Proband: #soki($string_utils.ezali Pamba($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#nsuka
+   • Proband: #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#end
 
    • eCRF:               $ecrffieldstatusentry_ecrffield_ecrf_name
-#if($notification.ecrfBokotisi ya Etat ya Esika.Bokotisi ya liste.etuluku)
-   • Lisanga ya Proband:      $notification.ecrfEntrée ya état ya terrain.Entry ya liste.groupe.titre
-#nsuka
-#if($notification.ecrfKokota ya Etat ya Esika.kotala)
-   • Kotala:              $notification.ecrfEntrée ya état ya terrain.kotala.titre
-#nsuka
+#if($notification.ecrfFieldStatusEntry.listEntry.group)
+   • Lisanga ya Proband:      $notification.ecrfFieldStatusEntry.listEntry.group.title
+#end
+#if($notification.ecrfFieldStatusEntry.visit)
+   • Kotala:              $notification.ecrfFieldStatusEntry.visit.title
+#end
    • Eteni ya eCRF:       $ecrffieldstatusentry_ecrffield_section
    • Esika ya bokotisi:        ${ecrffieldstatusentry_ecrffield_position}. $ecrffieldstatusentry_ecrffield_field_name
-#if($notification.ecrfEntrée ya état ya terrain.ecrfEtando.série)
+#if($notification.ecrfFieldStatusEntry.ecrfField.series)
    • Index:              $ecrffieldstatusentry_index
-#nsuka
+#end
 
    • Ezalela ya likambo ya eCRF:  $ecrffieldstatusentry_status
 
-   • Ebongwani: #soki($notification.ecrfEntrée yaEtat ya Esika.identité.ya Mosaleli oyo ebongwani)$ecrffieldstatusentry_modifieduser_identity_name#{else}$ecrffieldstatusentry_modifieduser_name#nsuka
+   • Ebongwani: #if($notification.ecrfFieldStatusEntry.modifiedUser.identity)$ecrffieldstatusentry_modifieduser_identity_name#{else}$ecrffieldstatusentry_modifieduser_name#end
 
 
 Komantere:
 
 $ecrffieldstatusentry_comment
 
-#soki (${index_field_log.size ()} > 0)Lisolo ya kala:
+#if(${index_field_log.size()} > 0)Lisolo ya kala:
 
-#koyebisa liboso($log na $index_field_log)
-#if(${log.class.name} == "org.phoenixctms.ctsms.vo.Ezalela ya esika ya esika ya ECREFEntryOutVO")
-   • $log.nkombo.ezalela: $!log.comment
-#elseif(${log.class.name} == "org.phoenixctms.ctsms.vo.Motuya ya esika ya ECRFOutVO")
+#foreach($log in $index_field_log)
+#if(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldStatusEntryOutVO")
+   • $log.status.name: $!log.comment
+#elseif(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO")
    • saved (#if($string_utils.isEmpty($log.reasonForChange))version $log.version#{else}$log.reasonForChange#end): $ecrf_input_field_value_adapter.toString($log)
-#nsuka
-#nsuka
+#end
+#end
 
-#end#if(!$notification.ecrfEzalela ya Etando.ezalela.esili)
+#end#if(!$notification.ecrfFieldStatusEntry.status.resolved)
 Svp tala entrée ya ba données pona ko résoudre problème ya eCRF:
 
    $http_base_url/ekabolami/ecrfSection.jsf?issueid=$ecrffieldstatusentry_id
-#mosusu
+#else
 Likambo ya eCRF ekangami.
-#nsuka
+#end
 
 Matondi!
 

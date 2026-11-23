@@ -11,7 +11,7 @@ $inventorybooking_onbehalfof_firstname様
    • ステータスの種類:     $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
    • 発信者:      $inventorystatusentry_originator_name
-＃終わり
+#end
    • ステータス:     $inventorystatusentry_start
    • ステータス:       $inventorystatusentry_stop
 

@@ -11,7 +11,7 @@
    • 入力:            $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
    • 発信者:      $inventorystatusentry_originator_name
-＃終わり
+#end
    • 送信者:            $inventorystatusentry_start
    • 宛先:              $inventorystatusentry_stop
 

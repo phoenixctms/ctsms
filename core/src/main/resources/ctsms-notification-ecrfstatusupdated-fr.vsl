@@ -11,10 +11,10 @@ il s'agit d'une notification pour l'événement suivant :
    • eCRF :                 $ecrfstatusentry_ecrf_name
 #if($notification.ecrfStatusEntry.listEntry.group)
    • Groupe de candidats :        $notification.ecrfStatusEntry.listEntry.group.title
-#fin
+#end
 #if($notification.ecrfStatusEntry.visit)
    • Visitez :                $notification.ecrfStatusEntry.visit.title
-#fin
+#end
 
    • Statut eCRF :          $ecrfstatusentry_status
 #if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "OK")
@@ -23,18 +23,18 @@ il s'agit d'une notification pour l'événement suivant :
 #elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "FAILED")
    • $ecrfstatusentry_validationresponsemsg
    • Horodatage :            $ecrfstatusentry_validationtimestamp
-#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "EN ATTENTE")
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "PENDING")
    • Validation des entrées en attente.
-#fin
+#end
 
    • Modifié : #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
 
 
 #if(!$notification.ecrfStatusEntry.status.done)
 Veuillez passer aux étapes suivantes pour terminer la saisie des données eCRF.
-#autre
+#else
 La saisie des données eCRF est terminée.
-#fin
+#end
 
 Merci!
 

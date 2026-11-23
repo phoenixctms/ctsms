@@ -1,30 +1,30 @@
 Caro $user_identity_firstname,
 
-il tuo account ${application.abbreviation} è stato #se($new_user)creato#{else}modificato#end.
+il tuo account ${application.abbreviation} è stato #if($new_user)creato#{else}modificato#end.
 
    • Nome utente:   $user_name
-#se($local_auth_method)
-#se($new_user)
+#if($local_auth_method)
+#if($new_user)
    • Un amministratore ti informerà della password effettiva.
-#altro
+#else
    • La password rimane invariata.
-#FINE
-#altrimentise($ldap_auth_method)
+#end
+#elseif($ldap_auth_method)
    • La password da utilizzare è la password MUG.
 
-#se($new_user)
+#if($new_user)
 Al primo accesso inserire come “password locale” obbligatoria la password fornita dall'amministratore.
-#altro
+#else
 Al prossimo accesso, inserisci la tua password attuale come "password locale" obbligatoria.
-#FINE
-#FINE
+#end
+#end
 
-#se($new_user)
+#if($new_user)
 Il sistema è accessibile al sito seguente:
 
    $http_base_url
 
-#FINE
+#end
 IMPORTANTE: L'account consente di leggere le informazioni di identificazione personale dei soggetti registrati dagli utenti del dipartimento "$user_department". Per mantenere la privacy dei dati, le credenziali dell'account devono essere mantenute segrete. Non ti verrà mai chiesto di fornire credenziali tramite email o server diversi da "$http_domain_name".
 
 Grazie!

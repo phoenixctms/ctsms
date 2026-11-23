@@ -15,9 +15,9 @@ ez egy értesítés a következő eseményről:
    • Új személyzet:      $dutyrosterturn_staff_name
 #if($notification.dutyRosterTurn.selfAllocatable)
    • Önállóan allokálható.
-#más
+#else
    • Nincs önkiosztás.
-#vége
+#end
 
    • Módosítva: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
 
@@ -32,7 +32,7 @@ A szolgálati beosztás kötelező, és a végleges befagyasztásig változhat. 
 
 Köszönöm!
 
-Ez egy rendszer által generált e-mail, amelyet a $generated_onnapon hoztak létre, és időközben elavult lehet. Ne válaszolj.
+Ez egy rendszer által generált e-mail, amelyet a $generated_on napon hoztak létre, és időközben elavult lehet. Ne válaszolj.
 
 -------------------------------------------------- -------------
 ${application.abbreviation} ${application.version}

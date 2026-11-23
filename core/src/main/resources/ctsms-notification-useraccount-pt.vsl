@@ -3,28 +3,28 @@ Caro $user_identity_firstname,
 sua conta ${application.abbreviation} foi #if($new_user)criada#{else}alterada#end.
 
    • Nome de usuário:   $user_name
-#se($local_auth_method)
-#se($new_user)
+#if($local_auth_method)
+#if($new_user)
    • Um administrador informará a senha real.
-#outro
+#else
    • A senha permanece inalterada.
-#fim
+#end
 #elseif($ldap_auth_method)
    • A senha a ser usada é sua senha MUG.
 
-#se($new_user)
+#if($new_user)
 Ao fazer login pela primeira vez, digite a senha fornecida pelo administrador como “senha local obrigatória”.
-#outro
+#else
 Na próxima vez que fizer login, digite sua senha atual como a "senha local" obrigatória.
-#fim
-#fim
+#end
+#end
 
-#se($new_user)
+#if($new_user)
 O sistema está acessível no site abaixo:
 
    $http_base_url
 
-#fim
+#end
 IMPORTANTE: A conta permite a leitura de informações de identificação pessoal de sujeitos cadastrados por usuários do departamento "$user_department". Para manter a privacidade dos dados, as credenciais da conta devem ser mantidas em sigilo. Você nunca será solicitado a fornecer credenciais por e-mail ou servidores que não sejam "$http_domain_name".
 
 Obrigado!

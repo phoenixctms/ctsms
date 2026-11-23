@@ -11,10 +11,10 @@ ovo je obavijest za sljedeći događaj:
    • eCRF:                 $ecrfstatusentry_ecrf_name
 #if($notification.ecrfStatusEntry.listEntry.group)
    • Proband grupa:        $notification.ecrfStatusEntry.listEntry.group.title
-#kraj
+#end
 #if($notification.ecrfStatusEntry.visit)
    • Posjetite:                $notification.ecrfStatusEntry.visit.title
-#kraj
+#end
 
    • eCRF status:          $ecrfstatusentry_status
 #if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "OK")
@@ -25,16 +25,16 @@ ovo je obavijest za sljedeći događaj:
    • Vremenska oznaka:            $ecrfstatusentry_validationtimestamp
 #elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "PENDING")
    • Validacija unosa na čekanju.
-#kraj
+#end
 
-   • Izmijenjeno: #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#kraj
+   • Izmijenjeno: #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
 
 
 #if(!$notification.ecrfStatusEntry.status.done)
 Nastavite sa sljedećim koracima kako biste dovršili unos podataka u eCRF.
-#drugo
+#else
 Unos podataka u eCRF je završen.
-#kraj
+#end
 
 Hvala vam!
 

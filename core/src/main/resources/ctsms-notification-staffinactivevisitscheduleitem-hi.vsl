@@ -6,20 +6,20 @@
 
    • परीक्षण:      $visitscheduleitem_trial_name
    • विजिट करें:      $visitscheduleitem_name
-#अगर($visit_schedule_item_day_date)
+#if($visit_schedule_item_day_date)
    • दिनांक:       $visit_schedule_item_day_date
-#अन्य
+#else
    • यहां से जाएँ: $visitscheduleitem_start
    • यहां जाएँ:   $visitscheduleitem_stop
-#अंत
+#end
 
    • दहलीज:  $inactive_staff_limit
 
 $inactive_staff.size() कर्मचारी एन/ए:
 
 #foreach($employee in $inactive_staff)
-   • $employee.नाम
-#अंत
+   • $employee.name
+#end
 
 कृपया तैयारी करें और/या उचित कार्रवाई करें।
 

@@ -10,9 +10,9 @@ dette er en notifikation for følgende begivenhed:
    • Besøg på:      $visitscheduleitem_stop
 #if($notification.proband)
 
-   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#slut
+   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
-#ende
+#end
 
 Forbered venligst og/eller tag passende handlinger.
 

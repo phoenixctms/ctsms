@@ -11,30 +11,30 @@
    • eCRF:                 $ecrfstatusentry_ecrf_name
 #if($notification.ecrfStatusEntry.listEntry.group)
    • 프로밴드 그룹:        $notification.ecrfStatusEntry.listEntry.group.title
-#끝
+#end
 #if($notification.ecrfStatusEntry.visit)
    • 방문:                $notification.ecrfStatusEntry.visit.title
-#끝
+#end
 
    • eCRF 상태:          $ecrfstatusentry_status
-#if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "확인")
+#if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "OK")
    • 입력 유효성 검사:     $ecrfstatusentry_validationresponsemsg
    • 검증 타임스탬프: $ecrfstatusentry_validationtimestamp
 #elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "FAILED")
    • $ecrfstatusentry_validationresponsemsg
    • 타임스탬프:            $ecrfstatusentry_validationtimestamp
-#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "보류 중")
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "PENDING")
    • 입력 유효성 검사가 보류 중입니다.
-#끝
+#end
 
    • 수정됨: #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
 
 
 #if(!$notification.ecrfStatusEntry.status.done)
 eCRF 데이터 입력을 완료하려면 다음 단계를 계속 진행하세요.
-#또 다른
+#else
 eCRF 데이터 입력이 완료되었습니다.
-#끝
+#end
 
 감사합니다!
 

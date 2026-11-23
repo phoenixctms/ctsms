@@ -11,34 +11,34 @@ ez egy értesítés a következő eseményről:
    • eCRF:                 $ecrfstatusentry_ecrf_name
 #if($notification.ecrfStatusEntry.listEntry.group)
    • Proband csoport:        $notification.ecrfStatusEntry.listEntry.group.title
-#vége
+#end
 #if($notification.ecrfStatusEntry.visit)
    • Látogassa meg:                $notification.ecrfStatusEntry.visit.title
-#vége
+#end
 
    • eCRF állapot:          $ecrfstatusentry_status
 #if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "OK")
    • Bemenet ellenőrzése:     $ecrfstatusentry_validationresponsemsg
    • Érvényesítési időbélyeg: $ecrfstatusentry_validationtimestamp
-#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "SIKERTELEN")
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "FAILED")
    • $ecrfstatusentry_validationresponsemsg
    • Időbélyeg:            $ecrfstatusentry_validationtimestamp
-#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "FÜGGŐBEN")
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "PENDING")
    • Bemeneti ellenőrzés függőben.
-#vége
+#end
 
    • Módosítva: #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
 
 
 #if(!$notification.ecrfStatusEntry.status.done)
 Kérjük, folytassa a következő lépésekkel az eCRF adatbevitel befejezéséhez.
-#más
+#else
 Az eCRF adatbevitel befejeződött.
-#vége
+#end
 
 Köszönöm!
 
-Ez egy rendszer által generált e-mail, amelyet a $generated_onnapon hoztak létre, és időközben elavult lehet. Ne válaszolj.
+Ez egy rendszer által generált e-mail, amelyet a $generated_on napon hoztak létre, és időközben elavult lehet. Ne válaszolj.
 
 -------------------------------------------------- -------------
 ${application.abbreviation} ${application.version}

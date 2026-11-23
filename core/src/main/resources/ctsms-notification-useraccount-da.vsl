@@ -3,28 +3,28 @@ Kære $user_identity_firstname,
 din ${application.abbreviation} konto blev #if($new_user)oprettet#{else}ændret#end.
 
    • Brugernavn:   $user_name
-#hvis($local_auth_method)
-#hvis($new_user)
+#if($local_auth_method)
+#if($new_user)
    • En administrator vil informere dig om den faktiske adgangskode.
-#andet
+#else
    • Adgangskoden forbliver uændret.
-#ende
+#end
 #elseif($ldap_auth_method)
    • Adgangskoden, der skal bruges, er din MUG-adgangskode.
 
-#hvis($new_user)
+#if($new_user)
 Når du logger på første gang, skal du indtaste den adgangskode, som administratoren har givet som den obligatoriske "lokale adgangskode".
-#andet
+#else
 Når du logger ind næste gang, skal du indtaste din nuværende adgangskode som den obligatoriske "lokale adgangskode".
-#ende
-#ende
+#end
+#end
 
-#hvis($new_user)
+#if($new_user)
 Systemet er tilgængeligt på nedenstående websted:
 
    $http_base_url
 
-#ende
+#end
 VIGTIGT: Kontoen giver dig mulighed for at læse personligt identificerbare oplysninger om emner, der er registreret af brugere af "$user_department"-afdelingen. For at bevare databeskyttelsen skal kontooplysningerne holdes hemmelige. Du vil aldrig blive bedt om at give legitimationsoplysninger via e-mail eller andre servere end "$http_domain_name".
 
 Tak skal du have!

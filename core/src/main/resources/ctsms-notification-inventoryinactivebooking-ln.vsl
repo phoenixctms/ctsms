@@ -9,9 +9,9 @@ oyo ezali liyebisi mpo na likambo oyo elandi:
    • Inventaire cat.:  $inventorybooking_inventory_category
 
    • Lolenge ya ezalela:     $inventorystatusentry_type
-#if($notification.Entrée yaEtat ya inventaire.mobandisi)
+#if($notification.inventoryStatusEntry.originator)
    • Mobandisi:      $inventorystatusentry_originator_name
-#nsuka
+#end
    • Ezalela uta:     $inventorystatusentry_start
    • Ezalela na:       $inventorystatusentry_stop
 
@@ -20,7 +20,7 @@ oyo ezali liyebisi mpo na likambo oyo elandi:
 
    • Mpo na ya solo:      $inventorybooking_course_name
    • Mpo na kosambisa:       $inventorybooking_trial_name
-   • Mpo na proband: #soki($string_utils.ezaliPamba($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#nsuka
+   • Mpo na proband: #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
 
 
 Commentaire ya état:

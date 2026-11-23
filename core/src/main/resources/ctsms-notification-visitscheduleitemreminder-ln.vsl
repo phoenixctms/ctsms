@@ -8,11 +8,11 @@ oyo ezali liyebisi mpo na likambo oyo elandi:
    • Kotala:         $visitscheduleitem_name
    • Kotala uta na:    $visitscheduleitem_start
    • Kotala na:      $visitscheduleitem_stop
-#soki($notification.proband) .
+#if($notification.proband)
 
-   • Proband: #soki($string_utils.ezali Pamba($proband_alias))$proband_id#{else}$proband_alias#nsuka
+   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
-#nsuka
+#end
 
 Tosɛngi yo omibongisa mpe/to osala makambo oyo ebongi.
 

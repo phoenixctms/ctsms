@@ -11,10 +11,10 @@
    • eCRF:                 $ecrfstatusentry_ecrf_name
 #if($notification.ecrfStatusEntry.listEntry.group)
    • प्रोबैंड समूह:        $notification.ecrfStatusEntry.listEntry.group.title
-#अंत
+#end
 #if($notification.ecrfStatusEntry.visit)
    • विजिट करें:                $notification.ecrfStatusEntry.visit.title
-#अंत
+#end
 
    • ईसीआरएफ स्थिति:          $ecrfstatusentry_status
 #if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "OK")
@@ -25,16 +25,16 @@
    • टाइमस्टैम्प:            $ecrfstatusentry_validationtimestamp
 #elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "PENDING")
    • इनपुट सत्यापन लंबित है.
-#अंत
+#end
 
    • संशोधित: #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
 
 
 #if(!$notification.ecrfStatusEntry.status.done)
 कृपया eCRF डेटा प्रविष्टि को पूरा करने के लिए अगले चरण जारी रखें।
-#अन्य
+#else
 ईसीआरएफ डेटा प्रविष्टि पूरी हो गई है।
-#अंत
+#end
 
 धन्यवाद!
 

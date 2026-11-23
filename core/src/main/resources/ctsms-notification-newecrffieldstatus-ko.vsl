@@ -11,15 +11,15 @@
    • eCRF:               $ecrffieldstatusentry_ecrffield_ecrf_name
 #if($notification.ecrfFieldStatusEntry.listEntry.group)
    • 프로밴드 그룹:      $notification.ecrfFieldStatusEntry.listEntry.group.title
-#끝
+#end
 #if($notification.ecrfFieldStatusEntry.visit)
    • 방문:              $notification.ecrfFieldStatusEntry.visit.title
-#끝
+#end
    • eCRF 섹션:       $ecrffieldstatusentry_ecrffield_section
    • 입력 필드:        ${ecrffieldstatusentry_ecrffield_position}. $ecrffieldstatusentry_ecrffield_field_name
 #if($notification.ecrfFieldStatusEntry.ecrfField.series)
    • 색인:              $ecrffieldstatusentry_index
-#끝
+#end
 
    • eCRF 발행 상태:  $ecrffieldstatusentry_status
 
@@ -32,21 +32,21 @@ $ecrffieldstatusentry_comment
 
 #if(${index_field_log.size()} > 0)기록:
 
-#foreach($log $index_field_log)
+#foreach($log in $index_field_log)
 #if(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldStatusEntryOutVO")
    • $log.status.name: $!log.comment
 #elseif(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO")
    • saved (#if($string_utils.isEmpty($log.reasonForChange))version $log.version#{else}$log.reasonForChange#end): $ecrf_input_field_value_adapter.toString($log)
-#끝
-#끝
+#end
+#end
 
 #end#if(!$notification.ecrfFieldStatusEntry.status.resolved)
 eCRF 문제를 해결하려면 데이터 항목을 확인하세요.
 
    $http_base_url/shared/ecrfSection.jsf?issueid=$ecrffieldstatusentry_id
-#또 다른
+#else
 eCRF 문제가 종료되었습니다.
-#끝
+#end
 
 감사합니다!
 

@@ -8,11 +8,11 @@ eyi jẹ iwifunni fun iṣẹlẹ atẹle:
    • Ṣabẹwo:         $visitscheduleitem_name
    • Ṣabẹwo lati:    $visitscheduleitem_start
    • Ṣabẹwo si:      $visitscheduleitem_stop
-#ti o ba jẹ ($notification.proband)
+#if($notification.proband)
 
-   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#opin
+   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
-#opin
+#end
 
 Jọwọ mura ati/tabi ṣe awọn iṣe ti o yẹ.
 

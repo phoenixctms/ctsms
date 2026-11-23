@@ -6,20 +6,20 @@ aceasta este o notificare pentru următorul eveniment:
 
    • Proba:      $visitscheduleitem_trial_name
    • Vizită:      $visitscheduleitem_name
-#dacă($visit_schedule_item_day_date)
+#if($visit_schedule_item_day_date)
    • Data:       $visit_schedule_item_day_date
-#altfel
+#else
    • Vizită de la: $visitscheduleitem_start
    • Vizită la:   $visitscheduleitem_stop
-#Sfârşit
+#end
 
    • Prag:  $inactive_staff_limit
 
 $inactive_staff.size() angajați N/A:
 
-#foreach($employee în $inactive_staff)
-   • $employee.nume
-#Sfârşit
+#foreach($employee in $inactive_staff)
+   • $employee.name
+#end
 
 Vă rugăm să pregătiți și/sau să luați măsurile adecvate.
 

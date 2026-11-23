@@ -11,34 +11,34 @@ dit is een melding voor de volgende gebeurtenis:
    • eCRF:                 $ecrfstatusentry_ecrf_name
 #if($notification.ecrfStatusEntry.listEntry.group)
    • Proband-groep:        $notification.ecrfStatusEntry.listEntry.group.title
-#einde
+#end
 #if($notification.ecrfStatusEntry.visit)
    • Bezoek:                $notification.ecrfStatusEntry.visit.title
-#einde
+#end
 
    • eCRF-status:          $ecrfstatusentry_status
 #if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "OK")
    • Invoervalidatie:     $ecrfstatusentry_validationresponsemsg
    • Validatietijdstempel: $ecrfstatusentry_validationtimestamp
-#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "mislukt")
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "FAILED")
    • $ecrfstatusentry_validationresponsemsg
    • Tijdstempel:            $ecrfstatusentry_validationtimestamp
-#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "IN AFWACHTING")
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "PENDING")
    • Invoervalidatie in behandeling.
-#einde
+#end
 
    • Gewijzigd: #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
 
 
 #if(!$notification.ecrfStatusEntry.status.done)
 Ga verder met de volgende stappen om de eCRF-gegevensinvoer te voltooien.
-#anders
+#else
 De eCRF-gegevensinvoer is voltooid.
-#einde
+#end
 
 Bedankt!
 
-Dit is een door het systeem gegenereerde e-mail die is gemaakt op $generated_onen in de tussentijd mogelijk verouderd is. Niet antwoorden.
+Dit is een door het systeem gegenereerde e-mail die is gemaakt op $generated_on en in de tussentijd mogelijk verouderd is. Niet antwoorden.
 
 ---------------------------------------------- ------------
 ${application.abbreviation} ${application.version}

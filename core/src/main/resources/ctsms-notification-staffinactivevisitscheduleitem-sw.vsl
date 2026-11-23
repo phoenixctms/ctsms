@@ -6,20 +6,20 @@ hii ni arifa ya tukio lifuatalo:
 
    • Jaribio:      $visitscheduleitem_trial_name
    • Tembelea:      $visitscheduleitem_name
-#kama($visit_schedule_item_day_date)
+#if($visit_schedule_item_day_date)
    • Tarehe:       $visit_schedule_item_day_date
-#vingine
+#else
    • Tembelea kutoka: $visitscheduleitem_start
    • Tembelea:   $visitscheduleitem_stop
-#mwisho
+#end
 
    • Kizingiti:  $inactive_staff_limit
 
 $inactive_staff.size() wafanyikazi N/A:
 
 #foreach($employee in $inactive_staff)
-   • $employee.jina
-#mwisho
+   • $employee.name
+#end
 
 Tafadhali jitayarishe na/au chukua hatua zinazofaa.
 

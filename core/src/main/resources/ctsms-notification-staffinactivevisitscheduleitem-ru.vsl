@@ -8,18 +8,18 @@
    • Посетите:      $visitscheduleitem_name
 #if($visit_schedule_item_day_date)
    • Дата:       $visit_schedule_item_day_date
-#еще
+#else
    • Посетитель: $visitscheduleitem_start
    • Посещение:   $visitscheduleitem_stop
-#конец
+#end
 
    • Порог:  $inactive_staff_limit
 
-$inactive_staffсотрудники .size() Н/Д:
+$inactive_staff.size() сотрудники Н/Д:
 
-#foreach($employee в $inactive_staff)
-   • $employee.имя
-#конец
+#foreach($employee in $inactive_staff)
+   • $employee.name
+#end
 
 Пожалуйста, подготовьтесь и/или примите соответствующие меры.
 

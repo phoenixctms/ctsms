@@ -11,30 +11,30 @@ aceasta este o notificare pentru următorul eveniment:
    • eCRF:                 $ecrfstatusentry_ecrf_name
 #if($notification.ecrfStatusEntry.listEntry.group)
    • Grup Proband:        $notification.ecrfStatusEntry.listEntry.group.title
-#Sfârşit
+#end
 #if($notification.ecrfStatusEntry.visit)
    • Vizitați:                $notification.ecrfStatusEntry.visit.title
-#Sfârşit
+#end
 
    • Stare eCRF:          $ecrfstatusentry_status
-#if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == „OK”)
+#if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "OK")
    • Validarea intrării:     $ecrfstatusentry_validationresponsemsg
    • Marcaj temporal de validare: $ecrfstatusentry_validationtimestamp
-#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == „FAILED”)
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "FAILED")
    • $ecrfstatusentry_validationresponsemsg
    • Marcaj temporal:            $ecrfstatusentry_validationtimestamp
-#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == „ÎN AȘTEPTARE”)
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "PENDING")
    • Validarea intrărilor în așteptare.
-#Sfârşit
+#end
 
    • Modificat: #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
 
 
 #if(!$notification.ecrfStatusEntry.status.done)
 Continuați cu pașii următori pentru a finaliza introducerea datelor eCRF.
-#altfel
+#else
 Introducerea datelor eCRF este finalizată.
-#Sfârşit
+#end
 
 Mulțumesc!
 

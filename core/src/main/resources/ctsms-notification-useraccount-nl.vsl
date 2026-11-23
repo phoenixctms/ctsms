@@ -6,30 +6,30 @@ je ${application.abbreviation} account is #if($new_user)creëerd#{else}gewijzigd
 #if($local_auth_method)
 #if($new_user)
    • Een beheerder informeert u over het daadwerkelijke wachtwoord.
-#anders
+#else
    • Het wachtwoord blijft ongewijzigd.
-#einde
+#end
 #elseif($ldap_auth_method)
    • Het te gebruiken wachtwoord is uw MUG-wachtwoord.
 
 #if($new_user)
 Wanneer u voor de eerste keer inlogt, voert u het door de beheerder opgegeven wachtwoord in als verplicht "lokaal wachtwoord".
-#anders
+#else
 Wanneer u de volgende keer inlogt, voert u uw huidige wachtwoord in als verplicht "lokaal wachtwoord".
-#einde
-#einde
+#end
+#end
 
 #if($new_user)
 Het systeem is toegankelijk via de onderstaande site:
 
    $http_base_url
 
-#einde
+#end
 BELANGRIJK: Met het account kunt u persoonlijk identificeerbare informatie lezen van onderwerpen die zijn geregistreerd door gebruikers van de afdeling "$user_department". Om de gegevensprivacy te behouden, moeten accountgegevens geheim worden gehouden. Er wordt nooit om inloggegevens gevraagd via e-mail of andere servers dan "$http_domain_name".
 
 Bedankt!
 
-Dit is een door het systeem gegenereerde e-mail die is gemaakt op $generated_onen in de tussentijd mogelijk verouderd is. Niet antwoorden.
+Dit is een door het systeem gegenereerde e-mail die is gemaakt op $generated_on en in de tussentijd mogelijk verouderd is. Niet antwoorden.
 
 ---------------------------------------------- ------------
 ${application.abbreviation} ${application.version}

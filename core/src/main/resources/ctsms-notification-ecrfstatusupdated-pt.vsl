@@ -11,30 +11,30 @@ esta é uma notificação para o seguinte evento:
    • eCRF:                 $ecrfstatusentry_ecrf_name
 #if($notification.ecrfStatusEntry.listEntry.group)
    • Grupo Proband:        $notification.ecrfStatusEntry.listEntry.group.title
-#fim
+#end
 #if($notification.ecrfStatusEntry.visit)
    • Visite:                $notification.ecrfStatusEntry.visit.title
-#fim
+#end
 
    • status da eCRF:          $ecrfstatusentry_status
 #if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "OK")
    • Validação de entrada:     $ecrfstatusentry_validationresponsemsg
    • Carimbo de data e hora de validação: $ecrfstatusentry_validationtimestamp
-#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "FALHA")
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "FAILED")
    • $ecrfstatusentry_validationresponsemsg
    • Carimbo de data e hora:            $ecrfstatusentry_validationtimestamp
-#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "PENDENTE")
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "PENDING")
    • Validação de entrada pendente.
-#fim
+#end
 
    • Modificado: #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
 
 
 #if(!$notification.ecrfStatusEntry.status.done)
 Continue com as próximas etapas para concluir a entrada de dados eCRF.
-#outro
+#else
 A entrada de dados eCRF está concluída.
-#fim
+#end
 
 Obrigado!
 

@@ -3,28 +3,28 @@ Cher $user_identity_firstname,
 votre compte ${application.abbreviation} a été #if($new_user)créé#{else}modifié#end.
 
    • Nom d'utilisateur :   $user_name
-#si($local_auth_method)
-#si($new_user)
+#if($local_auth_method)
+#if($new_user)
    • Un administrateur vous informera du mot de passe réel.
-#autre
+#else
    • Le mot de passe reste inchangé.
-#fin
+#end
 #elseif($ldap_auth_method)
    • Le mot de passe à utiliser est votre mot de passe MUG.
 
-#si($new_user)
+#if($new_user)
 Lors de votre première connexion, saisissez le mot de passe fourni par l'administrateur comme « mot de passe local » obligatoire.
-#autre
+#else
 Lors de votre prochaine connexion, entrez votre mot de passe actuel comme « mot de passe local » obligatoire.
-#fin
-#fin
+#end
+#end
 
-#si($new_user)
+#if($new_user)
 Le système est accessible sur le site ci-dessous :
 
    $http_base_url
 
-#fin
+#end
 IMPORTANT : Le compte vous permet de lire les informations personnellement identifiables des sujets enregistrés par les utilisateurs du département «$user_department». Pour préserver la confidentialité des données, les informations d’identification du compte doivent rester secrètes. Il ne vous sera jamais demandé de fournir des informations d'identification par e-mail ou sur des serveurs autres que "$http_domain_name".
 
 Merci!

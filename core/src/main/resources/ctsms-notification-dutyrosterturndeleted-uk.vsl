@@ -15,11 +15,11 @@
    • Персонал:          $dutyrosterturn_staff_name
 #if($notification.dutyRosterTurn.selfAllocatable)
    • Саморозподіл.
-#інше
+#else
    • Немає самостійного розподілу.
-#кінець
+#end
 
-   • Змінено: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#кінець
+   • Змінено: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
 
 
 Обов'язковий коментар:

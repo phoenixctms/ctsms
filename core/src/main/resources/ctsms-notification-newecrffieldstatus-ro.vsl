@@ -11,15 +11,15 @@ aceasta este o notificare pentru următorul eveniment:
    • eCRF:               $ecrffieldstatusentry_ecrffield_ecrf_name
 #if($notification.ecrfFieldStatusEntry.listEntry.group)
    • Grup Proband:      $notification.ecrfFieldStatusEntry.listEntry.group.title
-#Sfârşit
+#end
 #if($notification.ecrfFieldStatusEntry.visit)
    • Vizitați:              $notification.ecrfFieldStatusEntry.visit.title
-#Sfârşit
+#end
    • secțiunea eCRF:       $ecrffieldstatusentry_ecrffield_section
    • Câmp de introducere:        ${ecrffieldstatusentry_ecrffield_position}. $ecrffieldstatusentry_ecrffield_field_name
 #if($notification.ecrfFieldStatusEntry.ecrfField.series)
    • Index:              $ecrffieldstatusentry_index
-#Sfârşit
+#end
 
    • Starea problemei eCRF:  $ecrffieldstatusentry_status
 
@@ -32,21 +32,21 @@ $ecrffieldstatusentry_comment
 
 #if(${index_field_log.size()} > 0)Istoric:
 
-#foreach($log în $index_field_log)
+#foreach($log in $index_field_log)
 #if(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldStatusEntryOutVO")
    • $log.status.name: $!log.comment
 #elseif(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO")
    • saved (#if($string_utils.isEmpty($log.reasonForChange))version $log.version#{else}$log.reasonForChange#end): $ecrf_input_field_value_adapter.toString($log)
-#Sfârşit
-#Sfârşit
+#end
+#end
 
 #end#if(!$notification.ecrfFieldStatusEntry.status.resolved)
 Verificați introducerea datelor pentru a rezolva problema eCRF:
 
    $http_base_url/shared/ecrfSection.jsf?issueid=$ecrffieldstatusentry_id
-#altfel
+#else
 Problema eCRF este închisă.
-#Sfârşit
+#end
 
 Mulțumesc!
 

@@ -11,15 +11,15 @@
    • eCRF:               $ecrffieldstatusentry_ecrffield_ecrf_name
 #if($notification.ecrfFieldStatusEntry.listEntry.group)
    • प्रोबैंड समूह:      $notification.ecrfFieldStatusEntry.listEntry.group.title
-#अंत
+#end
 #if($notification.ecrfFieldStatusEntry.visit)
    • विजिट करें:              $notification.ecrfFieldStatusEntry.visit.title
-#अंत
+#end
    • eCRF अनुभाग:       $ecrffieldstatusentry_ecrffield_section
    • इनपुट फ़ील्ड:        ${ecrffieldstatusentry_ecrffield_position}. $ecrffieldstatusentry_ecrffield_field_name
 #if($notification.ecrfFieldStatusEntry.ecrfField.series)
    • सूचकांक:              $ecrffieldstatusentry_index
-#अंत
+#end
 
    • ईसीआरएफ जारी करने की स्थिति:  $ecrffieldstatusentry_status
 
@@ -37,16 +37,16 @@ $ecrffieldstatusentry_comment
    • $log.status.name: $!log.comment
 #elseif(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO")
    • saved (#if($string_utils.isEmpty($log.reasonForChange))version $log.version#{else}$log.reasonForChange#end): $ecrf_input_field_value_adapter.toString($log)
-#अंत
-#अंत
+#end
+#end
 
 #end#if(!$notification.ecrfFieldStatusEntry.status.resolved)
 कृपया eCRF समस्या के समाधान के लिए डेटा प्रविष्टि की जाँच करें:
 
    $http_base_url/shared/ecrfSection.jsf?issueid=$ecrffieldstatusentry_id
-#अन्य
+#else
 ईसीआरएफ मुद्दा बंद हो गया है।
-#अंत
+#end
 
 धन्यवाद!
 

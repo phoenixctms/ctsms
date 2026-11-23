@@ -6,20 +6,20 @@ detta är ett meddelande för följande händelse:
 
    • Provperiod:              $ecrffieldstatusentry_listentry_trial_name
    • Provavdelning:   $ecrffieldstatusentry_listentry_trial_department
-   • Proband: #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#slut
+   • Proband: #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#end
 
    • eCRF:               $ecrffieldstatusentry_ecrffield_ecrf_name
 #if($notification.ecrfFieldStatusEntry.listEntry.group)
    • Probandgrupp:      $notification.ecrfFieldStatusEntry.listEntry.group.title
-#slutet
+#end
 #if($notification.ecrfFieldStatusEntry.visit)
    • Besök:              $notification.ecrfFieldStatusEntry.visit.title
-#slutet
+#end
    • eCRF-sektion:       $ecrffieldstatusentry_ecrffield_section
    • Inmatningsfält:        ${ecrffieldstatusentry_ecrffield_position}. $ecrffieldstatusentry_ecrffield_field_name
 #if($notification.ecrfFieldStatusEntry.ecrfField.series)
    • Index:              $ecrffieldstatusentry_index
-#slutet
+#end
 
    • eCRF ärendestatus:  $ecrffieldstatusentry_status
 
@@ -32,21 +32,21 @@ $ecrffieldstatusentry_comment
 
 #if(${index_field_log.size()} > 0)Historik:
 
-#foreach($log i $index_field_log)
+#foreach($log in $index_field_log)
 #if(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldStatusEntryOutVO")
    • $log.status.name: $!log.comment
 #elseif(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO")
    • saved (#if($string_utils.isEmpty($log.reasonForChange))version $log.version#{else}$log.reasonForChange#end): $ecrf_input_field_value_adapter.toString($log)
-#slutet
-#slutet
+#end
+#end
 
 #end#if(!$notification.ecrfFieldStatusEntry.status.resolved)
 Kontrollera datainmatningen för att lösa eCRF-problemet:
 
    $http_base_url/shared/ecrfSection.jsf?issueid=$ecrffieldstatusentry_id
-#annan
+#else
 eCRF-frågan är avslutad.
-#slutet
+#end
 
 Tack!
 

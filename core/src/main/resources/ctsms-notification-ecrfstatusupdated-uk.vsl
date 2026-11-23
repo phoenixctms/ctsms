@@ -11,30 +11,30 @@
    • eCRF:                 $ecrfstatusentry_ecrf_name
 #if($notification.ecrfStatusEntry.listEntry.group)
    • Група пробандів:        $notification.ecrfStatusEntry.listEntry.group.title
-#кінець
+#end
 #if($notification.ecrfStatusEntry.visit)
    • Відвідайте:                $notification.ecrfStatusEntry.visit.title
-#кінець
+#end
 
    • Статус eCRF:          $ecrfstatusentry_status
 #if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "OK")
    • Перевірка введення:     $ecrfstatusentry_validationresponsemsg
    • Мітка часу перевірки: $ecrfstatusentry_validationtimestamp
-#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "ПОМИЛКА")
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "FAILED")
    • $ecrfstatusentry_validationresponsemsg
    • Мітка часу:            $ecrfstatusentry_validationtimestamp
-#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "ОЧІКУЄТЬСЯ")
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "PENDING")
    • Очікується перевірка введених даних.
-#кінець
+#end
 
-   • Змінено: #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#кінець
+   • Змінено: #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
 
 
 #if(!$notification.ecrfStatusEntry.status.done)
 Продовжуйте виконувати наступні дії, щоб завершити введення даних eCRF.
-#інше
+#else
 Введення даних eCRF завершено.
-#кінець
+#end
 
 Дякую тобі!
 

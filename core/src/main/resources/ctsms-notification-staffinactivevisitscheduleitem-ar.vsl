@@ -6,20 +6,20 @@
 
    • المحاكمة:      $visitscheduleitem_trial_name
    • زيارة:      $visitscheduleitem_name
-#إذا($visit_schedule_item_day_date)
+#if($visit_schedule_item_day_date)
    • التاريخ:       $visit_schedule_item_day_date
-#آخر
+#else
    • الزيارة من: $visitscheduleitem_start
    • زيارة إلى:   $visitscheduleitem_stop
-#نهاية
+#end
 
    • العتبة:  $inactive_staff_limit
 
 $inactive_staff.size() الموظفون غير متاح:
 
-#foreach($employee في $inactive_staff)
+#foreach($employee in $inactive_staff)
    • $employee.name
-#نهاية
+#end
 
 يرجى الاستعداد و/أو اتخاذ الإجراءات المناسبة.
 

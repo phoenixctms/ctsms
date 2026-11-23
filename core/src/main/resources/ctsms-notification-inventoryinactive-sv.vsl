@@ -11,7 +11,7 @@ detta är ett meddelande för följande händelse:
    • Typ:            $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
    • Upphovsman:      $inventorystatusentry_originator_name
-#slutet
+#end
    • Från:            $inventorystatusentry_start
    • Till:              $inventorystatusentry_stop
 

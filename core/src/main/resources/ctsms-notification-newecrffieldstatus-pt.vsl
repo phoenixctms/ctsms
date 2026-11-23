@@ -11,15 +11,15 @@ esta é uma notificação para o seguinte evento:
    • eCRF:               $ecrffieldstatusentry_ecrffield_ecrf_name
 #if($notification.ecrfFieldStatusEntry.listEntry.group)
    • Grupo Proband:      $notification.ecrfFieldStatusEntry.listEntry.group.title
-#fim
+#end
 #if($notification.ecrfFieldStatusEntry.visit)
    • Visite:              $notification.ecrfFieldStatusEntry.visit.title
-#fim
+#end
    • seção eCRF:       $ecrffieldstatusentry_ecrffield_section
    • Campo de entrada:        ${ecrffieldstatusentry_ecrffield_position}. $ecrffieldstatusentry_ecrffield_field_name
 #if($notification.ecrfFieldStatusEntry.ecrfField.series)
    • Índice:              $ecrffieldstatusentry_index
-#fim
+#end
 
    • Status do problema da eCRF:  $ecrffieldstatusentry_status
 
@@ -32,21 +32,21 @@ $ecrffieldstatusentry_comment
 
 #if(${index_field_log.size()} > 0)Histórico:
 
-#foreach($log em $index_field_log)
+#foreach($log in $index_field_log)
 #if(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldStatusEntryOutVO")
    • $log.status.name: $!log.comment
 #elseif(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO")
    • saved (#if($string_utils.isEmpty($log.reasonForChange))version $log.version#{else}$log.reasonForChange#end): $ecrf_input_field_value_adapter.toString($log)
-#fim
-#fim
+#end
+#end
 
 #end#if(!$notification.ecrfFieldStatusEntry.status.resolved)
 Verifique a entrada de dados para resolver o problema do eCRF:
 
    $http_base_url/shared/ecrfSection.jsf?issueid=$ecrffieldstatusentry_id
-#outro
+#else
 A questão do eCRF está encerrada.
-#fim
+#end
 
 Obrigado!
 

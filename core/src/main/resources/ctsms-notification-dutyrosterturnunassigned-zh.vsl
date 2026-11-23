@@ -15,9 +15,9 @@
    • 新员工：      $dutyrosterturn_staff_name
 #if($notification.dutyRosterTurn.selfAllocatable)
    • 可自行分配。
-＃别的
+#else
    • 无自我分配。
-＃结尾
+#end
 
    • 修改：#if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
 

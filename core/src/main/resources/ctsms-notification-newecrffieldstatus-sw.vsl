@@ -6,24 +6,24 @@ hii ni arifa ya tukio lifuatalo:
 
    • Jaribio:              $ecrffieldstatusentry_listentry_trial_name
    • Idara ya majaribio:   $ecrffieldstatusentry_listentry_trial_department
-   • Proband: #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#mwisho
+   • Proband: #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#end
 
    • eCRF:               $ecrffieldstatusentry_ecrffield_ecrf_name
 #if($notification.ecrfFieldStatusEntry.listEntry.group)
    • Kikundi cha proband:      $notification.ecrfFieldStatusEntry.listEntry.group.title
-#mwisho
-#if($notification.ecrfFieldStatusEntry.tembelea)
+#end
+#if($notification.ecrfFieldStatusEntry.visit)
    • Tembelea:              $notification.ecrfFieldStatusEntry.visit.title
-#mwisho
+#end
    • sehemu ya eCRF:       $ecrffieldstatusentry_ecrffield_section
    • Sehemu ya ingizo:        ${ecrffieldstatusentry_ecrffield_position}. $ecrffieldstatusentry_ecrffield_field_name
 #if($notification.ecrfFieldStatusEntry.ecrfField.series)
    • Kielezo:              $ecrffieldstatusentry_index
-#mwisho
+#end
 
    • Hali ya Tatizo la eCRF:  $ecrffieldstatusentry_status
 
-   • Iliyorekebishwa: #if($notification.ecrfFieldStatusEntry.modifiedUser.identity)$ecrffieldstatusentry_modifieduser_identity_name#{else}$ecrffieldstatusentry_modifieduser_name#mwisho
+   • Iliyorekebishwa: #if($notification.ecrfFieldStatusEntry.modifiedUser.identity)$ecrffieldstatusentry_modifieduser_identity_name#{else}$ecrffieldstatusentry_modifieduser_name#end
 
 
 Maoni:
@@ -37,16 +37,16 @@ $ecrffieldstatusentry_comment
    • $log.status.name: $!log.comment
 #elseif(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO")
    • saved (#if($string_utils.isEmpty($log.reasonForChange))version $log.version#{else}$log.reasonForChange#end): $ecrf_input_field_value_adapter.toString($log)
-#mwisho
-#mwisho
+#end
+#end
 
-#mwisho#kama(!$notification.ecrfFieldStatusEntry.status.status.resolved)
+#end#if(!$notification.ecrfFieldStatusEntry.status.resolved)
 Tafadhali angalia ingizo la data ili kutatua suala la eCRF:
 
    $http_base_url/shared/ecrfSection.jsf?issueid=$ecrffieldstatusentry_id
-#vingine
+#else
 Suala la eCRF limefungwa.
-#mwisho
+#end
 
 Asante!
 

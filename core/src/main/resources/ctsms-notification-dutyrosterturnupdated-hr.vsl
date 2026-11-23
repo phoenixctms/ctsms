@@ -15,11 +15,11 @@ ovo je obavijest za sljedeći događaj:
    • Osoblje:          $dutyrosterturn_staff_name
 #if($notification.dutyRosterTurn.selfAllocatable)
    • Samododjeljujući se.
-#drugo
+#else
    • Nema samoraspodjele.
-#kraj
+#end
 
-   • Izmijenjeno: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#kraj
+   • Izmijenjeno: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
 
 
 Dežurni komentar:

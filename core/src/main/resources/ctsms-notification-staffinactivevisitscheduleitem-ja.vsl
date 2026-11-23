@@ -8,10 +8,10 @@ $visitscheduleitem_trial_name トライアル チーム メンバーまたは $s
    • 訪問:      $visitscheduleitem_name
 #if($visit_schedule_item_day_date)
    • 日付:       $visit_schedule_item_day_date
-＃それ以外
+#else
    • 訪問者: $visitscheduleitem_start
    • 訪問先:   $visitscheduleitem_stop
-＃終わり
+#end
 
    • しきい値:  $inactive_staff_limit
 
@@ -19,7 +19,7 @@ $inactive_staff.size() 従業員 N/A:
 
 #foreach($employee in $inactive_staff)
    • $employee.name
-＃終わり
+#end
 
 適切な準備や対応を行ってください。
 

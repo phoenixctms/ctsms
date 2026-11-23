@@ -8,11 +8,11 @@
    • 访问：         $visitscheduleitem_name
    • 访问时间：    $visitscheduleitem_start
    • 访问：      $visitscheduleitem_stop
-#if($notification.先证者)
+#if($notification.proband)
 
    • 先证者：#if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
-＃结尾
+#end
 
 请准备和/或采取适当的行动。
 

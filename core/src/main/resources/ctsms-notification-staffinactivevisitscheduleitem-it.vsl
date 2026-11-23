@@ -6,20 +6,20 @@ questa è una notifica per il seguente evento:
 
    • Prova:      $visitscheduleitem_trial_name
    • Visita:      $visitscheduleitem_name
-#se($visit_schedule_item_day_date)
+#if($visit_schedule_item_day_date)
    • Data:       $visit_schedule_item_day_date
-#altro
+#else
    • Visita da: $visitscheduleitem_start
    • Visita a:   $visitscheduleitem_stop
-#FINE
+#end
 
    • Soglia:  $inactive_staff_limit
 
 $inactive_staff.size() dipendenti N/D:
 
 #foreach($employee in $inactive_staff)
-   • $employee.nome
-#FINE
+   • $employee.name
+#end
 
 Si prega di preparare e/o intraprendere azioni appropriate.
 

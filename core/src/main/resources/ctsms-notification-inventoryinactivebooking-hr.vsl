@@ -11,7 +11,7 @@ ovo je obavijest za sljedeći događaj:
    • Vrsta statusa:     $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
    • Pokretač:      $inventorystatusentry_originator_name
-#kraj
+#end
    • Status od:     $inventorystatusentry_start
    • Status do:       $inventorystatusentry_stop
 

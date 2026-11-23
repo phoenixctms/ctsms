@@ -11,15 +11,15 @@ toto je upozornenie na nasledujúcu udalosť:
 #else
    • Návšteva z: $visitscheduleitem_start
    • Navštívte:   $visitscheduleitem_stop
-#koniec
+#end
 
    • Prahová hodnota:  $inactive_staff_limit
 
 $inactive_staff.size() zamestnanci N/A:
 
-#foreach($employee v $inactive_staff)
-   • $employee.meno
-#koniec
+#foreach($employee in $inactive_staff)
+   • $employee.name
+#end
 
 Pripravte sa a/alebo vykonajte príslušné kroky.
 

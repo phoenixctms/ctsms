@@ -1,30 +1,30 @@
 Bästa $user_identity_firstname,
 
-ditt ${application.abbreviation} -konto #if($new_user)skapades#{else}ändrades#slut.
+ditt ${application.abbreviation} -konto #if($new_user)skapades#{else}ändrades#end.
 
    • Användarnamn:   $user_name
 #if($local_auth_method)
 #if($new_user)
    • En administratör kommer att informera dig om det faktiska lösenordet.
-#annan
+#else
    • Lösenordet förblir oförändrat.
-#slutet
+#end
 #elseif($ldap_auth_method)
    • Lösenordet som ska användas är ditt MUG-lösenord.
 
 #if($new_user)
 När du loggar in för första gången, skriv in lösenordet som administratören gett som det obligatoriska "lokala lösenordet".
-#annan
+#else
 När du loggar in nästa gång anger du ditt nuvarande lösenord som det obligatoriska "lokala lösenordet".
-#slutet
-#slutet
+#end
+#end
 
 #if($new_user)
 Systemet är tillgängligt på webbplatsen nedan:
 
    $http_base_url
 
-#slutet
+#end
 VIKTIGT: Kontot låter dig läsa personligt identifierbar information om ämnen som registrerats av användare av "$user_department"-avdelningen. För att upprätthålla datasekretessen måste kontouppgifterna hållas hemliga. Du kommer aldrig att bli ombedd att tillhandahålla referenser via e-post eller andra servrar än "$http_domain_name".
 
 Tack!

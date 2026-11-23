@@ -15,9 +15,9 @@ Esta es una notificación para el siguiente evento:
    • Personal:          $dutyrosterturn_staff_name
 #if($notification.dutyRosterTurn.selfAllocatable)
    • Autoasignable.
-#demás
+#else
    • Sin autoasignación.
-#fin
+#end
 
    • Modificado: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
 

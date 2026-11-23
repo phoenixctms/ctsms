@@ -1,30 +1,30 @@
 Ndeko $user_identity_firstname,
 
-compte na yo ${application.abbreviation} ezalaki #soki($new_user)ekelamaki#{else}ebongwanaki#nsuka.
+compte na yo ${application.abbreviation} ezalaki #if($new_user)ekelamaki#{else}ebongwanaki#end.
 
    • Nkombo ya mosaleli:   $user_name
-#soki($local_auth_method) .
-#soki($new_user) .
+#if($local_auth_method)
+#if($new_user)
    • Mokambi moko akoyebisa yo mot de passe ya solosolo.
-#mosusu
+#else
    • Mot de passe etikalaka ndenge moko.
-#nsuka
-#soki($ldap_auth_method)
+#end
+#elseif($ldap_auth_method)
    • Mot de passe oyo osengeli kosalela ezali mot de passe MUG na yo.
 
-#soki($new_user) .
+#if($new_user)
 Tango ozali kokota mpo na mbala ya liboso, kotia mot de passe oyo administrateur apesi lokola "mot de passe locale" obligatoire.
-#mosusu
+#else
 Ntango ozali kokota mbala ya sima, kotia mot de passe na yo ya lelo lokola "mot de passe locale" oyo esengeli.
-#nsuka
-#nsuka
+#end
+#end
 
-#soki($new_user) .
+#if($new_user)
 Système yango ekoki kozwama na esika oyo ezali awa na nse:
 
    $http_base_url
 
-#nsuka
+#end
 LIKANISI YA NTINDA: Compte yango epesaka yo nzela ya kotánga makambo oyo ekoki koyeba yo ya bato oyo basaleli ya departema "$user_department" bakomisi nkombo. Mpo na kobatela bomoto ya ba données, esengeli kobomba ba credentiels ya compte na sekele. Bakosenga yo ata moke te kopesa ba credentiels na nzela ya email to ba serveurs mosusu longola se "$http_domain_name".
 
 Matondi!
