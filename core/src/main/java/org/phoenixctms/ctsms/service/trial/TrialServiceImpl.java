@@ -147,6 +147,7 @@ import org.phoenixctms.ctsms.util.Settings.Bundle;
 import org.phoenixctms.ctsms.util.SystemMessageCodes;
 import org.phoenixctms.ctsms.util.diff_match_patch;
 import org.phoenixctms.ctsms.util.date.DateCalc;
+import org.phoenixctms.ctsms.util.date.DateInterval;
 import org.phoenixctms.ctsms.util.randomization.Randomization;
 import org.phoenixctms.ctsms.util.randomization.Randomization.RandomizationType;
 import org.phoenixctms.ctsms.vo.AddressTypeVO;
@@ -173,6 +174,7 @@ import org.phoenixctms.ctsms.vo.ECRFProgressSummaryVO;
 import org.phoenixctms.ctsms.vo.ECRFProgressVO;
 import org.phoenixctms.ctsms.vo.ECRFSpecificationPDFVO;
 import org.phoenixctms.ctsms.vo.ECRFStatusEntryVO;
+import org.phoenixctms.ctsms.vo.ECRFStatusTypeVO;
 import org.phoenixctms.ctsms.vo.ECRFVisitVO;
 import org.phoenixctms.ctsms.vo.FileContentOutVO;
 import org.phoenixctms.ctsms.vo.FileStreamOutVO;
@@ -8291,6 +8293,166 @@ public class TrialServiceImpl
 		return courses;
 	}
 
+	private static final class TrialProgressListEntry {
+
+		private final long id;
+		private final Long groupId;
+		private final long probandId;
+		private final ECRFProgressSummaryVO summary;
+
+		private TrialProgressListEntry(long id, Long groupId, long probandId) {
+			this.id = id;
+			this.groupId = groupId;
+			this.probandId = probandId;
+			this.summary = new ECRFProgressSummaryVO();
+		}
+	}
+
+	private static final class TrialProgressStatus {
+
+		private final long statusTypeId;
+		private final boolean done;
+		private final Date modified;
+
+		private TrialProgressStatus(long statusTypeId, boolean done, Date modified) {
+			this.statusTypeId = statusTypeId;
+			this.done = done;
+			this.modified = modified;
+		}
+	}
+
+	private static boolean ecrfAppliesToListEntryGroup(ECRF ecrf, Long groupId) {
+		if (groupId == null) {
+			return true;
+		}
+		Collection<ProbandGroup> groups = ecrf.getGroups();
+		if (groups == null || groups.isEmpty()) {
+			return true;
+		}
+		Iterator<ProbandGroup> it = groups.iterator();
+		while (it.hasNext()) {
+			if (groupId.equals(it.next().getId())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private static Long singleGroupId(ECRF ecrf) {
+		Collection<ProbandGroup> groups = ecrf.getGroups();
+		if (groups != null && groups.size() == 1) {
+			return groups.iterator().next().getId();
+		}
+		return null;
+	}
+
+	private static Long singleVisitId(ECRF ecrf) {
+		Collection<Visit> visits = ecrf.getVisits();
+		if (visits != null && visits.size() == 1) {
+			return visits.iterator().next().getId();
+		}
+		return null;
+	}
+
+	private static Long toLong(Object value) {
+		return value == null ? null : Long.valueOf(((Number) value).longValue());
+	}
+
+	private static long toLongValue(Object value) {
+		return ((Number) value).longValue();
+	}
+
+	private static <T> T unwrapDao(Object dao, Class<T> type) {
+		try {
+			if (dao instanceof org.springframework.aop.framework.Advised) {
+				Object target = ((org.springframework.aop.framework.Advised) dao).getTargetSource().getTarget();
+				if (target != null && target != dao) {
+					return unwrapDao(target, type);
+				}
+			}
+		} catch (Exception e) {
+			throw new IllegalStateException(e);
+		}
+		return type.cast(dao);
+	}
+
+	private Timestamp findScheduleTimestamp(boolean annual, Long trialId, Long groupId, Long visitId, Long probandId, VisitScheduleItemDao visitScheduleItemDao,
+			HashMap<String, Timestamp> cache) throws Exception {
+		String key = (annual ? "a" : "p") + ":" + probandId + ":" + groupId + ":" + visitId;
+		if (cache.containsKey(key)) {
+			return cache.get(key);
+		}
+		Timestamp value = annual ? visitScheduleItemDao.findMinStart(trialId, groupId, visitId, probandId)
+				: visitScheduleItemDao.findMaxStop(trialId, groupId, visitId, probandId);
+		cache.put(key, value);
+		return value;
+	}
+
+	private static ArrayList<ECRFFieldStatusQueueCountVO> toTrialFieldStatusQueueCounts(List<Object[]> totals, List<Object[]> lastFlags) {
+		ECRFFieldStatusQueue[] queues = ECRFFieldStatusQueue.values();
+		HashMap<ECRFFieldStatusQueue, long[]> counts = new HashMap<ECRFFieldStatusQueue, long[]>(queues.length);
+		for (int i = 0; i < queues.length; i++) {
+			counts.put(queues[i], new long[6]);
+		}
+		Iterator<Object[]> totalIt = totals.iterator();
+		while (totalIt.hasNext()) {
+			Object[] row = totalIt.next();
+			long[] count = counts.get(row[0]);
+			if (count != null) {
+				count[0] = toLongValue(row[1]);
+			}
+		}
+		Iterator<Object[]> lastIt = lastFlags.iterator();
+		while (lastIt.hasNext()) {
+			Object[] row = lastIt.next();
+			long[] count = counts.get(row[0]);
+			if (count == null) {
+				continue;
+			}
+			long n = toLongValue(row[5]);
+			if (Boolean.TRUE.equals(row[1])) {
+				count[1] += n;
+			}
+			if (Boolean.TRUE.equals(row[2])) {
+				count[2] += n;
+			}
+			if (Boolean.TRUE.equals(row[3])) {
+				count[3] += n;
+			}
+			if (Boolean.TRUE.equals(row[4])) {
+				count[4] += n;
+			} else if (Boolean.FALSE.equals(row[4])) {
+				count[5] += n;
+			}
+		}
+		ArrayList<ECRFFieldStatusQueueCountVO> result = new ArrayList<ECRFFieldStatusQueueCountVO>(queues.length);
+		for (int i = 0; i < queues.length; i++) {
+			long[] count = counts.get(queues[i]);
+			ECRFFieldStatusQueueCountVO queueCount = new ECRFFieldStatusQueueCountVO();
+			queueCount.setQueue(queues[i]);
+			queueCount.setTotal(count[0]);
+			queueCount.setInitial(count[1]);
+			queueCount.setUpdated(count[2]);
+			queueCount.setProposed(count[3]);
+			queueCount.setResolved(count[4]);
+			queueCount.setUnresolved(count[5]);
+			result.add(queueCount);
+		}
+		return result;
+	}
+
+	private static void addProgressStatus(ECRFProgressSummaryVO summary, TrialProgressStatus status) {
+		ECRFProgressVO progress = new ECRFProgressVO();
+		if (status != null) {
+			ECRFStatusTypeVO statusType = new ECRFStatusTypeVO();
+			statusType.setId(Long.valueOf(status.statusTypeId));
+			ECRFStatusEntryVO statusEntry = new ECRFStatusEntryVO();
+			statusEntry.setStatus(statusType);
+			progress.setStatusEntry(statusEntry);
+		}
+		summary.getEcrfs().add(progress);
+	}
+
 	@Override
 	protected TrialECRFProgressSummaryVO handleGetTrialEcrfProgressSummary(AuthenticationVO auth, Long trialId, Long probandDepartmentId, boolean dueDetail, Date from, Date to)
 			throws Exception {
@@ -8300,10 +8462,8 @@ public class TrialServiceImpl
 			CheckIDUtil.checkDepartmentId(probandDepartmentId, this.getDepartmentDao());
 		}
 		ECRFDao ecrfDao = this.getECRFDao();
-		ProbandListEntryDao probandListEntryDao = this.getProbandListEntryDao();
-		ECRFStatusTypeDao ecrfStatusTypeDao = this.getECRFStatusTypeDao();
-		ECRFStatusEntryDao ecrfStatusEntryDao = this.getECRFStatusEntryDao();
-		ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao = this.getECRFFieldStatusEntryDao();
+		ECRFStatusEntryDaoImpl ecrfStatusEntryDao = unwrapDao(this.getECRFStatusEntryDao(), ECRFStatusEntryDaoImpl.class);
+		ECRFFieldStatusEntryDaoImpl ecrfFieldStatusEntryDao = unwrapDao(this.getECRFFieldStatusEntryDao(), ECRFFieldStatusEntryDaoImpl.class);
 		VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
 		TrialECRFProgressSummaryVO result = new TrialECRFProgressSummaryVO();
 		result.setTrial(trialVO);
@@ -8312,18 +8472,101 @@ public class TrialServiceImpl
 		result.setEcrfOverdueCount(0l);
 		result.setCharge(0.0f);
 		result.setEcrfStatusEntryCount(0l);
-		Iterator<ProbandListEntry> listEntriesIt = probandListEntryDao.findByTrialProbandDepartmentEcrfs(trialId, probandDepartmentId, true).iterator();
-		while (listEntriesIt.hasNext()) {
-			ProbandListEntryOutVO listEntryVO = probandListEntryDao.toProbandListEntryOutVO(listEntriesIt.next());
-			ECRFProgressSummaryVO ecrfProgressSummary = createEcrfProgessSummary(listEntryVO, false, false, dueDetail, false, from, to);
-			result.setEcrfTotalCount(result.getEcrfTotalCount() + ecrfProgressSummary.getEcrfTotalCount());
-			result.setEcrfDoneCount(result.getEcrfDoneCount() + ecrfProgressSummary.getEcrfDoneCount());
-			result.setEcrfOverdueCount(result.getEcrfOverdueCount() + ecrfProgressSummary.getEcrfOverdueCount());
-			result.setCharge(result.getCharge() + ecrfProgressSummary.getCharge());
-			result.setEcrfStatusEntryCount(result.getEcrfStatusEntryCount() + ecrfProgressSummary.getEcrfStatusEntryCount());
-			result.setEcrfFieldStatusQueueCounts(ServiceUtil.addEcrfFieldStatusEntryCounts(result.getEcrfFieldStatusQueueCounts(),
-					ecrfProgressSummary.getEcrfFieldStatusQueueCounts()));
-			result.getListEntries().add(ecrfProgressSummary);
+		List<Object[]> statusRows = ecrfStatusEntryDao.findTrialProgressStatusRows(trialId, probandDepartmentId);
+		LinkedHashMap<Long, TrialProgressListEntry> listEntries = new LinkedHashMap<Long, TrialProgressListEntry>(statusRows.size());
+		HashMap<String, TrialProgressStatus> statusByListEntryEcrfVisit = new HashMap<String, TrialProgressStatus>(statusRows.size());
+		Iterator<Object[]> statusIt = statusRows.iterator();
+		while (statusIt.hasNext()) {
+			Object[] row = statusIt.next();
+			long listEntryId = toLongValue(row[0]);
+			Long groupId = toLong(row[1]);
+			long probandId = toLongValue(row[2]);
+			long ecrfId = toLongValue(row[3]);
+			Long visitId = toLong(row[4]);
+			if (!listEntries.containsKey(Long.valueOf(listEntryId))) {
+				listEntries.put(Long.valueOf(listEntryId), new TrialProgressListEntry(listEntryId, groupId, probandId));
+			}
+			String statusKey = listEntryId + ":" + ecrfId + ":" + visitId;
+			if (!statusByListEntryEcrfVisit.containsKey(statusKey)) {
+				statusByListEntryEcrfVisit.put(statusKey, new TrialProgressStatus(toLongValue(row[5]), Boolean.TRUE.equals(row[6]), (Date) row[7]));
+			}
+		}
+		boolean limitByDate = from != null || to != null;
+		if (!limitByDate) {
+			result.setEcrfStatusEntryCount(statusRows.size());
+			if (!listEntries.isEmpty()) {
+				result.setEcrfFieldStatusQueueCounts(toTrialFieldStatusQueueCounts(
+						ecrfFieldStatusEntryDao.getTrialQueueTotals(trialId, probandDepartmentId),
+						ecrfFieldStatusEntryDao.getTrialQueueLastFlagCounts(trialId, probandDepartmentId)));
+			}
+		}
+		ArrayList<ECRF> ecrfs = new ArrayList<ECRF>();
+		Iterator ecrfIt = ecrfDao.findByTrialGroupVisitActiveSorted(trialId, null, null, true, true, null).iterator();
+		while (ecrfIt.hasNext()) {
+			ecrfs.add((ECRF) ecrfIt.next());
+		}
+		boolean annual = Settings.getBoolean(SettingCodes.ECRF_CHARGE_DUE_ANNUAL, Bundle.SETTINGS, DefaultSettings.ECRF_CHARGE_DUE_ANNUAL);
+		VariablePeriod duePeriod = Settings.getVariablePeriod(SettingCodes.ECRF_CHARGE_DUE_PERIOD, Bundle.SETTINGS, DefaultSettings.ECRF_CHARGE_DUE_PERIOD);
+		Long duePeriodDays = Settings.getLongNullable(SettingCodes.ECRF_CHARGE_DUE_PERIOD_DAYS, Bundle.SETTINGS, DefaultSettings.ECRF_CHARGE_DUE_PERIOD_DAYS);
+		DateInterval interval = limitByDate ? new DateInterval(from, to, true) : null;
+		HashMap<String, Timestamp> scheduleCache = new HashMap<String, Timestamp>();
+		Iterator<TrialProgressListEntry> listEntryIt = listEntries.values().iterator();
+		while (listEntryIt.hasNext()) {
+			TrialProgressListEntry listEntry = listEntryIt.next();
+			Iterator<ECRF> trialEcrfIt = ecrfs.iterator();
+			while (trialEcrfIt.hasNext()) {
+				ECRF ecrf = trialEcrfIt.next();
+				if (!ecrfAppliesToListEntryGroup(ecrf, listEntry.groupId)) {
+					continue;
+				}
+				Long scheduleGroupId = singleGroupId(ecrf);
+				Long scheduleVisitId = singleVisitId(ecrf);
+				Collection<Visit> visits = ecrf.getVisits();
+				ArrayList<Long> visitIds = new ArrayList<Long>();
+				if (visits != null && !visits.isEmpty()) {
+					Iterator<Visit> visitIt = visits.iterator();
+					while (visitIt.hasNext()) {
+						visitIds.add(visitIt.next().getId());
+					}
+				} else {
+					visitIds.add(null);
+				}
+				Iterator<Long> visitIdIt = visitIds.iterator();
+				while (visitIdIt.hasNext()) {
+					Long visitId = visitIdIt.next();
+					Timestamp scheduleDate = null;
+					if (limitByDate) {
+						scheduleDate = findScheduleTimestamp(annual, trialId, scheduleGroupId, scheduleVisitId, Long.valueOf(listEntry.probandId), visitScheduleItemDao,
+								scheduleCache);
+						if (scheduleDate == null || !interval.contains(scheduleDate)) {
+							continue;
+						}
+					}
+					TrialProgressStatus status = statusByListEntryEcrfVisit.get(listEntry.id + ":" + ecrf.getId() + ":" + visitId);
+					result.setEcrfTotalCount(result.getEcrfTotalCount() + 1l);
+					if (status != null && status.done) {
+						result.setEcrfDoneCount(result.getEcrfDoneCount() + 1l);
+						result.setCharge(result.getCharge() + ecrf.getCharge());
+						if (dueDetail) {
+							if (!limitByDate) {
+								scheduleDate = findScheduleTimestamp(annual, trialId, scheduleGroupId, scheduleVisitId, Long.valueOf(listEntry.probandId),
+										visitScheduleItemDao, scheduleCache);
+							}
+							Date dueDate = null;
+							if (annual) {
+								dueDate = DateCalc.getEndOfYear(scheduleDate);
+							} else if (duePeriod != null) {
+								dueDate = DateCalc.addInterval(scheduleDate, duePeriod, duePeriodDays);
+							}
+							if (dueDate != null && status.modified.compareTo(dueDate) > 0) {
+								result.setEcrfOverdueCount(result.getEcrfOverdueCount() + 1l);
+							}
+						}
+					}
+					addProgressStatus(listEntry.summary, status);
+				}
+			}
+			result.getListEntries().add(listEntry.summary);
 		}
 		return result;
 	}

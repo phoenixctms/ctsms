@@ -6,7 +6,10 @@
 package org.phoenixctms.ctsms.domain;
 
 import java.util.Collection;
+import java.util.List;
 
+import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.phoenixctms.ctsms.enumeration.ECRFValidationStatus;
@@ -226,6 +229,40 @@ public class ECRFStatusEntryDaoImpl
 			ecrfStatusEntry = ECRFStatusEntry.Factory.newInstance();
 		}
 		return ecrfStatusEntry;
+	}
+
+	/**
+	 * One row per eCRF status entry of probands on the trial who already have a status entry:
+	 * list entry id, proband group id, proband id, eCRF id, visit id, status type id, done, modified timestamp.
+	 * Visit and proband group are left joined, so a missing visit or group stays null.
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Object[]> findTrialProgressStatusRows(Long trialId, Long probandDepartmentId) {
+		org.hibernate.Criteria criteria = this.getSession().createCriteria(ECRFStatusEntry.class, "statusEntry");
+		org.hibernate.Criteria listEntryCriteria = criteria.createCriteria("listEntry", "listEntry", CriteriaSpecification.INNER_JOIN);
+		if (trialId != null) {
+			listEntryCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
+		}
+		listEntryCriteria.add(Restrictions.isNotEmpty("ecrfStatusEntries"));
+		listEntryCriteria.createCriteria("group", "listEntryGroup", CriteriaSpecification.LEFT_JOIN);
+		org.hibernate.Criteria probandCriteria = listEntryCriteria.createCriteria("proband", "proband", CriteriaSpecification.INNER_JOIN);
+		if (probandDepartmentId != null) {
+			probandCriteria.add(Restrictions.eq("department.id", probandDepartmentId.longValue()));
+		}
+		criteria.createCriteria("ecrf", "ecrf", CriteriaSpecification.INNER_JOIN);
+		criteria.createCriteria("visit", "visit", CriteriaSpecification.LEFT_JOIN);
+		criteria.createCriteria("status", "statusType", CriteriaSpecification.INNER_JOIN);
+		ProjectionList projection = Projections.projectionList();
+		projection.add(Projections.property("listEntry.id"));
+		projection.add(Projections.property("listEntryGroup.id"));
+		projection.add(Projections.property("proband.id"));
+		projection.add(Projections.property("ecrf.id"));
+		projection.add(Projections.property("visit.id"));
+		projection.add(Projections.property("statusType.id"));
+		projection.add(Projections.property("statusType.done"));
+		projection.add(Projections.property("statusEntry.modifiedTimestamp"));
+		criteria.setProjection(projection);
+		return criteria.list();
 	}
 
 	@Override

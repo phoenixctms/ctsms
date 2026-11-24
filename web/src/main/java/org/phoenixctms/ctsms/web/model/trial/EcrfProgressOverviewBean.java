@@ -36,6 +36,7 @@ public class EcrfProgressOverviewBean extends ManagedBeanBase {
 	private ArrayList<SelectItem> departments;
 	private EcrfProgressSummaryLazyModel ecrfProgressSummaryModel;
 	private HashMap<Long, TrialECRFProgressSummaryVO> trialEcrfProgressSummaryCache;
+	private HashMap<Long, HashMap<Long, Long>> trialStatusCountCache;
 	private Collection<ECRFStatusTypeVO> allStatusTypes;
 	private Date start;
 	private Date stop;
@@ -45,6 +46,7 @@ public class EcrfProgressOverviewBean extends ManagedBeanBase {
 	public EcrfProgressOverviewBean() {
 		super();
 		trialEcrfProgressSummaryCache = new HashMap<Long, TrialECRFProgressSummaryVO>();
+		trialStatusCountCache = new HashMap<Long, HashMap<Long, Long>>();
 		ecrfProgressSummaryModel = new EcrfProgressSummaryLazyModel();
 		dueDetail = Settings.getBoolean(SettingCodes.ECRF_PROGRESS_SUMMARY_SHOW_DUE_DETAIL_PRESET, Bundle.SETTINGS, DefaultSettings.ECRF_PROGRESS_SUMMARY_SHOW_DUE_DETAIL_PRESET);
 		StaffOutVO identity = WebUtil.getUserIdentity();
@@ -68,6 +70,7 @@ public class EcrfProgressOverviewBean extends ManagedBeanBase {
 			} else {
 				trialECRFProgressSummaryVO = WebUtil.getTrialEcrfProgressSummary(trialVO.getId(), probandDepartmentId, dueDetail, start, stop);
 				trialEcrfProgressSummaryCache.put(trialVO.getId(), trialECRFProgressSummaryVO);
+				trialStatusCountCache.put(trialVO.getId(), buildSummaryStatusCountMap(trialECRFProgressSummaryVO));
 			}
 			return trialECRFProgressSummaryVO;
 		}
@@ -155,8 +158,7 @@ public class EcrfProgressOverviewBean extends ManagedBeanBase {
 		return result;
 	}
 
-	public HashMap<Long, Long> getSummaryStatusCountMap(TrialOutVO trialVO) {
-		TrialECRFProgressSummaryVO trialProgressSummary = getCachedEcrfProgressSummary(trialVO);
+	private HashMap<Long, Long> buildSummaryStatusCountMap(TrialECRFProgressSummaryVO trialProgressSummary) {
 		if (trialProgressSummary != null && trialProgressSummary.getEcrfStatusEntryCount() > 0l) {
 			Iterator<ECRFProgressSummaryVO> listEntryIt = trialProgressSummary.getListEntries().iterator();
 			HashMap<Long, Long> countMap = new HashMap<Long, Long>();
@@ -181,6 +183,14 @@ public class EcrfProgressOverviewBean extends ManagedBeanBase {
 		return null;
 	}
 
+	public HashMap<Long, Long> getSummaryStatusCountMap(TrialOutVO trialVO) {
+		if (trialVO == null) {
+			return null;
+		}
+		getCachedEcrfProgressSummary(trialVO);
+		return trialStatusCountCache.get(trialVO.getId());
+	}
+
 	public void handleDepartmentStartStopChange() {
 		initSets();
 	}
@@ -196,6 +206,7 @@ public class EcrfProgressOverviewBean extends ManagedBeanBase {
 
 	private void initSets() {
 		trialEcrfProgressSummaryCache.clear();
+		trialStatusCountCache.clear();
 		if (departments == null) {
 			StaffOutVO user = WebUtil.getUserIdentity();
 			departments = WebUtil.getVisibleDepartments(user == null ? null : user.getDepartment().getId());
