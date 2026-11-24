@@ -2247,6 +2247,87 @@ PrimeFaces.widget.Password.prototype.setValue = function(value) {
   this.jq.val(value);
 }
 
+// PrimeFaces 3.3 scores length, digits, a-zA-Z and a fixed symbol set. The change-password
+// page sets window.ctsmsPasswordPolicy so the meter follows PasswordPolicy.checkStrength instead.
+// Bands stay those of the widget keyup handler: <30 weak, <80 good, otherwise strong.
+PrimeFaces.widget.Password.prototype.testStrength = (function(originalTestStrength) {
+	function countChars(password, chars) {
+		var count = 0;
+		if (!chars) {
+			return count;
+		}
+		for (var i = 0; i < password.length; i++) {
+			if (chars.indexOf(password.charAt(i)) >= 0) {
+				count++;
+			}
+		}
+		return count;
+	}
+
+	return function(password) {
+		var policy = window.ctsmsPasswordPolicy;
+		if (!policy || !policy.classes) {
+			return originalTestStrength.call(this, password);
+		}
+		var length = password.length;
+		var minLength = policy.minLength || 0;
+		var maxLength = policy.maxLength || 0;
+		var classes = policy.classes;
+		var allowed = {};
+		var i;
+		var c;
+		for (i = 0; i < classes.length; i++) {
+			var chars = classes[i].chars || "";
+			for (c = 0; c < chars.length; c++) {
+				allowed[chars.charAt(c)] = true;
+			}
+		}
+		var illegal = false;
+		for (i = 0; i < length; i++) {
+			if (!allowed[password.charAt(i)]) {
+				illegal = true;
+				break;
+			}
+		}
+		var tooLong = maxLength > 0 && length > maxLength;
+		var lengthOk = length >= minLength && !tooLong;
+		var required = 0;
+		var met = 0;
+		for (i = 0; i < classes.length; i++) {
+			var min = classes[i].min || 0;
+			if (min > 0) {
+				required++;
+				if (countChars(password, classes[i].chars) >= min) {
+					met++;
+				}
+			}
+		}
+		if (lengthOk && !illegal && met === required) {
+			var span = Math.max(1, maxLength - minLength);
+			var extra = maxLength > minLength ? (length - minLength) / span : 1;
+			if (extra < 0) {
+				extra = 0;
+			} else if (extra > 1) {
+				extra = 1;
+			}
+			return 80 + extra * 20;
+		}
+		if (!lengthOk || illegal) {
+			var progress = minLength > 0 ? Math.min(1, length / minLength) : 0;
+			return progress * 29;
+		}
+		var fractionSum = 0;
+		for (i = 0; i < classes.length; i++) {
+			var minimum = classes[i].min || 0;
+			if (minimum > 0) {
+				fractionSum += Math.min(1, countChars(password, classes[i].chars) / minimum);
+			}
+		}
+		var fraction = required > 0 ? fractionSum / required : 0;
+		return 30 + fraction * 49;
+	};
+})(PrimeFaces.widget.Password.prototype.testStrength);
+
 if (typeof links !== 'undefined') {
   links.Timeline.prototype.applyRange = function (start, end, zoomAroundDate) {
       // calculate new start and end value
