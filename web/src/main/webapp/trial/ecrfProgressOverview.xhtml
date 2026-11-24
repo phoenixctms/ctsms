@@ -246,13 +246,25 @@
 									<h:outputText
 										value="#{triallabels.ecrf_progress_overview_ecrf_progress_summary_list_status_counts_column}" />
 								</f:facet>
-								<ui:include
-									src="/META-INF/includes/shared/listEcrfStatusIcons.xhtml">
-									<ui:param name="statusTypes"
-										value="#{ecrfProgressOverviewBean.allStatusTypes}" />
-									<ui:param name="value"
-										value="#{ecrfProgressOverviewBean.getSummaryStatusCountMap(trial.vo)}" />
-								</ui:include>
+								<ui:repeat value="#{ecrfProgressOverviewBean.allStatusTypes}" var="statusType">
+									<h:panelGroup rendered="#{ecrfProgressOverviewBean.getSummaryStatusCount(trial.vo, statusType.id) > 0}">
+										<h:outputLink
+											id="statusTypeIcon"
+											styleClass="outputLinkAsText"
+											value="#">
+											<h:outputText
+												styleClass="ctsms-list-ui-icon ui-icon #{statusType.nodeStyleClass}"
+												value="(#{ecrfProgressOverviewBean.getSummaryStatusCount(trial.vo, statusType.id)})" />
+										</h:outputLink>
+										<p:tooltip rendered="#{enableTooltips}" for="statusTypeIcon">
+											<h:outputFormat value="#{labels.ecrf_status_type_icon_tooltip}" escape="false">
+												<f:param value="#{statusType.name}" />
+												<f:param value="#{ecrfProgressOverviewBean.getSummaryStatusCount(trial.vo, statusType.id)}" />
+											</h:outputFormat>
+										</p:tooltip>
+										<h:outputText value=" " />
+									</h:panelGroup>
+								</ui:repeat>
 							</p:column>
 							<p:column>
 							    
