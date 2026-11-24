@@ -37,7 +37,7 @@ public class EcrfProgressOverviewBean extends ManagedBeanBase {
 	private EcrfProgressSummaryLazyModel ecrfProgressSummaryModel;
 	private HashMap<Long, TrialECRFProgressSummaryVO> trialEcrfProgressSummaryCache;
 	private HashMap<Long, HashMap<Long, Long>> trialStatusCountCache;
-	private Collection<ECRFStatusTypeVO> allStatusTypes;
+	private ArrayList<ECRFStatusTypeVO> allStatusTypes;
 	private Date start;
 	private Date stop;
 	private boolean dueDetail;
@@ -58,7 +58,16 @@ public class EcrfProgressOverviewBean extends ManagedBeanBase {
 		}
 	}
 
-	public Collection<ECRFStatusTypeVO> getAllStatusTypes() {
+	public ArrayList<ECRFStatusTypeVO> getAllStatusTypes() {
+		if (allStatusTypes == null || allStatusTypes.isEmpty()) {
+			Collection<ECRFStatusTypeVO> statusTypes = WebUtil.getEcrfStatusTypes();
+			if (statusTypes != null && !statusTypes.isEmpty()) {
+				allStatusTypes = new ArrayList<ECRFStatusTypeVO>(statusTypes);
+			}
+		}
+		if (allStatusTypes == null) {
+			return new ArrayList<ECRFStatusTypeVO>();
+		}
 		return allStatusTypes;
 	}
 
@@ -70,7 +79,6 @@ public class EcrfProgressOverviewBean extends ManagedBeanBase {
 			} else {
 				trialECRFProgressSummaryVO = WebUtil.getTrialEcrfProgressSummary(trialVO.getId(), probandDepartmentId, dueDetail, start, stop);
 				trialEcrfProgressSummaryCache.put(trialVO.getId(), trialECRFProgressSummaryVO);
-				trialStatusCountCache.put(trialVO.getId(), buildSummaryStatusCountMap(trialECRFProgressSummaryVO));
 			}
 			return trialECRFProgressSummaryVO;
 		}
@@ -187,8 +195,24 @@ public class EcrfProgressOverviewBean extends ManagedBeanBase {
 		if (trialVO == null) {
 			return null;
 		}
-		getCachedEcrfProgressSummary(trialVO);
-		return trialStatusCountCache.get(trialVO.getId());
+		if (trialStatusCountCache.containsKey(trialVO.getId())) {
+			return trialStatusCountCache.get(trialVO.getId());
+		}
+		HashMap<Long, Long> countMap = buildSummaryStatusCountMap(getCachedEcrfProgressSummary(trialVO));
+		trialStatusCountCache.put(trialVO.getId(), countMap);
+		return countMap;
+	}
+
+	public long getSummaryStatusCount(TrialOutVO trialVO, Long statusTypeId) {
+		if (statusTypeId == null) {
+			return 0l;
+		}
+		HashMap<Long, Long> countMap = getSummaryStatusCountMap(trialVO);
+		if (countMap == null) {
+			return 0l;
+		}
+		Long count = countMap.get(statusTypeId);
+		return count == null ? 0l : count.longValue();
 	}
 
 	public void handleDepartmentStartStopChange() {
@@ -207,11 +231,11 @@ public class EcrfProgressOverviewBean extends ManagedBeanBase {
 	private void initSets() {
 		trialEcrfProgressSummaryCache.clear();
 		trialStatusCountCache.clear();
+		allStatusTypes = null;
 		if (departments == null) {
 			StaffOutVO user = WebUtil.getUserIdentity();
 			departments = WebUtil.getVisibleDepartments(user == null ? null : user.getDepartment().getId());
 		}
-		allStatusTypes = WebUtil.getEcrfStatusTypes();
 		ecrfProgressSummaryModel.updateRowCount();
 	}
 
