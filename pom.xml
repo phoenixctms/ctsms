@@ -69,11 +69,19 @@
             <name>Terracotta Repo</name>
             <!-- <url>https://www.terracotta.org/download/reflector/releases</url> -->
             <url>https://repo.terracotta.org/maven2</url>
+            <!-- AndroMDA 3.5-SNAPSHOT is only in the file repositories above. -->
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
         </repository>
 		<repository>
 			<id>jbossrepo</id>
 			<name>JBoss Repository</name>
 			<url>https://repository.jboss.org/nexus/content/repositories/releases/</url>
+            <!-- AndroMDA 3.5-SNAPSHOT is only in the file repositories above. -->
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
 		</repository>		
 	</repositories>
 	<dependencyManagement>
