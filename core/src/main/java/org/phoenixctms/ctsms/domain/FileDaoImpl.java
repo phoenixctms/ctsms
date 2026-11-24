@@ -154,7 +154,7 @@ public class FileDaoImpl
 			if (subTree) {
 				criteria.add(Restrictions.sqlRestriction("substr({alias}.logical_path, 1, length(?)) = ?",
 						new Object[] { logicalPath, logicalPath },
-						new org.hibernate.type.NullableType[] { Hibernate.STRING, Hibernate.STRING }));
+						new org.hibernate.type.Type[] { Hibernate.STRING, Hibernate.STRING }));
 			} else {
 				criteria.add(Restrictions.eq("logicalPath", logicalPath));
 			}
