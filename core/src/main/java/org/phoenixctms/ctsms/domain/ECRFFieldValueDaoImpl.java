@@ -1350,9 +1350,7 @@ public class ECRFFieldValueDaoImpl
 				}
 				break;
 			case FILE:
-				if (input.getFileValue() != null) {
-					text = input.getFileValue().getFileName();
-				}
+				text = seriesIndexFileName(input.getFileValue());
 				break;
 			default:
 				break;
@@ -1361,6 +1359,23 @@ public class ECRFFieldValueDaoImpl
 			return "";
 		}
 		return text.replaceAll("\\s+", " ").trim();
+	}
+
+	private static String seriesIndexFileName(File file) {
+		if (file == null) {
+			return null;
+		}
+		if (!CommonUtil.getUseFileEncryption(file.getModule())) {
+			return file.getFileName();
+		}
+		try {
+			if (!CoreUtil.isPassDecryption()) {
+				return null;
+			}
+			return (String) org.phoenixctms.ctsms.security.CryptoUtil.decryptValue(file.getFileNameIv(), file.getEncryptedFileName());
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 	private static String checkboxLabel(ECRFField ecrfField, HashMap<Long, String> checkboxLabels) {

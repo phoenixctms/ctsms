@@ -4999,6 +4999,23 @@ public final class ServiceUtil {
 		appendSeriesIndexProgress(result, listEntryVO, ecrfVO, visitVO, ecrfFieldValueDao, ecrfFieldStatusEntryDao);
 	}
 
+	private static <T> T daoImpl(Object dao, Class<T> implType) {
+		if (implType.isInstance(dao)) {
+			return implType.cast(dao);
+		}
+		if (dao instanceof org.springframework.aop.framework.Advised) {
+			try {
+				Object target = ((org.springframework.aop.framework.Advised) dao).getTargetSource().getTarget();
+				if (implType.isInstance(target)) {
+					return implType.cast(target);
+				}
+			} catch (Exception e) {
+				throw new IllegalStateException(e);
+			}
+		}
+		throw new IllegalStateException("Cannot access " + implType.getName());
+	}
+
 	private static void appendSeriesIndexProgress(ECRFProgressVO result, ProbandListEntryOutVO listEntryVO, ECRFOutVO ecrfVO, VisitOutVO visitVO,
 			ECRFFieldValueDao ecrfFieldValueDao, ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao) {
 		ArrayList<ECRFSectionProgressVO> summaries = new ArrayList<ECRFSectionProgressVO>(result.getSections());
@@ -5012,12 +5029,12 @@ public final class ServiceUtil {
 			Long listEntryId = listEntryVO.getId();
 			Long ecrfId = ecrfVO.getId();
 			Long visitId = visitVO != null ? visitVO.getId() : null;
-			Map<Long, Long> savedCounts = ((ECRFFieldValueDaoImpl) ecrfFieldValueDao).getSavedValueCountByIndex(listEntryId, ecrfId, visitId, summary.getSection(), null);
-			Map<Long, Long> mandatorySavedCounts = ((ECRFFieldValueDaoImpl) ecrfFieldValueDao).getSavedValueCountByIndex(listEntryId, ecrfId, visitId, summary.getSection(),
-					Boolean.FALSE);
-			Map<Long, ArrayList<ECRFFieldStatusQueueCountVO>> statusCounts = ((ECRFFieldStatusEntryDaoImpl) ecrfFieldStatusEntryDao).getSectionIndexStatusCounts(listEntryId,
-					ecrfId, visitId, summary.getSection());
-			Map<Long, String> valueSummaries = ((ECRFFieldValueDaoImpl) ecrfFieldValueDao).getSeriesIndexValueSummaries(listEntryId, ecrfId, visitId, summary.getSection());
+			ECRFFieldValueDaoImpl valueDao = daoImpl(ecrfFieldValueDao, ECRFFieldValueDaoImpl.class);
+			ECRFFieldStatusEntryDaoImpl statusDao = daoImpl(ecrfFieldStatusEntryDao, ECRFFieldStatusEntryDaoImpl.class);
+			Map<Long, Long> savedCounts = valueDao.getSavedValueCountByIndex(listEntryId, ecrfId, visitId, summary.getSection(), null);
+			Map<Long, Long> mandatorySavedCounts = valueDao.getSavedValueCountByIndex(listEntryId, ecrfId, visitId, summary.getSection(), Boolean.FALSE);
+			Map<Long, ArrayList<ECRFFieldStatusQueueCountVO>> statusCounts = statusDao.getSectionIndexStatusCounts(listEntryId, ecrfId, visitId, summary.getSection());
+			Map<Long, String> valueSummaries = valueDao.getSeriesIndexValueSummaries(listEntryId, ecrfId, visitId, summary.getSection());
 			for (long i = 0l; i <= maxIndex.longValue(); i++) {
 				Long index = Long.valueOf(i);
 				ECRFSectionProgressVO indexProgress = new ECRFSectionProgressVO();

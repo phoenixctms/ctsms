@@ -52,10 +52,9 @@ public class ExceptionHandler extends ExceptionHandlerWrapper {
 			} else if (e instanceof AuthenticationException) {
 				authenticationExceptionEventContext = eventContext;
 				it.remove();
-				//Debugging:
-				//} else {
-				//System.out.println(e.getClass().toString() + ": " + e.getMessage());
-				//e.printStackTrace();
+			} else {
+				System.out.println(e.getClass().toString() + ": " + e.getMessage());
+				e.printStackTrace();
 			}
 		}
 		if (viewExpiredExceptionEventContext != null) {

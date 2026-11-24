@@ -1168,6 +1168,36 @@ PrimeFaces.widget.SelectOneMenu.prototype.ctsmsCancelDeferredShow = function() {
   $(document).unbind('.ctsmsDeferredShow' + this.id.replace(/\W/g, '_'));
 }
 
+// The section menu's closed label is the option text (section, index, value summary).
+// Highlighting a row must not replace it with the row text, which is the progress fraction.
+var ctsmsSectionFilterHighlightItem = PrimeFaces.widget.SelectOneMenu.prototype.highlightItem;
+PrimeFaces.widget.SelectOneMenu.prototype.highlightItem = function(item, updateLabel) {
+  if (this.jq && this.jq.hasClass('ctsms-section-filter')) {
+    ctsmsSectionFilterHighlightItem.call(this, item, false);
+    if (updateLabel) {
+      this.ctsmsSectionFilterLabel(item);
+    }
+    return;
+  }
+  ctsmsSectionFilterHighlightItem.apply(this, arguments);
+};
+
+var ctsmsSectionFilterSelectItem = PrimeFaces.widget.SelectOneMenu.prototype.selectItem;
+PrimeFaces.widget.SelectOneMenu.prototype.selectItem = function(item, silent) {
+  ctsmsSectionFilterSelectItem.apply(this, arguments);
+  this.ctsmsSectionFilterLabel(item);
+};
+
+PrimeFaces.widget.SelectOneMenu.prototype.ctsmsSectionFilterLabel = function(item) {
+  if (!this.jq || !this.jq.hasClass('ctsms-section-filter') || !item || !item.length) {
+    return;
+  }
+  var option = this.options.eq(item.index());
+  if (option.length) {
+    this.setLabel(option.text());
+  }
+};
+
 PrimeFaces.widget.AutoComplete = PrimeFaces.widget.BaseWidget
         .extend({
 
