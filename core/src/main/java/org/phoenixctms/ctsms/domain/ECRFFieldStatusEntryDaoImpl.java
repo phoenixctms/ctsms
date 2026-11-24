@@ -6,6 +6,7 @@
 package org.phoenixctms.ctsms.domain;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.hibernate.Hibernate;
 import org.hibernate.criterion.CriteriaSpecification;
@@ -912,6 +913,64 @@ public class ECRFFieldStatusEntryDaoImpl
 	/**
 	 * @inheritDoc
 	 */
+	private org.hibernate.Criteria addTrialListEntriesWithEcrfStatus(org.hibernate.Criteria root, Long trialId, Long probandDepartmentId) {
+		org.hibernate.Criteria listEntryCriteria = root.createCriteria("listEntry", "probandListEntry0", CriteriaSpecification.INNER_JOIN);
+		if (trialId != null) {
+			listEntryCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
+		}
+		listEntryCriteria.add(Restrictions.isNotEmpty("ecrfStatusEntries"));
+		if (probandDepartmentId != null) {
+			listEntryCriteria.createCriteria("proband", CriteriaSpecification.INNER_JOIN).add(Restrictions.eq("department.id", probandDepartmentId.longValue()));
+		}
+		return listEntryCriteria;
+	}
+
+	/**
+	 * Field-status row counts per queue for probands on the trial who already have an eCRF status entry.
+	 * Returns queue, count.
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Object[]> getTrialQueueTotals(Long trialId, Long probandDepartmentId) {
+		org.hibernate.Criteria criteria = createEcrfFieldStatusEntryCriteria("ecrfFieldStatusEntry0");
+		addTrialListEntriesWithEcrfStatus(criteria, trialId, probandDepartmentId);
+		criteria.setProjection(Projections.projectionList()
+				.add(Projections.groupProperty("queue"))
+				.add(Projections.rowCount()));
+		return criteria.list();
+	}
+
+	/**
+	 * Counts of the latest field-status entry (max id) per list entry, field, index, visit and queue,
+	 * grouped by queue and the initial/updated/proposed/resolved flags. The index match is the same
+	 * null-or-equal test as {@link #applyEcrfFieldStatusEntryMaxIdSubCriteria}.
+	 * Returns queue, initial, updated, proposed, resolved, count.
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Object[]> getTrialQueueLastFlagCounts(Long trialId, Long probandDepartmentId) {
+		org.hibernate.Criteria criteria = createEcrfFieldStatusEntryCriteria("ecrfFieldStatusEntry0");
+		addTrialListEntriesWithEcrfStatus(criteria, trialId, probandDepartmentId);
+		criteria.createCriteria("ecrfField", "ecrfField0", CriteriaSpecification.INNER_JOIN);
+		criteria.createCriteria("visit", "visit0", CriteriaSpecification.LEFT_JOIN);
+		criteria.createCriteria("status", "fieldStatus", CriteriaSpecification.INNER_JOIN);
+		DetachedCriteria lastId = DetachedCriteria.forClass(ECRFFieldStatusEntryImpl.class, "ecrfFieldStatusEntry1");
+		lastId.add(Restrictions.eqProperty("listEntry.id", "probandListEntry0.id"));
+		lastId.add(Restrictions.eqProperty("ecrfField.id", "ecrfField0.id"));
+		lastId.add(Restrictions.eqProperty("queue", "ecrfFieldStatusEntry0.queue"));
+		lastId.add(Restrictions.or(Restrictions.isNull("index"), Restrictions.eqProperty("index", "ecrfFieldStatusEntry0.index")));
+		lastId.add(Restrictions.or(Restrictions.and(Restrictions.isNull("visit.id"), Restrictions.isNull("visit0.id")),
+				Restrictions.eqProperty("visit.id", "visit0.id")));
+		lastId.setProjection(Projections.max("id"));
+		criteria.add(Subqueries.propertyIn("id", lastId));
+		criteria.setProjection(Projections.projectionList()
+				.add(Projections.groupProperty("queue"))
+				.add(Projections.groupProperty("fieldStatus.initial"))
+				.add(Projections.groupProperty("fieldStatus.updated"))
+				.add(Projections.groupProperty("fieldStatus.proposed"))
+				.add(Projections.groupProperty("fieldStatus.resolved"))
+				.add(Projections.rowCount()));
+		return criteria.list();
+	}
+
 	@Override
 	public ECRFFieldStatusEntryOutVO toECRFFieldStatusEntryOutVO(final ECRFFieldStatusEntry entity) {
 		return super.toECRFFieldStatusEntryOutVO(entity);
