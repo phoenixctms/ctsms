@@ -43,6 +43,7 @@ import org.phoenixctms.ctsms.vo.AnnouncementVO;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.vo.LocaleVO;
 import org.phoenixctms.ctsms.vo.PasswordOutVO;
+import org.phoenixctms.ctsms.vo.CharacterClassVO;
 import org.phoenixctms.ctsms.vo.PasswordPolicyVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.TimeZoneVO;
@@ -853,6 +854,45 @@ public class SessionScopeBean implements FilterItemsStore {
 			}
 		}
 		return policy;
+	}
+
+	// JavaScript object for the change-password strength meter. Same rules as PasswordPolicy.checkStrength:
+	// length range, minimum occurrences, and only characters from allowed classes. Max occurrences are not enforced.
+	public String getPasswordPolicyMeterJson() {
+		PasswordPolicyVO passwordPolicy = getPasswordPolicy();
+		StringBuilder json = new StringBuilder();
+		json.append('{');
+		json.append("\"minLength\":").append(passwordPolicy.getMinLength());
+		json.append(",\"maxLength\":").append(passwordPolicy.getMaxLength());
+		json.append(",\"classes\":[");
+		Collection<CharacterClassVO> characterClasses = passwordPolicy.getCharacterSets();
+		if (characterClasses != null) {
+			boolean first = true;
+			Iterator<CharacterClassVO> it = characterClasses.iterator();
+			while (it.hasNext()) {
+				CharacterClassVO characterClass = it.next();
+				if (!first) {
+					json.append(',');
+				}
+				first = false;
+				Integer minOccurrence = characterClass.getMinOccurrence();
+				json.append("{\"min\":").append(minOccurrence == null ? 0 : minOccurrence.intValue());
+				json.append(",\"chars\":\"");
+				Character[] characters = characterClass.getCharacters();
+				if (characters != null) {
+					StringBuilder chars = new StringBuilder(characters.length);
+					for (int i = 0; i < characters.length; i++) {
+						if (characters[i] != null) {
+							chars.append(characters[i].charValue());
+						}
+					}
+					json.append(WebUtil.quoteJSString(chars.toString(), false).replace("<", "\\u003c"));
+				}
+				json.append("\"}");
+			}
+		}
+		json.append("]}");
+		return json.toString();
 	}
 
 	public MenuModel getProbandEntityMenuModel() {
