@@ -1316,6 +1316,7 @@ div.timeline-event-content {
 
 .ctsms-values-datagrid>div>table>tbody>tr>td>table>tbody>tr>td>.ctsms-inputfieldrow>.ui-fieldset>.ui-fieldset-content {
 	flex: 1 1 auto;
+	min-width: 0;
 	min-height: 0;
 	display: flex;
 	flex-direction: column;
@@ -1339,6 +1340,32 @@ div.timeline-event-content {
 	width: 100% !important;
 	max-width: 300px;
 	box-sizing: border-box;
+}
+
+/* a multiline textarea's cols set a min-content width, so a narrow field card grows
+   and the textarea spills into the next card */
+.ctsms-values-datagrid .ctsms-textarea-row,
+.ctsms-values-datagrid .ctsms-textarea-input-row,
+.ctsms-values-datagrid .ctsms-textarea-label-for-row,
+.ctsms-values-datagrid .ctsms-textarea-message-for-row {
+	min-width: 0;
+	max-width: 100%;
+}
+
+.ctsms-values-datagrid .ctsms-textarea-label-for-row {
+	white-space: normal;
+}
+
+.ctsms-values-datagrid .ctsms-textarea-row table {
+	width: 100%;
+	max-width: 100%;
+	table-layout: fixed;
+}
+
+.ctsms-values-datagrid textarea.ctsms-textarea {
+	width: 100% !important;
+	min-width: 0;
+	max-width: 100%;
 }
 
 /* the dropdown button of p:autoComplete gets the height of the input, instead of a height from its
