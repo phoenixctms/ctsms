@@ -56,7 +56,7 @@ public abstract class RecentEntityMenuBase {
 	protected static MenuItem getDutyRosterScheduleMenuItem() {
 		MenuItem dutyRosterScheduleMenuItem = new MenuItem();
 		dutyRosterScheduleMenuItem.setValue(Messages.getString(MessageCodes.DUTY_ROSTER_SCHEDULE_MENU_ITEM_LABEL));
-		dutyRosterScheduleMenuItem.setIcon(WebUtil.MENUBAR_ICON_STYLECLASS + " ctsms-icon-calendar " + WebUtil.MENU_BOLD_STYLECLASS);
+		dutyRosterScheduleMenuItem.setIcon(WebUtil.MENUBAR_ICON_STYLECLASS + " ctsms-icon-calendar");
 		dutyRosterScheduleMenuItem.setOnclick("openDutyRosterSchedule()");
 		dutyRosterScheduleMenuItem.setUrl("#");
 		dutyRosterScheduleMenuItem.setId("dutyRosterScheduleMenuItem");
