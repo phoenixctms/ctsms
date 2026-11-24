@@ -112,11 +112,13 @@
 											onstart="setSupressWait()"
 											listener="#{scheduleInventoryBookingBean.bookingScheduleModel.handleCalendarSelect}"
 											event="itemSelect"
+											oncomplete="updateBookingSchedule()"
 											process="@this" />
 										<p:ajax
 											onstart="setSupressWait()"
 											listener="#{scheduleInventoryBookingBean.bookingScheduleModel.handleCalendarUnselect}"
 											event="itemUnselect"
+											oncomplete="updateBookingSchedule()"
 											process="@this" />					
 										<p:ajax
 											onstart="setSupressWait()"
@@ -483,9 +485,6 @@
 									title="#{labels.print_schedule_button_title}"
 									icon="ui-icon-print" />
 								<ui:include src="/META-INF/includes/shared/ajaxStatus.xhtml" />
-								<p:commandButton type="button" onclick="updateBookingSchedule()"
-									title="#{inventorylabels.refresh_booking_schedule_button_title}"
-									icon="ui-icon-refresh" />
 							</h:panelGrid>
 						</h:panelGrid>
 					</p:panel>

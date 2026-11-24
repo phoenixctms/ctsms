@@ -96,11 +96,13 @@
 											onstart="setSupressWait()"
 											listener="#{scheduleDutyRosterTurnBean.dutyRosterScheduleModel.handleCalendarSelect}"
 											event="itemSelect"
+											oncomplete="updateDutyRosterSchedule()"
 											process="@this" />
 										<p:ajax
 											onstart="setSupressWait()"
 											listener="#{scheduleDutyRosterTurnBean.dutyRosterScheduleModel.handleCalendarUnselect}"
 											event="itemUnselect"
+											oncomplete="updateDutyRosterSchedule()"
 											process="@this" />					
 										<p:ajax
 											onstart="setSupressWait()"
@@ -515,10 +517,6 @@
 									title="#{labels.print_schedule_button_title}"
 									icon="ui-icon-print" />
 								<ui:include src="/META-INF/includes/shared/ajaxStatus.xhtml" />
-								<p:commandButton type="button"
-									onclick="updateDutyRosterSchedule()"
-									title="#{triallabels.refresh_duty_roster_schedule_button_title}"
-									icon="ui-icon-refresh" />
 							</h:panelGrid>
 						</h:panelGrid>
 					</p:panel>

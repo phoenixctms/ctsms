@@ -15,19 +15,7 @@
 			cellpadding="0"
 			rendered="#{(empty showPaginator or showPaginator) and (valueBean.paginator.psf.rowCount gt 0 or (showFieldQuery and not empty valueBean.fieldQuery))}"
 			styleClass="ui-widget-header ui-corner-all ctsms-pages-panelgrid"
-			columnClasses="#{valueBean.paginator.inputFieldForm ? 'ctsms-pages-fieldsperrow-column,' : ''}#{showFieldQuery ? 'ctsms-label-for-column,ctsms-input-column,' : ''}ctsms-pages-message-column,#{showAjaxStatus ? 'ctsms-ajaxstatus-column,' : ''}ctsms-pages-pagesize-column,#{valueBean.paginator.showNavigatorButtons ? 'ctsms-pages-navbutton-column,ctsms-pages-navbutton-column,' : ''}ctsms-pages-button-column#{valueBean.paginator.showNavigatorButtons ? ',ctsms-pages-navbutton-column,ctsms-pages-navbutton-column' : ''}">
-
-			<p:selectOneMenu required="false"
-				rendered="#{valueBean.paginator.inputFieldForm}"
-				layout="lineDirection" value="#{valueBean.paginator.fieldsPerRow}">
-				<f:selectItems value="#{valueBean.paginator.fieldsPerRows}"
-					var="selectItem" itemLabel="#{selectItem.label}"
-					itemValue="#{selectItem.value}" />
-
-				<p:ajax update="#{update}"
-					listener="#{valueBean.handleFieldsPerRowChange}"
-					oncomplete="#{valueBean.paginator.inputFieldForm ? 'FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args)' : ''}" />
-			</p:selectOneMenu>
+			columnClasses="#{showFieldQuery ? 'ctsms-label-for-column,ctsms-input-column,' : ''}ctsms-pages-message-column,#{showAjaxStatus ? 'ctsms-ajaxstatus-column,' : ''}#{valueBean.paginator.inputFieldForm ? 'ctsms-pages-fieldsperrow-column,' : ''}ctsms-pages-pagesize-column,#{valueBean.paginator.showNavigatorButtons ? 'ctsms-pages-navbutton-column,ctsms-pages-navbutton-column,' : ''}ctsms-pages-button-column#{valueBean.paginator.showNavigatorButtons ? ',ctsms-pages-navbutton-column,ctsms-pages-navbutton-column' : ''}">
 
 			<c:if test="#{showFieldQuery}">
 				<h:outputLabel for="field_query"
@@ -36,12 +24,12 @@
 					<p:remoteCommand process="@this,field_query"
 						name="#{empty filterFieldsName ? 'filterFields' : filterFieldsName}"
 						actionListener="#{valueBean.handleFieldQueryChange}"
-						oncomplete="#{valueBean.paginator.inputFieldForm ? 'FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args)' : ''}"
+						oncomplete="restoreFieldQueryFocus();#{valueBean.paginator.inputFieldForm ? 'FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args)' : ''}"
 						update="#{update}" />
 					<p:inputText id="field_query" value="#{valueBean.fieldQuery}"
 						required="false" label="#{labels.input_field_values_field_query}"
 						styleClass="ctsms-control-medium"
-						onkeyup="onKeyUpDelay(function(){ #{empty filterFieldsName ? 'filterFields' : filterFieldsName}(); }, 500);">
+						onkeyup="scheduleFilterFields(this, #{empty filterFieldsName ? 'filterFields' : filterFieldsName});">
 					</p:inputText>
 					<p:tooltip rendered="#{enableTooltips}" for="field_query">
 						<h:outputText
@@ -59,6 +47,17 @@
 					value="#{showAjaxStatus ? 'true' : 'false'}" />
 			</ui:include>
 
+			<p:selectOneMenu required="false"
+				rendered="#{valueBean.paginator.inputFieldForm}"
+				layout="lineDirection" value="#{valueBean.paginator.fieldsPerRow}">
+				<f:selectItems value="#{valueBean.paginator.fieldsPerRows}"
+					var="selectItem" itemLabel="#{selectItem.label}"
+					itemValue="#{selectItem.value}" />
+
+				<p:ajax update="#{update}"
+					listener="#{valueBean.handleFieldsPerRowChange}"
+					oncomplete="#{valueBean.paginator.inputFieldForm ? 'FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args)' : ''}" />
+			</p:selectOneMenu>
 			<p:selectOneMenu value="#{valueBean.paginator.pageSize}"
 				required="false" styleClass="ctsms-control-pagesize">
 				<f:selectItems value="#{valueBean.paginator.pageSizes}"
