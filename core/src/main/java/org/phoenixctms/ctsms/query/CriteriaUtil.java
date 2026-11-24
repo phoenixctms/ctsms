@@ -628,7 +628,7 @@ public final class CriteriaUtil {
 	}
 
 	private static org.hibernate.criterion.Criterion getRestrictionCriterion(RestrictionCriterionTypes restriction, String propertyName, Object value,
-			org.hibernate.type.NullableType type) {
+			Type type) {
 		if (PROPERTY_NAME_REGEXP.matcher(propertyName).find()) {
 			switch (restriction) {
 				case GT:
@@ -646,7 +646,7 @@ public final class CriteriaUtil {
 			return Restrictions.sqlRestriction(MessageFormat.format(restriction.toString(), propertyName),
 					//"  "substr({alias}.logical_path, 1, length(?)) = ?",
 					new Object[] { value },
-					new org.hibernate.type.NullableType[] { type });
+					new Type[] { type });
 		}
 	}
 

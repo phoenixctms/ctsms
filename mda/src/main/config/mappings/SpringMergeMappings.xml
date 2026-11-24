@@ -74,6 +74,8 @@
         <to>
             <![CDATA[
                 <prop key="hibernate.hbm2ddl.auto">none</prop>
+                <!-- Hibernate 3.6 enables Bean Validation when validation-api is on the classpath (swagger brings 1.1). There is no provider, and the app does not use Bean Validation. -->
+                <prop key="javax.persistence.validation.mode">none</prop>
             ]]>
         </to>
     </mapping>
