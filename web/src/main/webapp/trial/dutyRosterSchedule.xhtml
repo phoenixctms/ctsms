@@ -517,6 +517,10 @@
 									title="#{labels.print_schedule_button_title}"
 									icon="ui-icon-print" />
 								<ui:include src="/META-INF/includes/shared/ajaxStatus.xhtml" />
+								<p:commandButton type="button"
+									onclick="updateDutyRosterSchedule()"
+									title="#{triallabels.refresh_duty_roster_schedule_button_title}"
+									icon="ui-icon-refresh" />
 							</h:panelGrid>
 						</h:panelGrid>
 					</p:panel>
