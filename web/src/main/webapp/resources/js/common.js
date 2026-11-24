@@ -22,26 +22,43 @@ var onKeyUpDelay = (function() {
 })();
 
 var fieldQueryCaret = null;
+var fieldQueryRequest = 0;
+var fieldQueryPending = [];
 
 function scheduleFilterFields(input, command) {
 	onKeyUpDelay(function() {
-		fieldQueryCaret = {
-			id: input.id,
-			start: input.selectionStart,
-			end: input.selectionEnd
-		};
+		var request = ++fieldQueryRequest;
+		fieldQueryPending.push(request);
+		if (document.activeElement !== input) {
+			fieldQueryCaret = null;
+		} else {
+			fieldQueryCaret = {
+				id: input.id,
+				start: input.selectionStart,
+				end: input.selectionEnd,
+				request: request
+			};
+		}
 		command();
 	}, 500);
 }
 
 function restoreFieldQueryFocus() {
-	if (!fieldQueryCaret) {
+	if (fieldQueryPending.length === 0) {
+		return;
+	}
+	var finished = fieldQueryPending.shift();
+	if (!fieldQueryCaret || fieldQueryCaret.request !== finished) {
 		return;
 	}
 	var saved = fieldQueryCaret;
 	fieldQueryCaret = null;
 	var el = document.getElementById(saved.id);
 	if (!el) {
+		return;
+	}
+	var active = document.activeElement;
+	if (active && active !== document.body && active !== document.documentElement && active.id !== saved.id) {
 		return;
 	}
 	el.focus();
