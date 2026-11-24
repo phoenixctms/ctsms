@@ -546,6 +546,19 @@ td .ui-selectonemenu,td .ui-selectcheckboxmenu {
 	vertical-align: middle;
 }
 
+.ctsms-ecrf-section-filter-panel .ui-selectonemenu-items td:has(.ctsms-ecrf-section-index) {
+	width: 1%;
+	max-width: 64px;
+	box-sizing: border-box;
+	white-space: nowrap;
+}
+
+.ctsms-ecrf-section-filter-panel .ui-selectonemenu-items td:has(.ctsms-section-progress) {
+	width: 1%;
+	max-width: 82px;
+	box-sizing: border-box;
+}
+
 .ctsms-ecrf-section-index {
 	white-space: nowrap;
 }
@@ -558,6 +571,10 @@ td .ui-selectonemenu,td .ui-selectcheckboxmenu {
 }
 
 .ctsms-section-progress .ui-progressbar-value {
+	display: block;
+	position: absolute;
+	left: 0;
+	top: 0;
 	height: 100%;
 	margin: 0;
 }
