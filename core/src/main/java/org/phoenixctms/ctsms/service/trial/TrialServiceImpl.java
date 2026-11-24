@@ -8410,7 +8410,7 @@ public class TrialServiceImpl
 				continue;
 			}
 			long n = toLongValue(row[5]);
-			if (Boolean.TRUE.equals(row[1])) {
+			if (Boolean.TRUE.equals(row[1]) && Boolean.FALSE.equals(row[4])) {
 				count[1] += n;
 			}
 			if (Boolean.TRUE.equals(row[2])) {
