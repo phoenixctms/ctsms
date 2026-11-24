@@ -510,6 +510,8 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 			Long visitId = visit != null ? visit.getId() : null;
 			if (CommonUtil.isEmptyString(filterSection)) {
 				WebUtil.getServiceLocator().getTrialService().clearEcrfFieldValues(WebUtil.getAuthentication(), listEntryId, ecrfId, visitId);
+			} else if (filterIndex != null) {
+				WebUtil.getServiceLocator().getTrialService().clearEcrfFieldValues(WebUtil.getAuthentication(), listEntryId, ecrfId, visitId, filterSection, filterIndex);
 			} else {
 				WebUtil.getServiceLocator().getTrialService().clearEcrfFieldValues(WebUtil.getAuthentication(), listEntryId, ecrfId, visitId, filterSection);
 			}

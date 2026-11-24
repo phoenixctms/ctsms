@@ -4076,13 +4076,52 @@ public class TrialServiceImpl
 	@Override
 	protected Collection<ECRFFieldValueOutVO> handleClearEcrfFieldValues(AuthenticationVO auth, Long probandListEntryId, Long ecrfId, Long visitId, String section)
 			throws Exception {
+		return clearEcrfFieldValues(probandListEntryId, ecrfId, visitId, section, null);
+	}
+
+	@Override
+	protected Collection<ECRFFieldValueOutVO> handleClearEcrfFieldValues(AuthenticationVO auth, Long probandListEntryId, Long ecrfId, Long visitId, String section, Long index)
+			throws Exception {
+		return clearEcrfFieldValues(probandListEntryId, ecrfId, visitId, section, index);
+	}
+
+	private Collection<ECRFFieldValueOutVO> clearEcrfFieldValues(Long probandListEntryId, Long ecrfId, Long visitId, String section, Long index) throws Exception {
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
 		ProbandListEntry listEntry = checkClearEcrfFieldValues(probandListEntryId, ecrfId, visitId, now, user);
-		clearEcrfFieldStatusEntries(listEntry,
-				this.getECRFFieldStatusEntryDao().findByListEntryEcrfVisitSection(probandListEntryId, ecrfId, visitId, section, true, null), now, user);
-		return clearEcrfFieldValues(listEntry,
-				this.getECRFFieldValueDao().findByListEntryEcrfVisitSection(probandListEntryId, ecrfId, visitId, section, true, null), now, user);
+		Collection<ECRFFieldStatusEntry> statusEntries = this.getECRFFieldStatusEntryDao().findByListEntryEcrfVisitSection(probandListEntryId, ecrfId, visitId, section, true,
+				null);
+		Collection<ECRFFieldValue> values = this.getECRFFieldValueDao().findByListEntryEcrfVisitSection(probandListEntryId, ecrfId, visitId, section, true, null);
+		if (index != null) {
+			statusEntries = filterFieldStatusByIndex(statusEntries, index);
+			values = filterFieldValuesByIndex(values, index);
+		}
+		clearEcrfFieldStatusEntries(listEntry, statusEntries, now, user);
+		return clearEcrfFieldValues(listEntry, values, now, user);
+	}
+
+	private static Collection<ECRFFieldStatusEntry> filterFieldStatusByIndex(Collection<ECRFFieldStatusEntry> statusEntries, Long index) {
+		ArrayList<ECRFFieldStatusEntry> result = new ArrayList<ECRFFieldStatusEntry>();
+		Iterator<ECRFFieldStatusEntry> it = statusEntries.iterator();
+		while (it.hasNext()) {
+			ECRFFieldStatusEntry statusEntry = it.next();
+			if (index.equals(statusEntry.getIndex())) {
+				result.add(statusEntry);
+			}
+		}
+		return result;
+	}
+
+	private static Collection<ECRFFieldValue> filterFieldValuesByIndex(Collection<ECRFFieldValue> values, Long index) {
+		ArrayList<ECRFFieldValue> result = new ArrayList<ECRFFieldValue>();
+		Iterator<ECRFFieldValue> it = values.iterator();
+		while (it.hasNext()) {
+			ECRFFieldValue value = it.next();
+			if (index.equals(value.getIndex())) {
+				result.add(value);
+			}
+		}
+		return result;
 	}
 
 	@Override
