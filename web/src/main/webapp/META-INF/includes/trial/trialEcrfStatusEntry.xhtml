@@ -535,7 +535,8 @@
 											value="#{trialEcrfStatusEntryBean.ecrfFieldValueBean.filterSectionProgress}"
 											var="sectionProgress" converter="ctsms.ECRFSectionProgress"
 											label="#{triallabels.ecrf_field_values_section_filter}"
-											styleClass="ctsms-control-largest">
+											styleClass="ctsms-control-ecrf-section"
+											panelStyleClass="ctsms-ecrf-section-filter-panel">
 
 											<f:selectItems
 												value="#{trialEcrfStatusEntryBean.filterSections}"
@@ -546,11 +547,14 @@
 												<h:outputText value="#{sectionProgress.sectionLocalized}" />
 											</p:column>
 											<p:column>
+												<h:outputText value="#{trialEcrfStatusEntryBean.getFilterSectionIndexLabel(sectionProgress)}" />
+											</p:column>
+											<p:column>
 												<ui:include src="../shared/progressBar.xhtml">
 													<ui:param name="id"
-														value="tabView:trialecrfstatusentry_form:progressBar_#{applicationScopeBean.getStringDigest(sectionProgress.section)}" />
+														value="tabView:trialecrfstatusentry_form:progressBar_#{applicationScopeBean.getStringDigest(trialEcrfStatusEntryBean.getFilterSectionProgressId(sectionProgress))}" />
 													<ui:param name="widgetVar"
-														value="progressBar_#{applicationScopeBean.getStringDigest(sectionProgress.section)}" />
+														value="progressBar_#{applicationScopeBean.getStringDigest(trialEcrfStatusEntryBean.getFilterSectionProgressId(sectionProgress))}" />
 													<ui:param name="value"
 														value="#{trialEcrfStatusEntryBean.getEcrfSectionProgressValue(sectionProgress)}" />
 													<ui:param name="labelTemplate"
@@ -566,8 +570,12 @@
 													<ui:param name="showUpdate" value="true" />
 													<ui:param name="showProposed" value="true" />
 													<ui:param name="showResolved" value="true" />
-													<ui:param name="idSuffix" value="section" />
+													<ui:param name="idSuffix"
+														value="s#{applicationScopeBean.getStringDigest(trialEcrfStatusEntryBean.getFilterSectionProgressId(sectionProgress))}" />
 												</ui:include>
+											</p:column>
+											<p:column>
+												<h:outputText value="#{sectionProgress.valueSummary}" />
 											</p:column>
 
 

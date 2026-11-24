@@ -16,6 +16,20 @@ public class ECRFSectionProgressConverter implements Converter {
 
 	public static final String CONVERTER_ID = "ctsms.ECRFSectionProgress";
 
+	private static final String INDEX_SEPARATOR = "\u001f";
+
+	static String toConverterKey(ECRFSectionProgressVO value) {
+		if (value == null) {
+			return CommonUtil.NO_SELECTION_VALUE;
+		}
+		String section = value.getSection() != null ? value.getSection() : CommonUtil.NO_SELECTION_VALUE;
+		Long selectionIndex = (value instanceof EcrfSectionProgressItemValue) ? ((EcrfSectionProgressItemValue) value).getSelectionIndex() : null;
+		if (selectionIndex == null) {
+			return section;
+		}
+		return section + INDEX_SEPARATOR + selectionIndex;
+	}
+
 	@Override
 	public Object getAsObject(FacesContext facesContext, UIComponent component, String submittedValue) {
 		// http://stackoverflow.com/questions/9147119/avoid-extra-db-reads-in-the-getasobject-method-of-converter-class-by-caching-dat
@@ -23,7 +37,7 @@ public class ECRFSectionProgressConverter implements Converter {
 		while (it.hasNext()) {
 			Object value = it.next().getValue();
 			if (value instanceof ECRFSectionProgressVO) {
-				if (submittedValue.equals(((ECRFSectionProgressVO) value).getSection())) {
+				if (submittedValue.equals(toConverterKey((ECRFSectionProgressVO) value))) {
 					return value;
 				}
 			} else if (value instanceof String) {
@@ -48,7 +62,7 @@ public class ECRFSectionProgressConverter implements Converter {
 				return (String) value;
 			}
 		} else if (value instanceof ECRFSectionProgressVO) {
-			return ((ECRFSectionProgressVO) value).getSection();
+			return toConverterKey((ECRFSectionProgressVO) value);
 		} else {
 			return CommonUtil.NO_SELECTION_VALUE;
 		}

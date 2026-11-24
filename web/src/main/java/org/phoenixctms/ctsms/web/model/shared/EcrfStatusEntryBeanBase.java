@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.model.SelectItem;
@@ -50,40 +52,83 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 	// the field values are paginated, so start with the empty filter showing all sections.
 	private static final boolean SET_FIRST_FILTER_SECTION = false;
 
-	private static ArrayList<SelectItem> mergeEcrfFilterSections(Collection<String> sectionStrings, ECRFProgressVO ecrfProgress, ECRFProgressVO sectionEcrfProgress) {
-		ArrayList<SelectItem> filterSections;
-		if (sectionStrings != null) {
-			HashMap<String, ECRFSectionProgressVO> progressMap = null;
-			if (ecrfProgress != null) {
-				progressMap = new HashMap<String, ECRFSectionProgressVO>(ecrfProgress.getSections().size());
-				Iterator<ECRFSectionProgressVO> it = ecrfProgress.getSections().iterator();
-				while (it.hasNext()) {
-					ECRFSectionProgressVO progress = it.next();
-					progressMap.put(progress.getSection(), progress); // take last index
+	private static void addEmptySeriesIndexFilterSection(ArrayList<SelectItem> filterSections, ECRFSectionProgressVO summary) {
+		EcrfSectionProgressItemValue item = new EcrfSectionProgressItemValue(summary);
+		item.setSelectionIndex(Long.valueOf(0l));
+		item.setIndex(Long.valueOf(0l));
+		item.setSavedValueCount(0l);
+		item.setMandatorySavedValueCount(0l);
+		item.setEcrfFieldStatusQueueCounts(new ArrayList<ECRFFieldStatusQueueCountVO>());
+		filterSections.add(new SelectItem(item, seriesIndexFilterSectionLabel(item)));
+	}
+
+	private static void addSeriesIndexFilterSection(ArrayList<SelectItem> filterSections, ECRFSectionProgressVO indexProgress) {
+		EcrfSectionProgressItemValue item = new EcrfSectionProgressItemValue(indexProgress);
+		item.setSelectionIndex(indexProgress.getIndex());
+		filterSections.add(new SelectItem(item, seriesIndexFilterSectionLabel(item)));
+	}
+
+	private static String seriesIndexFilterSectionLabel(EcrfSectionProgressItemValue item) {
+		String label = Messages.getMessage(MessageCodes.ECRF_ENTRY_SECTION_SERIES_INDEX_LABEL, item.getSectionLocalized(), item.getSelectionIndex());
+		if (!CommonUtil.isEmptyString(item.getValueSummary())) {
+			label = label + " | " + item.getValueSummary();
+		}
+		return label;
+	}
+
+	private static LinkedHashMap<String, ArrayList<ECRFSectionProgressVO>> groupSectionProgress(Collection<ECRFSectionProgressVO> sections) {
+		LinkedHashMap<String, ArrayList<ECRFSectionProgressVO>> grouped = new LinkedHashMap<String, ArrayList<ECRFSectionProgressVO>>();
+		if (sections == null) {
+			return grouped;
+		}
+		Iterator<ECRFSectionProgressVO> it = sections.iterator();
+		while (it.hasNext()) {
+			ECRFSectionProgressVO progress = it.next();
+			String section = progress.getSection() != null ? progress.getSection() : "";
+			ArrayList<ECRFSectionProgressVO> rows = grouped.get(section);
+			if (rows == null) {
+				rows = new ArrayList<ECRFSectionProgressVO>();
+				grouped.put(section, rows);
+			}
+			rows.add(progress);
+		}
+		return grouped;
+	}
+
+	private static ArrayList<SelectItem> mergeEcrfFilterSections(ECRFProgressVO ecrfProgress, ECRFProgressVO sectionEcrfProgress) {
+		ArrayList<SelectItem> filterSections = new ArrayList<SelectItem>();
+		if (ecrfProgress != null && ecrfProgress.getSections() != null && ecrfProgress.getSections().size() > 0) {
+			LinkedHashMap<String, ArrayList<ECRFSectionProgressVO>> grouped = groupSectionProgress(ecrfProgress.getSections());
+			if (sectionEcrfProgress != null) {
+				Iterator<Map.Entry<String, ArrayList<ECRFSectionProgressVO>>> refreshedIt = groupSectionProgress(sectionEcrfProgress.getSections()).entrySet().iterator();
+				while (refreshedIt.hasNext()) {
+					Map.Entry<String, ArrayList<ECRFSectionProgressVO>> refreshed = refreshedIt.next();
+					grouped.put(refreshed.getKey(), refreshed.getValue());
 				}
-				if (sectionEcrfProgress != null) {
-					it = sectionEcrfProgress.getSections().iterator();
-					while (it.hasNext()) {
-						ECRFSectionProgressVO progress = it.next();
-						progressMap.put(progress.getSection(), progress); // take last index
+			}
+			ecrfProgress.getSections().clear();
+			Iterator<ArrayList<ECRFSectionProgressVO>> groups = grouped.values().iterator();
+			while (groups.hasNext()) {
+				ArrayList<ECRFSectionProgressVO> rows = groups.next();
+				ecrfProgress.getSections().addAll(rows);
+				ECRFSectionProgressVO summary = rows.get(0);
+				if (Boolean.TRUE.equals(summary.getSeries())) {
+					boolean addedIndex = false;
+					for (int i = 1; i < rows.size(); i++) {
+						ECRFSectionProgressVO indexProgress = rows.get(i);
+						if (indexProgress.getIndex() == null) {
+							continue;
+						}
+						addSeriesIndexFilterSection(filterSections, indexProgress);
+						addedIndex = true;
 					}
-				}
-				ecrfProgress.getSections().clear();
-			}
-			filterSections = new ArrayList<SelectItem>(sectionStrings.size());
-			Iterator<String> it = sectionStrings.iterator();
-			while (it.hasNext()) {
-				String section = it.next();
-				if (progressMap != null) {
-					ECRFSectionProgressVO progress = progressMap.get(section);
-					filterSections.add(new SelectItem(new EcrfSectionProgressItemValue(progress), section));
-					ecrfProgress.getSections().add(progress);
+					if (!addedIndex) {
+						addEmptySeriesIndexFilterSection(filterSections, summary);
+					}
 				} else {
-					filterSections.add(new SelectItem(section, section));
+					filterSections.add(new SelectItem(new EcrfSectionProgressItemValue(summary), summary.getSection()));
 				}
 			}
-		} else {
-			filterSections = new ArrayList<SelectItem>();
 		}
 		if (ecrfProgress != null) {
 			ECRFSectionProgressVO noSelectionSectionProgress = new EcrfSectionProgressItemValue();
@@ -459,15 +504,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		} else {
 			filterEcrfProgress = WebUtil.getEcrfProgress(listEntryId, ecrfId, visitId, true);
 		}
-		Collection<String> sectionStrings = null;
-		if (filterEcrfProgress != null && filterEcrfProgress.getSections().size() > 0) {
-			sectionStrings = new ArrayList<String>(filterEcrfProgress.getSections().size());
-			Iterator<ECRFSectionProgressVO> it = filterEcrfProgress.getSections().iterator();
-			while (it.hasNext()) {
-				sectionStrings.add(it.next().getSection());
-			}
-		}
-		return mergeEcrfFilterSections(sectionStrings, filterEcrfProgress, sectionEcrfProgress);
+		return mergeEcrfFilterSections(filterEcrfProgress, sectionEcrfProgress);
 	}
 
 	public EcrfVisitLazyModel getEcrfVisitModel() {
@@ -559,7 +596,11 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 
 	public String getEcrfSectionProgressLabel(ECRFSectionProgressVO sectionProgress) {
 		if (sectionProgress != null) {
-			if (sectionProgress.getSeries()) {
+			if (selectionIndex(sectionProgress) != null) {
+				if (sectionProgress.getFieldCount() > 0l) {
+					return Messages.getMessage(MessageCodes.ECRF_SECTION_PROGRESS_LABEL, sectionProgress.getSavedValueCount(), sectionProgress.getFieldCount());
+				}
+			} else if (sectionProgress.getSeries()) {
 				return Messages.getMessage(MessageCodes.ECRF_SECTION_PROGRESS_SERIES_LABEL, sectionProgress.getIndex() != null ? sectionProgress.getIndex().longValue() : 0l);
 			} else if (sectionProgress.getFieldCount() > 0l) {
 				return Messages.getMessage(MessageCodes.ECRF_SECTION_PROGRESS_LABEL, sectionProgress.getSavedValueCount(), sectionProgress.getFieldCount());
@@ -570,7 +611,12 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 
 	public int getEcrfSectionProgressValue(ECRFSectionProgressVO sectionProgress) {
 		if (sectionProgress != null) {
-			if (sectionProgress.getSeries()) {
+			if (selectionIndex(sectionProgress) != null) {
+				if (sectionProgress.getFieldCount() > 0l) {
+					return Math.round(((float) Settings.getInt(SettingCodes.PROGRESS_BAR_MAX_VALUE, Bundle.SETTINGS, DefaultSettings.PROGRESS_BAR_MAX_VALUE)
+							* sectionProgress.getSavedValueCount()) / (sectionProgress.getFieldCount()));
+				}
+			} else if (sectionProgress.getSeries()) {
 				return sectionProgress.getIndex() != null ? Settings.getInt(SettingCodes.PROGRESS_BAR_MAX_VALUE, Bundle.SETTINGS, DefaultSettings.PROGRESS_BAR_MAX_VALUE) : 0;
 			} else if (sectionProgress.getFieldCount() > 0l) {
 				return Math.round(((float) Settings.getInt(SettingCodes.PROGRESS_BAR_MAX_VALUE, Bundle.SETTINGS, DefaultSettings.PROGRESS_BAR_MAX_VALUE) * sectionProgress
@@ -578,6 +624,26 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 			}
 		}
 		return 0;
+	}
+
+	public String getFilterSectionIndexLabel(ECRFSectionProgressVO sectionProgress) {
+		Long index = selectionIndex(sectionProgress);
+		if (index == null) {
+			return "";
+		}
+		return Messages.getMessage(MessageCodes.ECRF_SECTION_PROGRESS_SERIES_LABEL, index);
+	}
+
+	public String getFilterSectionProgressId(ECRFSectionProgressVO sectionProgress) {
+		if (sectionProgress == null) {
+			return "";
+		}
+		String section = sectionProgress.getSection() != null ? sectionProgress.getSection() : "";
+		Long index = selectionIndex(sectionProgress);
+		if (index == null) {
+			return section;
+		}
+		return section + "\u001f" + index;
 	}
 
 	public ECRFStatusEntryVO getEcrfStatusEntry(ECRFOutVO ecrfVO, VisitOutVO visitVO) {
@@ -1067,8 +1133,34 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		return ERROR_OUTCOME;
 	}
 
-	@Override
+	private static Long selectionIndex(ECRFSectionProgressVO sectionProgress) {
+		if (sectionProgress instanceof EcrfSectionProgressItemValue) {
+			return ((EcrfSectionProgressItemValue) sectionProgress).getSelectionIndex();
+		}
+		return null;
+	}
+
+	private void keepFilterSectionSelection(String section, Long selectionIndex) {
+		if (filterSections == null) {
+			return;
+		}
+		Iterator<SelectItem> it = filterSections.iterator();
+		while (it.hasNext()) {
+			Object value = it.next().getValue();
+			if (value instanceof EcrfSectionProgressItemValue) {
+				EcrfSectionProgressItemValue item = (EcrfSectionProgressItemValue) value;
+				boolean sameSection = section == null ? item.getSection() == null : section.equals(item.getSection());
+				if (sameSection && (selectionIndex == null ? item.getSelectionIndex() == null : selectionIndex.equals(item.getSelectionIndex()))) {
+					ecrfFieldValueBean.setFilterSectionProgress(item);
+					return;
+				}
+			}
+		}
+	}
+
 	public String updateSectionAction(EcrfFieldSection section) {
+		String selectedSection = ecrfFieldValueBean.getFilterSection();
+		Long selectedIndex = selectionIndex(ecrfFieldValueBean.getFilterSectionProgress());
 		ecrfFieldValueBean.updateSection(section);
 		initSpecificSets();
 		password = null;
@@ -1077,6 +1169,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		Long ecrfId = ecrf == null ? null : ecrf.getId();
 		Long visitId = visit != null ? visit.getId() : null;
 		filterSections = getEcrfFilterSections(listEntryId, ecrfId, visitId, true);
+		keepFilterSectionSelection(selectedSection, selectedIndex);
 		if (ecrfStatus == null) {
 			ecrfStatus = WebUtil.getEcrfStatusEntry(listEntryId, ecrfId, visitId);
 			statusTypes = loadEcrfStatusTypes();

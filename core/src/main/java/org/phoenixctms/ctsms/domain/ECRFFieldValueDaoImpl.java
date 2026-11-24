@@ -6,11 +6,17 @@
 package org.phoenixctms.ctsms.domain;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.hibernate.criterion.CriteriaSpecification;
@@ -24,9 +30,12 @@ import org.hibernate.criterion.Subqueries;
 import org.phoenixctms.ctsms.compare.VOIDComparator;
 import org.phoenixctms.ctsms.enumeration.ECRFFieldStatusQueue;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
+import org.phoenixctms.ctsms.pdf.EcrfPDFDefaultSettings;
+import org.phoenixctms.ctsms.pdf.EcrfPDFSettingCodes;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
 import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.util.CommonUtil.EllipsisPlacement;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.DefaultSettings;
 import org.phoenixctms.ctsms.util.L10nUtil;
@@ -52,6 +61,28 @@ public class ECRFFieldValueDaoImpl
 
 	private final static VOIDComparator SELECTION_SET_VALUE_OUT_VO_ID_COMPARATOR = new VOIDComparator<InputFieldSelectionSetValueOutVO>(false);
 	private final static VOIDComparator SELECTION_SET_VALUE_JSON_VO_ID_COMPARATOR = new VOIDComparator<InputFieldSelectionSetValueJsonVO>(false);
+	private static final String SERIES_INDEX_VALUE_SEPARATOR = " | ";
+	private static final String SERIES_INDEX_SELECTION_SEPARATOR = ", ";
+	private static final int SERIES_INDEX_VALUE_SUMMARY_MAX_LENGTH = 120;
+	private static final String SERIES_INDEX_VALUE_SUMMARY_ELLIPSIS = "..";
+	private static final Comparator<InputFieldSelectionSetValue> SELECTION_SET_VALUE_ID_COMPARATOR = new Comparator<InputFieldSelectionSetValue>() {
+
+		@Override
+		public int compare(InputFieldSelectionSetValue a, InputFieldSelectionSetValue b) {
+			Long aId = a != null ? a.getId() : null;
+			Long bId = b != null ? b.getId() : null;
+			if (aId == null && bId == null) {
+				return 0;
+			}
+			if (aId == null) {
+				return -1;
+			}
+			if (bId == null) {
+				return 1;
+			}
+			return aId.compareTo(bId);
+		}
+	};
 
 	private static void applyEcrfFieldValueMaxIdSubCriteria(org.hibernate.Criteria ecrfFieldValueCriteria, org.hibernate.Criteria probandListEntryCriteria,
 			org.hibernate.Criteria visitCriteria, org.hibernate.Criteria ecrfFieldCriteria,
@@ -1164,6 +1195,212 @@ public class ECRFFieldValueDaoImpl
 		}
 		Collections.sort(result, SELECTION_SET_VALUE_OUT_VO_ID_COMPARATOR);
 		return result;
+	}
+
+	/**
+	 * Saved-value counts per series index. Same rows as
+	 * {@code getCount(listEntry, ecrf, visit, section, excludeAuditTrail=true, optional)}.
+	 */
+	@SuppressWarnings("unchecked")
+	public Map<Long, Long> getSavedValueCountByIndex(Long probandListEntryId, Long ecrfId, Long visitId, String section, Boolean optional) {
+		org.hibernate.Criteria ecrfFieldValueCriteria = createEcrfFieldValueCriteria("ecrfFieldValue0");
+		ecrfFieldValueCriteria.add(Restrictions.eq("listEntry.id", probandListEntryId.longValue()));
+		if (visitId != null) {
+			ecrfFieldValueCriteria.add(Restrictions.eq("visit.id", visitId.longValue()));
+		} else {
+			ecrfFieldValueCriteria.add(Restrictions.isNull("visit.id"));
+		}
+		org.hibernate.Criteria ecrfFieldCriteria = ecrfFieldValueCriteria.createCriteria("ecrfField", "ecrfField0");
+		ecrfFieldCriteria.add(Restrictions.eq("ecrf.id", ecrfId.longValue()));
+		if (optional != null) {
+			ecrfFieldCriteria.add(Restrictions.eq("optional", optional.booleanValue()));
+		}
+		if (section != null && section.length() > 0) {
+			ecrfFieldCriteria.add(Restrictions.eq("section", section));
+		} else {
+			ecrfFieldCriteria.add(Restrictions.or(Restrictions.eq("section", ""), Restrictions.isNull("section")));
+		}
+		applyEcrfFieldValueMaxIdSubCriteria(ecrfFieldValueCriteria, null, ecrfFieldCriteria, probandListEntryId, visitId, null);
+		ecrfFieldValueCriteria.setProjection(Projections.projectionList()
+				.add(Projections.groupProperty("index"))
+				.add(Projections.rowCount()));
+		HashMap<Long, Long> result = new HashMap<Long, Long>();
+		Iterator<Object[]> it = ((List<Object[]>) ecrfFieldValueCriteria.list()).iterator();
+		while (it.hasNext()) {
+			Object[] row = it.next();
+			if (row[0] instanceof Long && row[1] instanceof Number) {
+				result.put((Long) row[0], Long.valueOf(((Number) row[1]).longValue()));
+			}
+		}
+		return result;
+	}
+
+	public Map<Long, String> getSeriesIndexValueSummaries(Long probandListEntryId, Long ecrfId, Long visitId, String section) {
+		org.hibernate.Criteria ecrfFieldValueCriteria = createEcrfFieldValueCriteria("ecrfFieldValue0");
+		ecrfFieldValueCriteria.add(Restrictions.eq("listEntry.id", probandListEntryId.longValue()));
+		if (visitId != null) {
+			ecrfFieldValueCriteria.add(Restrictions.eq("visit.id", visitId.longValue()));
+		} else {
+			ecrfFieldValueCriteria.add(Restrictions.isNull("visit.id"));
+		}
+		org.hibernate.Criteria ecrfFieldCriteria = ecrfFieldValueCriteria.createCriteria("ecrfField", "ecrfField0");
+		ecrfFieldCriteria.add(Restrictions.eq("ecrf.id", ecrfId.longValue()));
+		if (section != null && section.length() > 0) {
+			ecrfFieldCriteria.add(Restrictions.eq("section", section));
+		} else {
+			ecrfFieldCriteria.add(Restrictions.or(Restrictions.eq("section", ""), Restrictions.isNull("section")));
+		}
+		applyEcrfFieldValueMaxIdSubCriteria(ecrfFieldValueCriteria, null, ecrfFieldCriteria, probandListEntryId, visitId, null);
+		ecrfFieldValueCriteria.addOrder(Order.asc("index"));
+		ecrfFieldCriteria.addOrder(Order.asc("position"));
+		DateFormat dateFormat = Settings.getSimpleDateFormat(EcrfPDFSettingCodes.DATE_VALUE_PATTERN, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.DATE_VALUE_PATTERN, Locales.USER,
+				false);
+		DateFormat timeFormat = Settings.getSimpleDateFormat(EcrfPDFSettingCodes.TIME_VALUE_PATTERN, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.TIME_VALUE_PATTERN, Locales.USER,
+				false);
+		DateFormat timestampFormat = Settings.getSimpleDateFormat(EcrfPDFSettingCodes.TIMESTAMP_VALUE_PATTERN, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.TIMESTAMP_VALUE_PATTERN,
+				Locales.USER, false);
+		DateFormat userTimestampFormat = Settings.getSimpleDateFormat(EcrfPDFSettingCodes.TIMESTAMP_VALUE_PATTERN, Bundle.ECRF_PDF,
+				EcrfPDFDefaultSettings.TIMESTAMP_VALUE_PATTERN, Locales.USER, true);
+		String decimalSeparator = Settings.getString(EcrfPDFSettingCodes.DECIMAL_SEPARATOR, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.DECIMAL_SEPARATOR);
+		LinkedHashMap<Long, StringBuilder> builders = new LinkedHashMap<Long, StringBuilder>();
+		HashMap<Long, String> checkboxLabels = new HashMap<Long, String>();
+		Iterator<?> it = ecrfFieldValueCriteria.list().iterator();
+		while (it.hasNext()) {
+			ECRFFieldValue value = (ECRFFieldValue) it.next();
+			if (value.getIndex() == null) {
+				continue;
+			}
+			String text = formatSeriesIndexValue(value, dateFormat, timeFormat, timestampFormat, userTimestampFormat, decimalSeparator, checkboxLabels);
+			if (CommonUtil.isEmptyString(text)) {
+				continue;
+			}
+			StringBuilder summary = builders.get(value.getIndex());
+			if (summary == null) {
+				summary = new StringBuilder();
+				builders.put(value.getIndex(), summary);
+			}
+			if (summary.length() > 0) {
+				summary.append(SERIES_INDEX_VALUE_SEPARATOR);
+			}
+			summary.append(text);
+		}
+		HashMap<Long, String> result = new HashMap<Long, String>(builders.size());
+		Iterator<Map.Entry<Long, StringBuilder>> summaries = builders.entrySet().iterator();
+		while (summaries.hasNext()) {
+			Map.Entry<Long, StringBuilder> entry = summaries.next();
+			result.put(entry.getKey(), CommonUtil.clipString(entry.getValue().toString(), SERIES_INDEX_VALUE_SUMMARY_MAX_LENGTH, SERIES_INDEX_VALUE_SUMMARY_ELLIPSIS,
+					EllipsisPlacement.TRAILING));
+		}
+		return result;
+	}
+
+	private String formatSeriesIndexValue(ECRFFieldValue value, DateFormat dateFormat, DateFormat timeFormat, DateFormat timestampFormat, DateFormat userTimestampFormat,
+			String decimalSeparator, HashMap<Long, String> checkboxLabels) {
+		ECRFField ecrfField = value.getEcrfField();
+		InputField field = ecrfField != null ? ecrfField.getField() : null;
+		InputFieldValue input = value.getValue();
+		if (field == null || field.getFieldType() == null || input == null) {
+			return "";
+		}
+		String text = null;
+		switch (field.getFieldType()) {
+			case SINGLE_LINE_TEXT:
+			case MULTI_LINE_TEXT:
+			case AUTOCOMPLETE:
+				text = input.getStringValue();
+				break;
+			case INTEGER:
+				if (input.getLongValue() != null) {
+					text = input.getLongValue().toString();
+				}
+				break;
+			case FLOAT:
+				text = CommonUtil.formatFloat(input.getFloatValue(), decimalSeparator);
+				break;
+			case DATE:
+				Date dateValue = CoreUtil.forceDate(input.getDateValue());
+				if (dateValue != null) {
+					text = dateFormat.format(dateValue);
+				}
+				break;
+			case TIME:
+				Date timeValue = CoreUtil.forceDate(input.getTimeValue());
+				if (timeValue != null) {
+					text = timeFormat.format(timeValue);
+				}
+				break;
+			case TIMESTAMP:
+				if (input.getTimestampValue() != null) {
+					text = (field.isUserTimeZone() ? userTimestampFormat : timestampFormat).format(input.getTimestampValue());
+				}
+				break;
+			case SELECT_ONE_DROPDOWN:
+			case SELECT_ONE_RADIO_H:
+			case SELECT_ONE_RADIO_V:
+			case SELECT_MANY_H:
+			case SELECT_MANY_V:
+			case SELECT_MATRIX_ONE:
+			case SELECT_MATRIX_MANY:
+			case SKETCH:
+				text = selectionValuesToString(input.getSelectionValues());
+				break;
+			case CHECKBOX:
+				if (Boolean.TRUE.equals(input.getBooleanValue())) {
+					text = checkboxLabel(ecrfField, checkboxLabels);
+				}
+				break;
+			case FILE:
+				if (input.getFileValue() != null) {
+					text = input.getFileValue().getFileName();
+				}
+				break;
+			default:
+				break;
+		}
+		if (text == null) {
+			return "";
+		}
+		return text.replaceAll("\\s+", " ").trim();
+	}
+
+	private static String checkboxLabel(ECRFField ecrfField, HashMap<Long, String> checkboxLabels) {
+		String label = checkboxLabels.get(ecrfField.getId());
+		if (label == null) {
+			label = "";
+			if (!CommonUtil.isEmptyString(ecrfField.getTitleL10nKey())) {
+				String title = L10nUtil.getInputFieldTitle(Locales.USER, ecrfField.getTitleL10nKey());
+				if (!CommonUtil.isEmptyString(title)) {
+					label = title;
+				}
+			}
+			checkboxLabels.put(ecrfField.getId(), label);
+		}
+		return label;
+	}
+
+	private static String selectionValuesToString(Collection<InputFieldSelectionSetValue> selectionValues) {
+		if (selectionValues == null || selectionValues.isEmpty()) {
+			return "";
+		}
+		ArrayList<InputFieldSelectionSetValue> sorted = new ArrayList<InputFieldSelectionSetValue>(selectionValues);
+		Collections.sort(sorted, SELECTION_SET_VALUE_ID_COMPARATOR);
+		StringBuilder text = new StringBuilder();
+		Iterator<InputFieldSelectionSetValue> it = sorted.iterator();
+		while (it.hasNext()) {
+			InputFieldSelectionSetValue selectionValue = it.next();
+			if (selectionValue == null || CommonUtil.isEmptyString(selectionValue.getNameL10nKey())) {
+				continue;
+			}
+			String name = L10nUtil.getInputFieldSelectionSetValueName(Locales.USER, selectionValue.getNameL10nKey());
+			if (CommonUtil.isEmptyString(name)) {
+				continue;
+			}
+			if (text.length() > 0) {
+				text.append(SERIES_INDEX_SELECTION_SEPARATOR);
+			}
+			text.append(name);
+		}
+		return text.toString();
 	}
 
 	private HashSet<InputFieldSelectionSetValue> toInputFieldSelectionSetValueSet(Collection<Long> selectionValueIds) { // lazyload persistentset prevention

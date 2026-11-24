@@ -5,8 +5,12 @@
  */
 package org.phoenixctms.ctsms.domain;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Hibernate;
 import org.hibernate.criterion.CriteriaSpecification;
@@ -22,6 +26,7 @@ import org.phoenixctms.ctsms.query.SubCriteriaMap;
 import org.phoenixctms.ctsms.vo.ECRFFieldOutVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldStatusEntryInVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldStatusEntryOutVO;
+import org.phoenixctms.ctsms.vo.ECRFFieldStatusQueueCountVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldStatusTypeVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
@@ -1004,5 +1009,154 @@ public class ECRFFieldStatusEntryDaoImpl
 		if (modifiedUser != null) {
 			target.setModifiedUser(this.getUserDao().toUserOutVO(modifiedUser));
 		}
+	}
+
+	/**
+	 * Field-status counts per series index for one section. Totals count every status row.
+	 * Initial, updated, proposed, resolved and unresolved count the latest status per field and index,
+	 * with the same flag rules as the section progress counts.
+	 */
+	public Map<Long, ArrayList<ECRFFieldStatusQueueCountVO>> getSectionIndexStatusCounts(Long probandListEntryId, Long ecrfId, Long visitId, String section) {
+		return toSectionIndexStatusCounts(listSectionIndexQueueTotals(probandListEntryId, ecrfId, visitId, section),
+				listSectionIndexQueueLastFlagCounts(probandListEntryId, ecrfId, visitId, section));
+	}
+
+	@SuppressWarnings("unchecked")
+	private List<Object[]> listSectionIndexQueueTotals(Long probandListEntryId, Long ecrfId, Long visitId, String section) {
+		org.hibernate.Criteria criteria = createSectionIndexStatusCriteria(probandListEntryId, ecrfId, visitId, section);
+		criteria.setProjection(Projections.projectionList()
+				.add(Projections.groupProperty("index"))
+				.add(Projections.groupProperty("queue"))
+				.add(Projections.rowCount()));
+		return criteria.list();
+	}
+
+	@SuppressWarnings("unchecked")
+	private List<Object[]> listSectionIndexQueueLastFlagCounts(Long probandListEntryId, Long ecrfId, Long visitId, String section) {
+		org.hibernate.Criteria criteria = createSectionIndexStatusCriteria(probandListEntryId, ecrfId, visitId, section);
+		criteria.createCriteria("status", "fieldStatus", CriteriaSpecification.INNER_JOIN);
+		DetachedCriteria lastId = DetachedCriteria.forClass(ECRFFieldStatusEntryImpl.class, "ecrfFieldStatusEntry1");
+		lastId.add(Restrictions.eq("listEntry.id", probandListEntryId.longValue()));
+		lastId.add(Restrictions.eqProperty("ecrfField.id", "ecrfField0.id"));
+		lastId.add(Restrictions.eqProperty("queue", "ecrfFieldStatusEntry0.queue"));
+		lastId.add(Restrictions.or(Restrictions.isNull("index"), Restrictions.eqProperty("index", "ecrfFieldStatusEntry0.index")));
+		if (visitId != null) {
+			lastId.add(Restrictions.eq("visit.id", visitId.longValue()));
+		} else {
+			lastId.add(Restrictions.isNull("visit.id"));
+		}
+		lastId.setProjection(Projections.max("id"));
+		criteria.add(Subqueries.propertyIn("id", lastId));
+		criteria.setProjection(Projections.projectionList()
+				.add(Projections.groupProperty("index"))
+				.add(Projections.groupProperty("queue"))
+				.add(Projections.groupProperty("fieldStatus.initial"))
+				.add(Projections.groupProperty("fieldStatus.updated"))
+				.add(Projections.groupProperty("fieldStatus.proposed"))
+				.add(Projections.groupProperty("fieldStatus.resolved"))
+				.add(Projections.rowCount()));
+		return criteria.list();
+	}
+
+	private org.hibernate.Criteria createSectionIndexStatusCriteria(Long probandListEntryId, Long ecrfId, Long visitId, String section) {
+		org.hibernate.Criteria criteria = createEcrfFieldStatusEntryCriteria("ecrfFieldStatusEntry0");
+		criteria.add(Restrictions.eq("listEntry.id", probandListEntryId.longValue()));
+		if (visitId != null) {
+			criteria.add(Restrictions.eq("visit.id", visitId.longValue()));
+		} else {
+			criteria.add(Restrictions.isNull("visit.id"));
+		}
+		org.hibernate.Criteria ecrfFieldCriteria = criteria.createCriteria("ecrfField", "ecrfField0", CriteriaSpecification.INNER_JOIN);
+		ecrfFieldCriteria.add(Restrictions.eq("ecrf.id", ecrfId.longValue()));
+		if (section != null && section.length() > 0) {
+			ecrfFieldCriteria.add(Restrictions.eq("section", section));
+		} else {
+			ecrfFieldCriteria.add(Restrictions.or(Restrictions.eq("section", ""), Restrictions.isNull("section")));
+		}
+		return criteria;
+	}
+
+	private static Map<Long, ArrayList<ECRFFieldStatusQueueCountVO>> toSectionIndexStatusCounts(List<Object[]> totals, List<Object[]> lastFlags) {
+		HashMap<Long, HashMap<ECRFFieldStatusQueue, long[]>> byIndex = new HashMap<Long, HashMap<ECRFFieldStatusQueue, long[]>>();
+		addSectionIndexStatusTotals(byIndex, totals);
+		addSectionIndexStatusFlags(byIndex, lastFlags);
+		ECRFFieldStatusQueue[] queues = ECRFFieldStatusQueue.values();
+		HashMap<Long, ArrayList<ECRFFieldStatusQueueCountVO>> result = new HashMap<Long, ArrayList<ECRFFieldStatusQueueCountVO>>(byIndex.size());
+		Iterator<Map.Entry<Long, HashMap<ECRFFieldStatusQueue, long[]>>> it = byIndex.entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry<Long, HashMap<ECRFFieldStatusQueue, long[]>> entry = it.next();
+			ArrayList<ECRFFieldStatusQueueCountVO> counts = new ArrayList<ECRFFieldStatusQueueCountVO>(queues.length);
+			for (int i = 0; i < queues.length; i++) {
+				long[] count = entry.getValue().get(queues[i]);
+				if (count == null) {
+					count = new long[6];
+				}
+				ECRFFieldStatusQueueCountVO queueCount = new ECRFFieldStatusQueueCountVO();
+				queueCount.setQueue(queues[i]);
+				queueCount.setTotal(count[0]);
+				queueCount.setInitial(count[1]);
+				queueCount.setUpdated(count[2]);
+				queueCount.setProposed(count[3]);
+				queueCount.setResolved(count[4]);
+				queueCount.setUnresolved(count[5]);
+				counts.add(queueCount);
+			}
+			result.put(entry.getKey(), counts);
+		}
+		return result;
+	}
+
+	private static void addSectionIndexStatusTotals(HashMap<Long, HashMap<ECRFFieldStatusQueue, long[]>> byIndex, List<Object[]> totals) {
+		Iterator<Object[]> it = totals.iterator();
+		while (it.hasNext()) {
+			Object[] row = it.next();
+			long[] count = sectionIndexStatusCount(byIndex, row[0], row[1]);
+			if (count != null && row[2] instanceof Number) {
+				count[0] = ((Number) row[2]).longValue();
+			}
+		}
+	}
+
+	private static void addSectionIndexStatusFlags(HashMap<Long, HashMap<ECRFFieldStatusQueue, long[]>> byIndex, List<Object[]> lastFlags) {
+		Iterator<Object[]> it = lastFlags.iterator();
+		while (it.hasNext()) {
+			Object[] row = it.next();
+			long[] count = sectionIndexStatusCount(byIndex, row[0], row[1]);
+			if (count == null || !(row[6] instanceof Number)) {
+				continue;
+			}
+			long n = ((Number) row[6]).longValue();
+			if (Boolean.TRUE.equals(row[2]) && Boolean.FALSE.equals(row[5])) {
+				count[1] += n;
+			}
+			if (Boolean.TRUE.equals(row[3])) {
+				count[2] += n;
+			}
+			if (Boolean.TRUE.equals(row[4])) {
+				count[3] += n;
+			}
+			if (Boolean.TRUE.equals(row[5])) {
+				count[4] += n;
+			} else if (Boolean.FALSE.equals(row[5])) {
+				count[5] += n;
+			}
+		}
+	}
+
+	private static long[] sectionIndexStatusCount(HashMap<Long, HashMap<ECRFFieldStatusQueue, long[]>> byIndex, Object index, Object queue) {
+		if (!(index instanceof Long) || !(queue instanceof ECRFFieldStatusQueue)) {
+			return null;
+		}
+		HashMap<ECRFFieldStatusQueue, long[]> counts = byIndex.get(index);
+		if (counts == null) {
+			counts = new HashMap<ECRFFieldStatusQueue, long[]>();
+			byIndex.put((Long) index, counts);
+		}
+		long[] count = counts.get(queue);
+		if (count == null) {
+			count = new long[6];
+			counts.put((ECRFFieldStatusQueue) queue, count);
+		}
+		return count;
 	}
 }
