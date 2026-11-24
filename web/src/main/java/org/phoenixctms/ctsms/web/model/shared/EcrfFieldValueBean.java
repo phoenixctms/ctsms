@@ -37,6 +37,7 @@ import org.phoenixctms.ctsms.vo.ProbandListEntryTagValueJsonVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.vo.VisitOutVO;
 import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
+import org.phoenixctms.ctsms.web.conversion.EcrfSectionProgressItemValue;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.model.Paginator;
 import org.phoenixctms.ctsms.web.model.shared.inputfield.EcrfFieldInputModel;
@@ -277,6 +278,10 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 
 			@Override
 			protected String getPageButtonLabelSeriesIndex(int i, int pageSize) {
+				Long filterIndex = ((EcrfFieldValueBean) bean).getFilterIndex();
+				if (filterIndex != null) {
+					return filterIndex.toString();
+				}
 				ECRFSectionProgressVO sectionProgress = ((EcrfFieldValueBean) bean).getFilterSectionProgress();
 				if (sectionProgress != null && sectionProgress.getSeries() && sectionProgress.getFieldCount() > 0l) {
 					long pageStart = i * pageSize + 1;
@@ -1029,6 +1034,11 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 	public void setFilterSectionProgress(ECRFSectionProgressVO filterSectionProgress) {
 		this.filterSectionProgress = filterSectionProgress;
 		this.filterSection = (filterSectionProgress != null ? filterSectionProgress.getSection() : null);
+		if (filterSectionProgress instanceof EcrfSectionProgressItemValue) {
+			this.filterIndex = ((EcrfSectionProgressItemValue) filterSectionProgress).getSelectionIndex();
+		} else {
+			this.filterIndex = null;
+		}
 	}
 
 	public void setInputModelErrorMsgs(Object data) {

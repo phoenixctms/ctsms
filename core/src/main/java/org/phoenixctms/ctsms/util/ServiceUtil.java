@@ -4996,6 +4996,47 @@ public final class ServiceUtil {
 				result.setMandatoryFieldCount(result.getMandatoryFieldCount() + (ecrfField.isOptional() ? 0l : 1l));
 			}
 		}
+		appendSeriesIndexProgress(result, listEntryVO, ecrfVO, visitVO, ecrfFieldValueDao, ecrfFieldStatusEntryDao);
+	}
+
+	private static void appendSeriesIndexProgress(ECRFProgressVO result, ProbandListEntryOutVO listEntryVO, ECRFOutVO ecrfVO, VisitOutVO visitVO,
+			ECRFFieldValueDao ecrfFieldValueDao, ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao) {
+		ArrayList<ECRFSectionProgressVO> summaries = new ArrayList<ECRFSectionProgressVO>(result.getSections());
+		Iterator<ECRFSectionProgressVO> it = summaries.iterator();
+		while (it.hasNext()) {
+			ECRFSectionProgressVO summary = it.next();
+			Long maxIndex = summary.getIndex();
+			if (!summary.getSeries() || maxIndex == null || maxIndex.longValue() < 0l) {
+				continue;
+			}
+			Long listEntryId = listEntryVO.getId();
+			Long ecrfId = ecrfVO.getId();
+			Long visitId = visitVO != null ? visitVO.getId() : null;
+			Map<Long, Long> savedCounts = ((ECRFFieldValueDaoImpl) ecrfFieldValueDao).getSavedValueCountByIndex(listEntryId, ecrfId, visitId, summary.getSection(), null);
+			Map<Long, Long> mandatorySavedCounts = ((ECRFFieldValueDaoImpl) ecrfFieldValueDao).getSavedValueCountByIndex(listEntryId, ecrfId, visitId, summary.getSection(),
+					Boolean.FALSE);
+			Map<Long, ArrayList<ECRFFieldStatusQueueCountVO>> statusCounts = ((ECRFFieldStatusEntryDaoImpl) ecrfFieldStatusEntryDao).getSectionIndexStatusCounts(listEntryId,
+					ecrfId, visitId, summary.getSection());
+			Map<Long, String> valueSummaries = ((ECRFFieldValueDaoImpl) ecrfFieldValueDao).getSeriesIndexValueSummaries(listEntryId, ecrfId, visitId, summary.getSection());
+			for (long i = 0l; i <= maxIndex.longValue(); i++) {
+				Long index = Long.valueOf(i);
+				ECRFSectionProgressVO indexProgress = new ECRFSectionProgressVO();
+				indexProgress.setSection(summary.getSection());
+				indexProgress.setSectionLocalized(summary.getSectionLocalized());
+				indexProgress.setSeries(true);
+				indexProgress.setIndex(index);
+				indexProgress.setFieldCount(summary.getFieldCount());
+				indexProgress.setMandatoryFieldCount(summary.getMandatoryFieldCount());
+				Long savedCount = savedCounts.get(index);
+				indexProgress.setSavedValueCount(savedCount != null ? savedCount.longValue() : 0l);
+				Long mandatorySavedCount = mandatorySavedCounts.get(index);
+				indexProgress.setMandatorySavedValueCount(mandatorySavedCount != null ? mandatorySavedCount.longValue() : 0l);
+				ArrayList<ECRFFieldStatusQueueCountVO> counts = statusCounts.get(index);
+				indexProgress.setEcrfFieldStatusQueueCounts(counts != null ? counts : new ArrayList<ECRFFieldStatusQueueCountVO>());
+				indexProgress.setValueSummary(valueSummaries.get(index));
+				result.getSections().add(indexProgress);
+			}
+		}
 	}
 
 	public static void populateInquiriesPDFVOMaps(
