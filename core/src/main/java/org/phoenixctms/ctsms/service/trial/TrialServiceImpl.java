@@ -8293,6 +8293,9 @@ public class TrialServiceImpl
 		return courses;
 	}
 
+	/** False returns the overview totals. True restores the previous per-proband graph. */
+	private static final boolean TRIAL_ECRF_PROGRESS_SUMMARY_FULL_GRAPH = false;
+
 	private static final class TrialProgressListEntry {
 
 		private final long id;
@@ -8453,9 +8456,42 @@ public class TrialServiceImpl
 		summary.getEcrfs().add(progress);
 	}
 
+	private TrialECRFProgressSummaryVO getTrialEcrfProgressSummaryFullGraph(Long trialId, Long probandDepartmentId, boolean dueDetail, Date from, Date to) throws Exception {
+		TrialDao trialDao = this.getTrialDao();
+		TrialOutVO trialVO = trialDao.toTrialOutVO(CheckIDUtil.checkTrialId(trialId, trialDao));
+		if (probandDepartmentId != null) {
+			CheckIDUtil.checkDepartmentId(probandDepartmentId, this.getDepartmentDao());
+		}
+		ProbandListEntryDao probandListEntryDao = this.getProbandListEntryDao();
+		TrialECRFProgressSummaryVO result = new TrialECRFProgressSummaryVO();
+		result.setTrial(trialVO);
+		result.setEcrfTotalCount(0l);
+		result.setEcrfDoneCount(0l);
+		result.setEcrfOverdueCount(0l);
+		result.setCharge(0.0f);
+		result.setEcrfStatusEntryCount(0l);
+		Iterator<ProbandListEntry> listEntriesIt = probandListEntryDao.findByTrialProbandDepartmentEcrfs(trialId, probandDepartmentId, true).iterator();
+		while (listEntriesIt.hasNext()) {
+			ProbandListEntryOutVO listEntryVO = probandListEntryDao.toProbandListEntryOutVO(listEntriesIt.next());
+			ECRFProgressSummaryVO ecrfProgressSummary = createEcrfProgessSummary(listEntryVO, false, false, dueDetail, false, from, to);
+			result.setEcrfTotalCount(result.getEcrfTotalCount() + ecrfProgressSummary.getEcrfTotalCount());
+			result.setEcrfDoneCount(result.getEcrfDoneCount() + ecrfProgressSummary.getEcrfDoneCount());
+			result.setEcrfOverdueCount(result.getEcrfOverdueCount() + ecrfProgressSummary.getEcrfOverdueCount());
+			result.setCharge(result.getCharge() + ecrfProgressSummary.getCharge());
+			result.setEcrfStatusEntryCount(result.getEcrfStatusEntryCount() + ecrfProgressSummary.getEcrfStatusEntryCount());
+			result.setEcrfFieldStatusQueueCounts(ServiceUtil.addEcrfFieldStatusEntryCounts(result.getEcrfFieldStatusQueueCounts(),
+					ecrfProgressSummary.getEcrfFieldStatusQueueCounts()));
+			result.getListEntries().add(ecrfProgressSummary);
+		}
+		return result;
+	}
+
 	@Override
 	protected TrialECRFProgressSummaryVO handleGetTrialEcrfProgressSummary(AuthenticationVO auth, Long trialId, Long probandDepartmentId, boolean dueDetail, Date from, Date to)
 			throws Exception {
+		if (TRIAL_ECRF_PROGRESS_SUMMARY_FULL_GRAPH) {
+			return getTrialEcrfProgressSummaryFullGraph(trialId, probandDepartmentId, dueDetail, from, to);
+		}
 		TrialDao trialDao = this.getTrialDao();
 		TrialOutVO trialVO = trialDao.toTrialOutVO(CheckIDUtil.checkTrialId(trialId, trialDao));
 		if (probandDepartmentId != null) {
