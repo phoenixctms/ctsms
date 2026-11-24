@@ -29,9 +29,15 @@ public class ECRFSectionProgressConverter implements Converter {
 			if (section.length() == 0) {
 				return CommonUtil.NO_SELECTION_VALUE;
 			}
-			return SECTION_KEY_PREFIX + escapeConverterKey(section);
+			StringBuilder key = new StringBuilder(SECTION_KEY_PREFIX);
+			key.append(escapeConverterKey(section));
+			return key.toString();
 		}
-		return INDEX_KEY_PREFIX + escapeConverterKey(section) + ":" + selectionIndex;
+		StringBuilder key = new StringBuilder(INDEX_KEY_PREFIX);
+		key.append(escapeConverterKey(section));
+		key.append(':');
+		key.append(selectionIndex);
+		return key.toString();
 	}
 
 	private static String escapeConverterKey(String section) {
