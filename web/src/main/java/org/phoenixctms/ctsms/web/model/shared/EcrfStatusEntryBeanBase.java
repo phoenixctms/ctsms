@@ -126,7 +126,11 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 						addEmptySeriesIndexFilterSection(filterSections, summary);
 					}
 				} else {
-					filterSections.add(new SelectItem(new EcrfSectionProgressItemValue(summary), summary.getSection()));
+					String closedLabel = summary.getSectionLocalized();
+					if (CommonUtil.isEmptyString(closedLabel)) {
+						closedLabel = summary.getSection();
+					}
+					filterSections.add(new SelectItem(new EcrfSectionProgressItemValue(summary), closedLabel));
 				}
 			}
 		}

@@ -62,9 +62,6 @@ public class EcrfSectionProgressItemValue extends ECRFSectionProgressVO {
 
 	@Override
 	public String toString() {
-		if (selectionIndex == null) {
-			return this.getSection();
-		}
-		return this.getSection() + "\u001f" + selectionIndex;
+		return ECRFSectionProgressConverter.toConverterKey(this);
 	}
 }

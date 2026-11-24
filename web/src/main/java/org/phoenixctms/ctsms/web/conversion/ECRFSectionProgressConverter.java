@@ -16,7 +16,8 @@ public class ECRFSectionProgressConverter implements Converter {
 
 	public static final String CONVERTER_ID = "ctsms.ECRFSectionProgress";
 
-	private static final String INDEX_SEPARATOR = "\u001f";
+	private static final String SECTION_KEY_PREFIX = "s:";
+	private static final String INDEX_KEY_PREFIX = "i:";
 
 	static String toConverterKey(ECRFSectionProgressVO value) {
 		if (value == null) {
@@ -25,9 +26,16 @@ public class ECRFSectionProgressConverter implements Converter {
 		String section = value.getSection() != null ? value.getSection() : CommonUtil.NO_SELECTION_VALUE;
 		Long selectionIndex = (value instanceof EcrfSectionProgressItemValue) ? ((EcrfSectionProgressItemValue) value).getSelectionIndex() : null;
 		if (selectionIndex == null) {
-			return section;
+			if (section.length() == 0) {
+				return CommonUtil.NO_SELECTION_VALUE;
+			}
+			return SECTION_KEY_PREFIX + escapeConverterKey(section);
 		}
-		return section + INDEX_SEPARATOR + selectionIndex;
+		return INDEX_KEY_PREFIX + escapeConverterKey(section) + ":" + selectionIndex;
+	}
+
+	private static String escapeConverterKey(String section) {
+		return section.replace(":", "::");
 	}
 
 	@Override

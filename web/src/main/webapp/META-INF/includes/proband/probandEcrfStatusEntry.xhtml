@@ -437,7 +437,7 @@
 											value="#{probandEcrfStatusEntryBean.ecrfFieldValueBean.filterSectionProgress}"
 											var="sectionProgress" converter="ctsms.ECRFSectionProgress"
 											label="#{probandlabels.ecrf_field_values_section_filter}"
-											styleClass="ctsms-control-ecrf-section"
+											styleClass="ctsms-control-largest ctsms-section-filter"
 											panelStyleClass="ctsms-ecrf-section-filter-panel">
 											<f:selectItems
 												value="#{probandEcrfStatusEntryBean.filterSections}"
@@ -448,20 +448,13 @@
 												<h:outputText value="#{sectionProgress.sectionLocalized}" />
 											</p:column>
 											<p:column>
-												<h:outputText value="#{probandEcrfStatusEntryBean.getFilterSectionIndexLabel(sectionProgress)}" />
+												<h:outputText styleClass="ctsms-ecrf-section-index" value="#{probandEcrfStatusEntryBean.getFilterSectionIndexLabel(sectionProgress)}" />
 											</p:column>
 											<p:column>
-												<ui:include src="../shared/progressBar.xhtml">
-													<ui:param name="id"
-														value="tabView:probandecrfstatusentry_form:progressBar_#{applicationScopeBean.getStringDigest(probandEcrfStatusEntryBean.getFilterSectionProgressId(sectionProgress))}" />
-													<ui:param name="widgetVar"
-														value="progressBar_#{applicationScopeBean.getStringDigest(probandEcrfStatusEntryBean.getFilterSectionProgressId(sectionProgress))}" />
-													<ui:param name="value"
-														value="#{probandEcrfStatusEntryBean.getEcrfSectionProgressValue(sectionProgress)}" />
-													<ui:param name="labelTemplate"
-														value="#{probandEcrfStatusEntryBean.getEcrfSectionProgressLabel(sectionProgress)}" />
-													<ui:param name="width" value="60" />
-												</ui:include>
+												<div class="ui-progressbar ui-widget ui-widget-content ui-corner-all ctsms-section-progress">
+													<div class="ui-progressbar-value ui-widget-header ui-corner-all" style="width:#{probandEcrfStatusEntryBean.getEcrfSectionProgressValue(sectionProgress)}%"></div>
+													<span class="ctsms-section-progress-label">#{probandEcrfStatusEntryBean.getEcrfSectionProgressLabel(sectionProgress)}</span>
+												</div>
 											</p:column>
 											<p:column>
 												<ui:include src="../shared/listEcrfFieldStatusIcons.xhtml">
@@ -473,6 +466,7 @@
 													<ui:param name="showResolved" value="true" />
 													<ui:param name="idSuffix"
 														value="s#{applicationScopeBean.getStringDigest(probandEcrfStatusEntryBean.getFilterSectionProgressId(sectionProgress))}" />
+													<ui:param name="statusIconTooltips" value="false" />
 												</ui:include>
 											</p:column>
 											<p:column>
@@ -795,7 +789,12 @@
 				<f:facet name="message">
 
 					<h:outputText
+						rendered="#{empty probandEcrfStatusEntryBean.ecrfFieldValueBean.filterIndex}"
 						value="#{probandlabels.ecrf_clear_section_confirmation_dialog_message}"
+						escape="false" />
+					<h:outputText
+						rendered="#{not empty probandEcrfStatusEntryBean.ecrfFieldValueBean.filterIndex}"
+						value="#{probandlabels.ecrf_clear_section_series_confirmation_dialog_message}"
 						escape="false" />
 				</f:facet>
 

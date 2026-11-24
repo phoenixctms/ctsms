@@ -531,18 +531,44 @@ td .ui-selectonemenu,td .ui-selectcheckboxmenu {
     width: 100% ;
 }
 
-.ctsms-control-ecrf-section {
-	width: 1100px !important;
+.ctsms-section-filter.ui-selectonemenu {
+	max-width: calc(100vw - 24px);
 }
 
 .ctsms-ecrf-section-filter-panel.ui-selectonemenu-panel {
-	width: 1100px !important;
-	min-width: 1100px !important;
+	width: min(720px, calc(100vw - 24px)) !important;
+	min-width: min(500px, calc(100vw - 24px));
+	max-width: min(720px, calc(100vw - 24px));
 }
 
 .ctsms-ecrf-section-filter-panel .ui-selectonemenu-items td {
+	padding-right: 8px;
+	vertical-align: middle;
+}
+
+.ctsms-ecrf-section-index {
 	white-space: nowrap;
-	padding-right: 12px;
+}
+
+.ctsms-section-progress {
+	position: relative;
+	width: 60px;
+	height: 16px;
+	overflow: hidden;
+}
+
+.ctsms-section-progress .ui-progressbar-value {
+	height: 100%;
+	margin: 0;
+}
+
+.ctsms-section-progress-label {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	line-height: 16px;
+	text-align: center;
 }
 
 .ctsms-picker {
