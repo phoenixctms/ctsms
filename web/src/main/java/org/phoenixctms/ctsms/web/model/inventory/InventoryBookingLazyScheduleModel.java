@@ -504,9 +504,18 @@ public class InventoryBookingLazyScheduleModel extends LazyScheduleModelBase {
 	}
 
 	public void handleCalendarSelect(SelectEvent event) {
+		if (event != null && event.getObject() instanceof String) {
+			String calendar = (String) event.getObject();
+			if (calendar.length() > 0) {
+				calendars.add(calendar);
+			}
+		}
 	}
 
 	public void handleCalendarUnselect(UnselectEvent event) {
+		if (event != null) {
+			calendars.remove(event.getObject());
+		}
 	}
 
 	public void setCalendars(List<String> calendars) {

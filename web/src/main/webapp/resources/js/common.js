@@ -21,6 +21,38 @@ var onKeyUpDelay = (function() {
     };
 })();
 
+var fieldQueryCaret = null;
+
+function scheduleFilterFields(input, command) {
+	onKeyUpDelay(function() {
+		fieldQueryCaret = {
+			id: input.id,
+			start: input.selectionStart,
+			end: input.selectionEnd
+		};
+		command();
+	}, 500);
+}
+
+function restoreFieldQueryFocus() {
+	if (!fieldQueryCaret) {
+		return;
+	}
+	var saved = fieldQueryCaret;
+	fieldQueryCaret = null;
+	var el = document.getElementById(saved.id);
+	if (!el) {
+		return;
+	}
+	el.focus();
+	if (typeof el.setSelectionRange === 'function' && saved.start != null) {
+		var len = el.value.length;
+		var start = Math.min(saved.start, len);
+		var end = Math.min(saved.end == null ? start : saved.end, len);
+		el.setSelectionRange(start, end);
+	}
+}
+
 // moves (initially hidden) buttons into the button bar of a p:fileUpload, next to its "choose" button. call it whenever both are rendered:
 function moveIntoFileUploadButtonBar(fileUploadSelector, buttonsSelector) {
 	$(buttonsSelector).appendTo($(fileUploadSelector).find('.fileupload-buttonbar')).css('display', '');

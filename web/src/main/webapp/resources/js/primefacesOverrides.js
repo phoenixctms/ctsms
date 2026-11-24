@@ -1463,7 +1463,9 @@ PrimeFaces.widget.AutoComplete = PrimeFaces.widget.BaseWidget
                           _self.multiItemContainer.children('.ui-helper-hidden').fadeIn();
                           _self.input.val('').focus();
 
-                          _self.hinput.append('<option value="' + itemValue + '" selected="selected"></option>');
+                          var option = $('<option></option>').val(itemValue);
+                          _self.hinput.append(option);
+                          option.prop('selected', true);
                         } else {
                           _self.input.val(item.attr('data-item-label')).focus();
 
