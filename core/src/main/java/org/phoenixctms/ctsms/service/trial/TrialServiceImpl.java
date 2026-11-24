@@ -8365,20 +8365,6 @@ public class TrialServiceImpl
 		return ((Number) value).longValue();
 	}
 
-	private static <T> T unwrapDao(Object dao, Class<T> type) {
-		try {
-			if (dao instanceof org.springframework.aop.framework.Advised) {
-				Object target = ((org.springframework.aop.framework.Advised) dao).getTargetSource().getTarget();
-				if (target != null && target != dao) {
-					return unwrapDao(target, type);
-				}
-			}
-		} catch (Exception e) {
-			throw new IllegalStateException(e);
-		}
-		return type.cast(dao);
-	}
-
 	private Timestamp findScheduleTimestamp(boolean annual, Long trialId, Long groupId, Long visitId, Long probandId, VisitScheduleItemDao visitScheduleItemDao,
 			HashMap<String, Timestamp> cache) throws Exception {
 		String key = (annual ? "a" : "p") + ":" + probandId + ":" + groupId + ":" + visitId;
@@ -8498,8 +8484,8 @@ public class TrialServiceImpl
 			CheckIDUtil.checkDepartmentId(probandDepartmentId, this.getDepartmentDao());
 		}
 		ECRFDao ecrfDao = this.getECRFDao();
-		ECRFStatusEntryDaoImpl ecrfStatusEntryDao = unwrapDao(this.getECRFStatusEntryDao(), ECRFStatusEntryDaoImpl.class);
-		ECRFFieldStatusEntryDaoImpl ecrfFieldStatusEntryDao = unwrapDao(this.getECRFFieldStatusEntryDao(), ECRFFieldStatusEntryDaoImpl.class);
+		ECRFStatusEntryDaoImpl ecrfStatusEntryDao = ServiceUtil.unwrapDao(this.getECRFStatusEntryDao(), ECRFStatusEntryDaoImpl.class);
+		ECRFFieldStatusEntryDaoImpl ecrfFieldStatusEntryDao = ServiceUtil.unwrapDao(this.getECRFFieldStatusEntryDao(), ECRFFieldStatusEntryDaoImpl.class);
 		VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
 		TrialECRFProgressSummaryVO result = new TrialECRFProgressSummaryVO();
 		result.setTrial(trialVO);
