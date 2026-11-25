@@ -68,6 +68,13 @@ public abstract class ExpirationEntityAdapter {
 		return reminderStart;
 	}
 
+	public boolean isReminderDue(boolean includeAlreadyPassed, VariablePeriod consistentValidityPeriod, Long consistentValidityPeriodDays,
+			VariablePeriod consistentReminderPeriod, Long consistentReminderPeriodDays) {
+		return isActive()
+				&& today.compareTo(getReminderStart(consistentValidityPeriod, consistentValidityPeriodDays, consistentReminderPeriod, consistentReminderPeriodDays)) >= 0
+				&& (includeAlreadyPassed || today.compareTo(getExpiry(consistentValidityPeriod, consistentValidityPeriodDays)) <= 0);
+	}
+
 	abstract public VariablePeriod getValidityPeriod();
 
 	abstract public Long getValidityPeriodDays();
