@@ -64,9 +64,9 @@ public class ProbandReflexionGraph extends ReflexionCycleHelper<Proband, Proband
 			ProbandCategoryDao probandCategoryDao, DepartmentDao departmentDao, StaffDao staffDao,
 			PrivacyConsentStatusTypeDao privacyConsentStatusTypeDao, UserDao userDao, Integer... maxInstances) {
 		this.maxInstances = maxInstances != null && maxInstances.length > 0 ? (maxInstances[0] == null ? DEFAULT_MAX_INSTANCES : maxInstances[0]) : DEFAULT_MAX_INSTANCES;
-		this.childrenDepth = maxInstances != null && maxInstances.length > 1 ? (maxInstances[1] == null ? DEFAULT_CHILDREN_DEPTH : maxInstances[1]) : DEFAULT_CHILDREN_DEPTH;
-		this.parentsDepth = maxInstances != null && maxInstances.length > 2 ? (maxInstances[2] == null ? DEFAULT_PARENTS_DEPTH : maxInstances[2])
-				: DEFAULT_PARENTS_DEPTH;
+		this.parentsDepth = maxInstances != null && maxInstances.length > 1 ? (maxInstances[1] == null ? DEFAULT_PARENTS_DEPTH : maxInstances[1]) : DEFAULT_PARENTS_DEPTH;
+		this.childrenDepth = maxInstances != null && maxInstances.length > 2 ? (maxInstances[2] == null ? DEFAULT_CHILDREN_DEPTH : maxInstances[2])
+				: DEFAULT_CHILDREN_DEPTH;
 		this.probandDaoImpl = probandDaoImpl;
 		this.probandCategoryDao = probandCategoryDao;
 		this.departmentDao = departmentDao;
