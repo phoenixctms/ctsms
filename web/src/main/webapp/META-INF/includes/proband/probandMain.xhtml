@@ -94,6 +94,12 @@
 				actionListener="#{probandBean.changeByNode()}"
 				oncomplete="handleProbandChanged(xhr, status, args)"
 				update="parent_tree,child_tree,proband_input" />
+			<p:remoteCommand process="@this" name="expandProbandParentTreeNode"
+				actionListener="#{probandBean.expandParentNode()}"
+				update="parent_tree" />
+			<p:remoteCommand process="@this" name="expandProbandChildTreeNode"
+				actionListener="#{probandBean.expandChildNode()}"
+				update="child_tree" />
 			<p:remoteCommand process="@this" name="mergeProband"
 				actionListener="#{probandBean.merge}"
 				oncomplete="handleProbandChanged(xhr, status, args)"
@@ -140,6 +146,12 @@
 										value="#{applicationScopeBean.clipStringMid(proband.name)}" />
 								</span>
 							</p:treeNode>
+							<p:treeNode type="#{applicationScopeBean.moreNodeType}">
+								<span class="ctsms-tree-node-marker"
+									onclick="expandProbandParentTreeNode(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('PROBAND_ID')}:#{proband.id}}));">
+									<h:outputText value="#{proband.label}" />
+								</span>
+							</p:treeNode>
 						</p:tree>
 						<h:outputText value="#{probandBean.probandTreeChildrenLabel}" />
 
@@ -168,6 +180,12 @@
 									onclick="changeProbandByTreeNode(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('PROBAND_ID')}:'#{proband.id}'}));">
 									<h:outputText
 										value="#{applicationScopeBean.clipStringMid(proband.name)}" />
+								</span>
+							</p:treeNode>
+							<p:treeNode type="#{applicationScopeBean.moreNodeType}">
+								<span class="ctsms-tree-node-marker"
+									onclick="expandProbandChildTreeNode(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('PROBAND_ID')}:#{proband.id}}));">
+									<h:outputText value="#{proband.label}" />
 								</span>
 							</p:treeNode>
 						</p:tree>
