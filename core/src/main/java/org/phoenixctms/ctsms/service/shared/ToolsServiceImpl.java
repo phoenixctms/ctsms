@@ -31,6 +31,7 @@ import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.phoenixctms.ctsms.UserContext;
+import org.phoenixctms.ctsms.adapt.ExpirationEntityAdapter;
 import org.phoenixctms.ctsms.adapt.ReminderEntityAdapter;
 import org.phoenixctms.ctsms.compare.DepartmentVOComparator;
 import org.phoenixctms.ctsms.compare.EntityIDComparator;
@@ -190,6 +191,36 @@ public class ToolsServiceImpl
 	private NotificationEmailSender notificationEmailSender;
 	private Authenticator authenticator;
 	private SessionFactory sessionFactory;
+
+	private void cancelExpiringCourseNotificationsNoLongerDue(Date today, Long departmentId, VariablePeriod courseReminderPeriod, Long courseReminderPeriodDays,
+			VariablePeriod participationReminderPeriod, Long participationReminderPeriodDays) throws Exception {
+		// saving a renewal or a participation does not revisit the preceding courses, so their notifications are cancelled here
+		NotificationDao notificationDao = this.getNotificationDao();
+		HashMap<Long, Set<Long>> takenCourseIdsMap = new HashMap<Long, Set<Long>>();
+		Iterator<Course> courseIt = this.getCourseDao().findByDepartmentCategoryInterval(null, null, null, null).iterator();
+		while (courseIt.hasNext()) {
+			Course course = courseIt.next();
+			if (course.isExpires()) {
+				if ((departmentId == null || departmentId.equals(course.getDepartment().getId()))
+						&& ServiceUtil.testNotificationExists(course.getNotifications(), org.phoenixctms.ctsms.enumeration.NotificationType.EXPIRING_COURSE, false)
+						&& !ExpirationEntityAdapter.getInstance(course, today).isReminderDue(false, null, null, courseReminderPeriod, courseReminderPeriodDays)) {
+					ServiceUtil.cancelNotifications(course.getNotifications(), notificationDao, org.phoenixctms.ctsms.enumeration.NotificationType.EXPIRING_COURSE);
+				}
+				Iterator<CourseParticipationStatusEntry> participationIt = course.getParticipations().iterator();
+				while (participationIt.hasNext()) {
+					CourseParticipationStatusEntry participation = participationIt.next();
+					if ((departmentId == null || departmentId.equals(participation.getStaff().getDepartment().getId()))
+							&& ServiceUtil.testNotificationExists(participation.getNotifications(),
+									org.phoenixctms.ctsms.enumeration.NotificationType.EXPIRING_COURSE_PARTICIPATION, false)
+							&& !ExpirationEntityAdapter.getInstance(participation, today, takenCourseIdsMap).isReminderDue(false, null, null, participationReminderPeriod,
+									participationReminderPeriodDays)) {
+						ServiceUtil.cancelNotifications(participation.getNotifications(), notificationDao,
+								org.phoenixctms.ctsms.enumeration.NotificationType.EXPIRING_COURSE_PARTICIPATION);
+					}
+				}
+			}
+		}
+	}
 
 	private Collection<LdapEntryVO> completeLdapEntry(String nameInfix,
 			AuthenticationType authMethod, Integer limit) throws Exception {
@@ -1247,6 +1278,8 @@ public class ToolsServiceImpl
 				}
 			}
 		}
+		cancelExpiringCourseNotificationsNoLongerDue(today, departmentId, expiringCourseReminderPeriod, expiringCourseReminderPeriodDays,
+				expiringCourseParticipationReminderPeriod, expiringCourseParticipationReminderPeriodDays);
 		Iterator<TimelineEvent> timelineScheduleIt = this.getTimelineEventDao().findTimelineSchedule(today, null, departmentId, null, true, false, false, null).iterator();
 		while (timelineScheduleIt.hasNext()) {
 			TimelineEvent timelineEvent = timelineScheduleIt.next();
