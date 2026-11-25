@@ -744,8 +744,8 @@ public class ProbandDaoImpl
 	protected long handleGetChildrenCount(Long probandId) throws Exception {
 		org.hibernate.Criteria probandCriteria = createProbandCriteria(null);
 		probandCriteria.add(Restrictions.idEq(probandId.longValue()));
-		org.hibernate.Criteria parentsCriteria = probandCriteria.createCriteria("parents", CriteriaSpecification.INNER_JOIN);
-		return (Long) parentsCriteria.setProjection(Projections.rowCount()).uniqueResult();
+		org.hibernate.Criteria childrenCriteria = probandCriteria.createCriteria("children", CriteriaSpecification.INNER_JOIN);
+		return (Long) childrenCriteria.setProjection(Projections.rowCount()).uniqueResult();
 	}
 
 	@Override
@@ -764,8 +764,8 @@ public class ProbandDaoImpl
 	protected long handleGetParentsCount(Long probandId) throws Exception {
 		org.hibernate.Criteria probandCriteria = createProbandCriteria(null);
 		probandCriteria.add(Restrictions.idEq(probandId.longValue()));
-		org.hibernate.Criteria childrenCriteria = probandCriteria.createCriteria("children", CriteriaSpecification.INNER_JOIN);
-		return (Long) childrenCriteria.setProjection(Projections.rowCount()).uniqueResult();
+		org.hibernate.Criteria parentsCriteria = probandCriteria.createCriteria("parents", CriteriaSpecification.INNER_JOIN);
+		return (Long) parentsCriteria.setProjection(Projections.rowCount()).uniqueResult();
 	}
 
 	/**
