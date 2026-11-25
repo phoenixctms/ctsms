@@ -59,14 +59,10 @@ public class EcrfProgressOverviewBean extends ManagedBeanBase {
 	}
 
 	public ArrayList<ECRFStatusTypeVO> getAllStatusTypes() {
-		if (allStatusTypes == null || allStatusTypes.isEmpty()) {
-			Collection<ECRFStatusTypeVO> statusTypes = WebUtil.getEcrfStatusTypes();
-			if (statusTypes != null && !statusTypes.isEmpty()) {
-				allStatusTypes = new ArrayList<ECRFStatusTypeVO>(statusTypes);
-			}
-		}
+		// an empty result is cached too, the overview table asks once per row
 		if (allStatusTypes == null) {
-			return new ArrayList<ECRFStatusTypeVO>();
+			Collection<ECRFStatusTypeVO> statusTypes = WebUtil.getEcrfStatusTypes();
+			allStatusTypes = statusTypes != null ? new ArrayList<ECRFStatusTypeVO>(statusTypes) : new ArrayList<ECRFStatusTypeVO>();
 		}
 		return allStatusTypes;
 	}
