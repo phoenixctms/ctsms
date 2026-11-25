@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.io.StringWriter;
 import java.security.MessageDigest;
 import java.sql.Timestamp;
@@ -34,6 +35,7 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.hibernate.Hibernate;
 import org.hibernate.LockMode;
+import org.hibernate.SessionFactory;
 import org.hibernate.collection.AbstractPersistentCollection;
 import org.hibernate.engine.SessionImplementor;
 import org.phoenixctms.ctsms.adapt.EcrfFieldValueInVOInputFieldValueEqualsAdapter;
@@ -117,6 +119,8 @@ import org.phoenixctms.ctsms.util.date.ShiftDuration;
 import org.phoenixctms.ctsms.vo.*;
 import org.phoenixctms.ctsms.vocycle.InputFieldSelectionSetValueGraph;
 import org.phoenixctms.ctsms.vocycle.UserReflexionGraph;
+import org.springframework.transaction.support.TransactionSynchronizationAdapter;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
 public final class ServiceUtil {
@@ -5547,7 +5551,9 @@ public final class ServiceUtil {
 				if (checkProbandLocked) {
 					checkProbandLocked(listEntry.getProband());
 				}
-				removeFromInverseCollection(listEntry.getEcrfValues(), fieldValue);
+				// not removeFromInverseCollection: a trial deletion loads listEntry.ecrfValues later in the same session
+				// (removeProbandListEntry), and an unflushed delete would still be listed there.
+				listEntry.removeEcrfValues(fieldValue);
 				removeEcrfFieldValue(fieldValue, now, user,
 						logTrial && Settings.getBoolean(SettingCodes.LOG_ECRF_FIELD_VALUE_TRIAL, Bundle.SETTINGS, DefaultSettings.LOG_ECRF_FIELD_VALUE_TRIAL),
 						logProband && Settings.getBoolean(SettingCodes.LOG_ECRF_FIELD_VALUE_PROBAND, Bundle.SETTINGS, DefaultSettings.LOG_ECRF_FIELD_VALUE_PROBAND),
@@ -5562,7 +5568,7 @@ public final class ServiceUtil {
 				if (checkProbandLocked) {
 					checkProbandLocked(listEntry.getProband());
 				}
-				removeFromInverseCollection(listEntry.getEcrfFieldStatusEntries(), fieldStatus);
+				listEntry.removeEcrfFieldStatusEntries(fieldStatus); // see above
 				removeEcrfFieldStatusEntry(fieldStatus, now, user,
 						logTrial && Settings.getBoolean(SettingCodes.LOG_ECRF_FIELD_STATUS_ENTRY_TRIAL, Bundle.SETTINGS, DefaultSettings.LOG_ECRF_FIELD_STATUS_ENTRY_TRIAL),
 						logProband && Settings.getBoolean(SettingCodes.LOG_ECRF_FIELD_STATUS_ENTRY_PROBAND, Bundle.SETTINGS, DefaultSettings.LOG_ECRF_FIELD_STATUS_ENTRY_PROBAND),
@@ -5676,6 +5682,12 @@ public final class ServiceUtil {
 	 * If the collection is not initialized, it is left alone and its 2nd level cache entry is evicted
 	 * instead, so a stale cached collection cannot list the deleted element later. If the uninitialized
 	 * collection holds queued additions of this session, it is initialized and the element removed as before.
+	 * <p>
+	 * The cache entry is evicted right away and once more after the transaction commits, because another
+	 * session could load and cache the collection with the not yet committed delete in between.
+	 * <p>
+	 * Only use it if the collection is not iterated later in the same session: a later initialization
+	 * runs no flush, so it could still list the deleted element.
 	 */
 	public static <E> boolean removeFromInverseCollection(Collection<E> collection, E element) {
 		if (collection == null) {
@@ -5691,10 +5703,42 @@ public final class ServiceUtil {
 			}
 			SessionImplementor session = persistentCollection.getSession();
 			if (session != null && persistentCollection.getRole() != null && persistentCollection.getKey() != null) {
-				session.getFactory().getCache().evictCollection(persistentCollection.getRole(), persistentCollection.getKey());
+				evictCollectionCache(session.getFactory(), persistentCollection.getRole(), persistentCollection.getKey());
 			}
 		}
 		return false;
+	}
+
+	private static final Object EVICT_COLLECTIONS_AFTER_COMMIT_KEY = new Object();
+
+	private static void evictCollectionCache(final SessionFactory sessionFactory, String role, Serializable key) {
+		sessionFactory.getCache().evictCollection(role, key);
+		if (TransactionSynchronizationManager.isSynchronizationActive()) {
+			@SuppressWarnings("unchecked")
+			Map<String, Object[]> pending = (Map<String, Object[]>) TransactionSynchronizationManager.getResource(EVICT_COLLECTIONS_AFTER_COMMIT_KEY);
+			if (pending == null) {
+				final Map<String, Object[]> evictions = new LinkedHashMap<String, Object[]>();
+				TransactionSynchronizationManager.bindResource(EVICT_COLLECTIONS_AFTER_COMMIT_KEY, evictions);
+				TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
+
+					@Override
+					public void afterCommit() {
+						Iterator<Object[]> it = evictions.values().iterator();
+						while (it.hasNext()) {
+							Object[] eviction = it.next();
+							sessionFactory.getCache().evictCollection((String) eviction[0], (Serializable) eviction[1]);
+						}
+					}
+
+					@Override
+					public void afterCompletion(int status) {
+						TransactionSynchronizationManager.unbindResourceIfPossible(EVICT_COLLECTIONS_AFTER_COMMIT_KEY);
+					}
+				});
+				pending = evictions;
+			}
+			pending.put(role + "#" + key, new Object[] { role, key });
+		}
 	}
 
 	public static void removeInquiry(Inquiry inquiry, boolean deleteCascade, boolean checkProbandLocked, Timestamp now, User user,
