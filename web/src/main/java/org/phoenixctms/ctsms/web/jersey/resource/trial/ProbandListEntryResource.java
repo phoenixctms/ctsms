@@ -56,7 +56,7 @@ public class ProbandListEntryResource {
 
 	@DELETE
 	@Produces({ MediaType.APPLICATION_JSON })
-	@Path("{id}")
+	@Path("{id: \\d+}") // same template as the GET below, else Jersey matches the more specific regex GET and answers 405
 	public ProbandListEntryOutVO deleteProbandListEntry(@PathParam("id") Long id) throws AuthenticationException, AuthorisationException, ServiceException {
 		return WebUtil.getServiceLocator().getTrialService().deleteProbandListEntry(auth, id);
 	}
