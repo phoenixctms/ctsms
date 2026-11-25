@@ -39,7 +39,20 @@ function scheduleFilterFields(input, command) {
 				request: request
 			};
 		}
-		command();
+		// oncomplete also runs after a failed request; only a command that throws never reaches it,
+		// so drop its id here, or every later completion would be matched against a stale one.
+		try {
+			command();
+		} catch (e) {
+			var index = fieldQueryPending.indexOf(request);
+			if (index >= 0) {
+				fieldQueryPending.splice(index, 1);
+			}
+			if (fieldQueryCaret && fieldQueryCaret.request === request) {
+				fieldQueryCaret = null;
+			}
+			throw e;
+		}
 	}, 500);
 }
 
