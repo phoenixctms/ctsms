@@ -32,7 +32,10 @@ import java.util.regex.PatternSyntaxException;
 
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
+import org.hibernate.Hibernate;
 import org.hibernate.LockMode;
+import org.hibernate.collection.AbstractPersistentCollection;
+import org.hibernate.engine.SessionImplementor;
 import org.phoenixctms.ctsms.adapt.EcrfFieldValueInVOInputFieldValueEqualsAdapter;
 import org.phoenixctms.ctsms.adapt.ExpirationEntityAdapter;
 import org.phoenixctms.ctsms.adapt.InputFieldValueStringAdapterBase;
@@ -5544,7 +5547,7 @@ public final class ServiceUtil {
 				if (checkProbandLocked) {
 					checkProbandLocked(listEntry.getProband());
 				}
-				listEntry.removeEcrfValues(fieldValue);
+				removeFromInverseCollection(listEntry.getEcrfValues(), fieldValue);
 				removeEcrfFieldValue(fieldValue, now, user,
 						logTrial && Settings.getBoolean(SettingCodes.LOG_ECRF_FIELD_VALUE_TRIAL, Bundle.SETTINGS, DefaultSettings.LOG_ECRF_FIELD_VALUE_TRIAL),
 						logProband && Settings.getBoolean(SettingCodes.LOG_ECRF_FIELD_VALUE_PROBAND, Bundle.SETTINGS, DefaultSettings.LOG_ECRF_FIELD_VALUE_PROBAND),
@@ -5559,7 +5562,7 @@ public final class ServiceUtil {
 				if (checkProbandLocked) {
 					checkProbandLocked(listEntry.getProband());
 				}
-				listEntry.removeEcrfFieldStatusEntries(fieldStatus);
+				removeFromInverseCollection(listEntry.getEcrfFieldStatusEntries(), fieldStatus);
 				removeEcrfFieldStatusEntry(fieldStatus, now, user,
 						logTrial && Settings.getBoolean(SettingCodes.LOG_ECRF_FIELD_STATUS_ENTRY_TRIAL, Bundle.SETTINGS, DefaultSettings.LOG_ECRF_FIELD_STATUS_ENTRY_TRIAL),
 						logProband && Settings.getBoolean(SettingCodes.LOG_ECRF_FIELD_STATUS_ENTRY_PROBAND, Bundle.SETTINGS, DefaultSettings.LOG_ECRF_FIELD_STATUS_ENTRY_PROBAND),
@@ -5589,7 +5592,7 @@ public final class ServiceUtil {
 		fieldStatus.setListEntry(null);
 		Visit visit = fieldStatus.getVisit();
 		if (visit != null) {
-			visit.removeEcrfFieldStatusEntries(fieldStatus);
+			removeFromInverseCollection(visit.getEcrfFieldStatusEntries(), fieldStatus);
 		}
 		fieldStatus.setEcrfField(null);
 		ecrfFieldStatusEntryDao.remove(fieldStatus);
@@ -5621,7 +5624,7 @@ public final class ServiceUtil {
 		fieldValue.setEcrfField(null);
 		Visit visit = fieldValue.getVisit();
 		if (visit != null) {
-			visit.removeEcrfValues(fieldValue);
+			removeFromInverseCollection(visit.getEcrfValues(), fieldValue);
 		}
 		ecrfFieldValueDao.remove(fieldValue);
 		fieldValue.setValue(null);
@@ -5657,9 +5660,41 @@ public final class ServiceUtil {
 		ecrfStatusEntry.setListEntry(null);
 		Visit visit = ecrfStatusEntry.getVisit();
 		if (visit != null) {
-			visit.removeEcrfStatusEntries(ecrfStatusEntry);
+			removeFromInverseCollection(visit.getEcrfStatusEntries(), ecrfStatusEntry);
 		}
 		ecrfStatusEntryDao.remove(ecrfStatusEntry);
+	}
+
+	/**
+	 * Removes an element from the inverse ("many") side collection of a one-to-many association,
+	 * without loading the collection if it is not initialized yet.
+	 * <p>
+	 * The collection is inverse, so removing from it writes no SQL. It only keeps the in-memory
+	 * collection and its 2nd level cache entry in line with the deleted element. Removing from an
+	 * uninitialized Hibernate bag loads the whole collection first, which is very slow for large
+	 * collections such as Visit.ecrfValues (all eCRF values of a visit across all probands).
+	 * If the collection is not initialized, it is left alone and its 2nd level cache entry is evicted
+	 * instead, so a stale cached collection cannot list the deleted element later. If the uninitialized
+	 * collection holds queued additions of this session, it is initialized and the element removed as before.
+	 */
+	public static <E> boolean removeFromInverseCollection(Collection<E> collection, E element) {
+		if (collection == null) {
+			return false;
+		}
+		if (Hibernate.isInitialized(collection)) {
+			return collection.remove(element);
+		}
+		if (collection instanceof AbstractPersistentCollection) {
+			AbstractPersistentCollection persistentCollection = (AbstractPersistentCollection) collection;
+			if (persistentCollection.hasQueuedOperations()) {
+				return collection.remove(element);
+			}
+			SessionImplementor session = persistentCollection.getSession();
+			if (session != null && persistentCollection.getRole() != null && persistentCollection.getKey() != null) {
+				session.getFactory().getCache().evictCollection(persistentCollection.getRole(), persistentCollection.getKey());
+			}
+		}
+		return false;
 	}
 
 	public static void removeInquiry(Inquiry inquiry, boolean deleteCascade, boolean checkProbandLocked, Timestamp now, User user,
@@ -6259,7 +6294,7 @@ public final class ServiceUtil {
 			Iterator<ECRFStatusEntry> ecrfStatusEntriesIt = probandListEntry.getEcrfStatusEntries().iterator();
 			while (ecrfStatusEntriesIt.hasNext()) {
 				ECRFStatusEntry statusEntry = ecrfStatusEntriesIt.next();
-				statusEntry.getEcrf().removeEcrfStatusEntries(statusEntry);
+				removeFromInverseCollection(statusEntry.getEcrf().getEcrfStatusEntries(), statusEntry);
 				removeEcrfStatusEntry(statusEntry, true, signatureDao, ecrfStatusEntryDao, notificationDao, notificationRecipientDao);
 			}
 			probandListEntry.getEcrfStatusEntries().clear();
@@ -6279,7 +6314,7 @@ public final class ServiceUtil {
 			Iterator<ECRFFieldValue> ecrfValuesIt = probandListEntry.getEcrfValues().iterator();
 			while (ecrfValuesIt.hasNext()) {
 				ECRFFieldValue fieldValue = ecrfValuesIt.next();
-				fieldValue.getEcrfField().removeFieldValues(fieldValue);
+				removeFromInverseCollection(fieldValue.getEcrfField().getFieldValues(), fieldValue);
 				removeEcrfFieldValue(fieldValue, now, user,
 						logTrial && Settings.getBoolean(SettingCodes.LOG_ECRF_FIELD_VALUE_TRIAL, Bundle.SETTINGS, DefaultSettings.LOG_ECRF_FIELD_VALUE_TRIAL),
 						logProband && Settings.getBoolean(SettingCodes.LOG_ECRF_FIELD_VALUE_PROBAND, Bundle.SETTINGS, DefaultSettings.LOG_ECRF_FIELD_VALUE_PROBAND),
@@ -6290,7 +6325,7 @@ public final class ServiceUtil {
 			Iterator<ECRFFieldStatusEntry> ecrfFieldStatusEntriesIt = probandListEntry.getEcrfFieldStatusEntries().iterator();
 			while (ecrfFieldStatusEntriesIt.hasNext()) {
 				ECRFFieldStatusEntry fieldStatus = ecrfFieldStatusEntriesIt.next();
-				fieldStatus.getEcrfField().removeEcrfFieldStatusEntries(fieldStatus);
+				removeFromInverseCollection(fieldStatus.getEcrfField().getEcrfFieldStatusEntries(), fieldStatus);
 				removeEcrfFieldStatusEntry(fieldStatus, now, user,
 						logTrial && Settings.getBoolean(SettingCodes.LOG_ECRF_FIELD_STATUS_ENTRY_TRIAL, Bundle.SETTINGS, DefaultSettings.LOG_ECRF_FIELD_STATUS_ENTRY_TRIAL),
 						logProband && Settings.getBoolean(SettingCodes.LOG_ECRF_FIELD_STATUS_ENTRY_PROBAND, Bundle.SETTINGS, DefaultSettings.LOG_ECRF_FIELD_STATUS_ENTRY_PROBAND),
