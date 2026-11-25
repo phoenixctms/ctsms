@@ -8481,13 +8481,19 @@ public class TrialServiceImpl
 		return result;
 	}
 
-	private static void addProgressStatus(ECRFProgressSummaryVO summary, TrialProgressStatus status) {
+	private static void addProgressStatus(ECRFProgressSummaryVO summary, TrialProgressStatus status, ECRFStatusTypeDao ecrfStatusTypeDao,
+			HashMap<Long, ECRFStatusTypeVO> statusTypeCache) {
 		ECRFProgressVO progress = new ECRFProgressVO();
 		if (status != null) {
-			ECRFStatusTypeVO statusType = new ECRFStatusTypeVO();
-			statusType.setId(Long.valueOf(status.statusTypeId));
+			Long statusTypeId = Long.valueOf(status.statusTypeId);
+			ECRFStatusTypeVO statusType = statusTypeCache.get(statusTypeId);
+			if (statusType == null) {
+				statusType = ecrfStatusTypeDao.toECRFStatusTypeVO(ecrfStatusTypeDao.load(statusTypeId));
+				statusTypeCache.put(statusTypeId, statusType);
+			}
 			ECRFStatusEntryVO statusEntry = new ECRFStatusEntryVO();
 			statusEntry.setStatus(statusType);
+			statusEntry.setModifiedTimestamp(status.modified);
 			progress.setStatusEntry(statusEntry);
 		}
 		summary.getEcrfs().add(progress);
@@ -8523,6 +8529,13 @@ public class TrialServiceImpl
 		return result;
 	}
 
+	/**
+	 * Trial totals are complete. The per-proband entries in getListEntries() are reduced to what the
+	 * progress overview reads: each ECRFProgressSummaryVO has its counts and charge, but no listEntry and no
+	 * field status queue counts; each ECRFProgressVO has only the status entry (status type VO and
+	 * modifiedTimestamp, no ecrf, visit or listEntry), or none if the eCRF has no status yet.
+	 * Loading the full per-proband graph is what made the overview slow (see TRIAL_ECRF_PROGRESS_SUMMARY_FULL_GRAPH).
+	 */
 	@Override
 	protected TrialECRFProgressSummaryVO handleGetTrialEcrfProgressSummary(AuthenticationVO auth, Long trialId, Long probandDepartmentId, boolean dueDetail, Date from, Date to)
 			throws Exception {
@@ -8538,6 +8551,8 @@ public class TrialServiceImpl
 		ECRFStatusEntryDaoImpl ecrfStatusEntryDao = ServiceUtil.unwrapDao(this.getECRFStatusEntryDao(), ECRFStatusEntryDaoImpl.class);
 		ECRFFieldStatusEntryDaoImpl ecrfFieldStatusEntryDao = ServiceUtil.unwrapDao(this.getECRFFieldStatusEntryDao(), ECRFFieldStatusEntryDaoImpl.class);
 		VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
+		ECRFStatusTypeDao ecrfStatusTypeDao = this.getECRFStatusTypeDao();
+		HashMap<Long, ECRFStatusTypeVO> statusTypeCache = new HashMap<Long, ECRFStatusTypeVO>();
 		TrialECRFProgressSummaryVO result = new TrialECRFProgressSummaryVO();
 		result.setTrial(trialVO);
 		result.setEcrfTotalCount(0l);
@@ -8556,16 +8571,25 @@ public class TrialServiceImpl
 			long probandId = toLongValue(row[2]);
 			long ecrfId = toLongValue(row[3]);
 			Long visitId = toLong(row[4]);
-			if (!listEntries.containsKey(Long.valueOf(listEntryId))) {
-				listEntries.put(Long.valueOf(listEntryId), new TrialProgressListEntry(listEntryId, groupId, probandId));
+			TrialProgressListEntry rowListEntry = listEntries.get(Long.valueOf(listEntryId));
+			if (rowListEntry == null) {
+				rowListEntry = new TrialProgressListEntry(listEntryId, groupId, probandId);
+				listEntries.put(Long.valueOf(listEntryId), rowListEntry);
 			}
+			rowListEntry.summary.setEcrfStatusEntryCount(rowListEntry.summary.getEcrfStatusEntryCount() + 1l);
 			String statusKey = listEntryId + ":" + ecrfId + ":" + visitId;
 			if (!statusByListEntryEcrfVisit.containsKey(statusKey)) {
 				statusByListEntryEcrfVisit.put(statusKey, new TrialProgressStatus(toLongValue(row[5]), Boolean.TRUE.equals(row[6]), (Date) row[7]));
 			}
 		}
 		boolean limitByDate = from != null || to != null;
-		if (!limitByDate) {
+		if (limitByDate) {
+			// like the trial total, status entry counts are not given for a date range
+			Iterator<TrialProgressListEntry> it = listEntries.values().iterator();
+			while (it.hasNext()) {
+				it.next().summary.setEcrfStatusEntryCount(0l);
+			}
+		} else {
 			result.setEcrfStatusEntryCount(statusRows.size());
 			if (!listEntries.isEmpty()) {
 				result.setEcrfFieldStatusQueueCounts(toTrialFieldStatusQueueCounts(
@@ -8616,10 +8640,14 @@ public class TrialServiceImpl
 						}
 					}
 					TrialProgressStatus status = statusByListEntryEcrfVisit.get(listEntry.id + ":" + ecrf.getId() + ":" + visitId);
+					ECRFProgressSummaryVO summary = listEntry.summary;
 					result.setEcrfTotalCount(result.getEcrfTotalCount() + 1l);
+					summary.setEcrfTotalCount(summary.getEcrfTotalCount() + 1l);
 					if (status != null && status.done) {
 						result.setEcrfDoneCount(result.getEcrfDoneCount() + 1l);
+						summary.setEcrfDoneCount(summary.getEcrfDoneCount() + 1l);
 						result.setCharge(result.getCharge() + ecrf.getCharge());
+						summary.setCharge(summary.getCharge() + ecrf.getCharge());
 						if (dueDetail) {
 							if (!limitByDate) {
 								scheduleDate = findScheduleTimestamp(annual, trialId, scheduleGroupId, scheduleVisitId, Long.valueOf(listEntry.probandId),
@@ -8633,10 +8661,11 @@ public class TrialServiceImpl
 							}
 							if (dueDate != null && status.modified.compareTo(dueDate) > 0) {
 								result.setEcrfOverdueCount(result.getEcrfOverdueCount() + 1l);
+								summary.setEcrfOverdueCount(summary.getEcrfOverdueCount() + 1l);
 							}
 						}
 					}
-					addProgressStatus(listEntry.summary, status);
+					addProgressStatus(summary, status, ecrfStatusTypeDao, statusTypeCache);
 				}
 			}
 			result.getListEntries().add(listEntry.summary);
