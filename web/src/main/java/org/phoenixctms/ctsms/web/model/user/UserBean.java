@@ -34,6 +34,7 @@ import org.phoenixctms.ctsms.web.model.DefaultTreeNode;
 import org.phoenixctms.ctsms.web.model.IDVO;
 import org.phoenixctms.ctsms.web.model.IDVOTreeNode;
 import org.phoenixctms.ctsms.web.model.SessionScopeBean;
+import org.phoenixctms.ctsms.web.model.TreeNodeMarkers;
 import org.phoenixctms.ctsms.web.model.shared.UserSettingsBeanBase;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
@@ -411,6 +412,102 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 		}
 	}
 
+	private static int getAncestorDistance(UserOutVO user, UserOutVO top) {
+		int distance = 0;
+		while (user != null && user != top) {
+			user = user.getParent();
+			distance++;
+		}
+		return distance;
+	}
+
+	private boolean hasMoreAncestors(UserOutVO top, int distance) {
+		Integer maxParentDepth = Settings.getIntNullable(SettingCodes.GRAPH_MAX_USER_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_USER_PARENT_DEPTH);
+		if (maxParentDepth != null && distance >= maxParentDepth) {
+			try {
+				return WebUtil.getServiceLocator().getUserService().getUser(WebUtil.getAuthentication(), top.getId(), 2, 1, 0).getParent() != null;
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+			} catch (AuthenticationException e) {
+				WebUtil.publishException(e);
+			}
+		}
+		return false;
+	}
+
+	private void buildUserTree(UserOutVO top, int distance, Integer maxDepth) {
+		TreeNode container = userRoot;
+		if (hasMoreAncestors(top, distance)) {
+			container = TreeNodeMarkers.createAncestorsNode(userRoot, top.getId());
+		}
+		userOutVOtoTreeNode(top, container, out, new ArrayList<IDVOTreeNode>(),
+				Settings.getIntNullable(SettingCodes.GRAPH_MAX_USER_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_USER_INSTANCES),
+				maxDepth, null, 0);
+	}
+
+	private void appendMoreNodes(TreeNode node) {
+		TreeNodeMarkers.appendMoreNodes(node, vo -> ((UserOutVO) vo).getChildrenCount());
+	}
+
+	public void expandNode() {
+		Long userId = WebUtil.getLongParamValue(GetParamNames.USER_ID);
+		IDVOTreeNode node = TreeNodeMarkers.findNode(userRoot, userId);
+		if (node != null) {
+			Integer maxInstances = TreeNodeMarkers.getExpandMaxInstances(
+					Settings.getIntNullable(SettingCodes.GRAPH_MAX_USER_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_USER_INSTANCES),
+					((UserOutVO) node.getData()).getChildrenCount());
+			try {
+				UserOutVO user = WebUtil.getServiceLocator().getUserService().getUser(WebUtil.getAuthentication(), userId,
+						maxInstances, 0, TreeNodeMarkers.EXPAND_DEPTH);
+				TreeNode parent = node.getParent();
+				int index = TreeNodeMarkers.detach(node);
+				IDVOTreeNode expanded = userOutVOtoTreeNode(user, parent, out, new ArrayList<IDVOTreeNode>(), maxInstances, TreeNodeMarkers.EXPAND_DEPTH,
+						null, 0);
+				if (expanded != null) {
+					TreeNodeMarkers.detach(expanded);
+					TreeNodeMarkers.attach(expanded, parent, index);
+					appendMoreNodes(expanded);
+					expanded.setExpanded(true);
+				} else {
+					TreeNodeMarkers.attach(node, parent, index);
+				}
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+			} catch (AuthenticationException e) {
+				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+				WebUtil.publishException(e);
+			}
+		}
+	}
+
+	public void expandAncestors() {
+		Long userId = WebUtil.getLongParamValue(GetParamNames.USER_ID);
+		IDVOTreeNode topNode = TreeNodeMarkers.findNode(userRoot, userId);
+		if (topNode != null) {
+			try {
+				UserOutVO user = WebUtil.getServiceLocator().getUserService().getUser(WebUtil.getAuthentication(), userId,
+						Settings.getIntNullable(SettingCodes.GRAPH_MAX_USER_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_USER_INSTANCES),
+						Settings.getIntNullable(SettingCodes.GRAPH_MAX_USER_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_USER_PARENT_DEPTH),
+						0);
+				UserOutVO top = findUserRoot(user);
+				TreeNodeMarkers.detach(topNode);
+				userRoot.getChildren().clear();
+				buildUserTree(top, getAncestorDistance(user, top), null);
+				IDVOTreeNode placeholder = TreeNodeMarkers.findNode(userRoot, userId);
+				if (placeholder != null) {
+					TreeNode parent = placeholder.getParent();
+					TreeNodeMarkers.attach(topNode, parent, TreeNodeMarkers.detach(placeholder));
+					parent.setExpanded(true);
+				}
+				appendMoreNodes(userRoot);
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+			} catch (AuthenticationException e) {
+				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+				WebUtil.publishException(e);
+			}
+		}
+	}
+
 	@Override
 	public AuthenticationType getAuthenticationType(int property) {
 		switch (property) {
@@ -623,9 +720,9 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 			} catch (NullPointerException e) {
 				maxDepth = null;
 			}
-			userOutVOtoTreeNode(findUserRoot(out), userRoot, out, new ArrayList<IDVOTreeNode>(),
-					Settings.getIntNullable(SettingCodes.GRAPH_MAX_USER_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_USER_INSTANCES),
-					maxDepth, null, 0);
+			UserOutVO top = findUserRoot(out);
+			buildUserTree(top, getAncestorDistance(out, top), maxDepth);
+			appendMoreNodes(userRoot);
 		} else {
 			IDVOTreeNode loose = new IDVOTreeNode(createUserOutFromIn(in), userRoot);
 			loose.setType(WebUtil.LEAF_NODE_TYPE);

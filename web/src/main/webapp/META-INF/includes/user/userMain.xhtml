@@ -24,6 +24,16 @@
 				actionListener="#{userBean.changeByNode()}"
 				oncomplete="handleUserChanged(xhr, status, args)"
 				update="user_tree,user_input,useradd_departmentpassword,userupdate_departmentpassword" />
+			<p:remoteCommand
+				process="@this"
+				name="expandUserTreeNode"
+				actionListener="#{userBean.expandNode()}"
+				update="user_tree" />
+			<p:remoteCommand
+				process="@this"
+				name="expandUserTreeAncestors"
+				actionListener="#{userBean.expandAncestors()}"
+				update="user_tree" />
 				
 			<p:remoteCommand
 				process="@this"
@@ -76,6 +86,20 @@
 								class="#{user.deferredDelete ? 'ctsms-strikethrough' : ''} ctsms-user-tree-node-leaf"
 								onclick="changeUserByTreeNode(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('USER_ID')}:#{user.id}}));"> <h:outputText
 									value="#{applicationScopeBean.clipStringMid(user.name)}" />
+							</span>
+						</p:treeNode>
+						<p:treeNode type="#{applicationScopeBean.moreNodeType}">
+							<span
+								class="ctsms-tree-node-marker"
+								onclick="expandUserTreeNode(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('USER_ID')}:#{user.id}}));"> <h:outputText
+									value="#{user.label}" />
+							</span>
+						</p:treeNode>
+						<p:treeNode type="#{applicationScopeBean.ancestorsNodeType}">
+							<span
+								class="ctsms-tree-node-marker"
+								onclick="expandUserTreeAncestors(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('USER_ID')}:#{user.id}}));"> <h:outputText
+									value="#{user.label}" />
 							</span>
 						</p:treeNode>
 					</p:tree>
