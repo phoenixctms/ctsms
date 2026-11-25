@@ -32,6 +32,7 @@ import org.phoenixctms.ctsms.web.model.DefaultTreeNode;
 import org.phoenixctms.ctsms.web.model.IDVO;
 import org.phoenixctms.ctsms.web.model.IDVOTreeNode;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
+import org.phoenixctms.ctsms.web.model.TreeNodeMarkers;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
 import org.phoenixctms.ctsms.web.util.JSValues;
@@ -243,6 +244,102 @@ public class InventoryBean extends ManagedBeanBase {
 		}
 	}
 
+	private static int getAncestorDistance(InventoryOutVO inventory, InventoryOutVO top) {
+		int distance = 0;
+		while (inventory != null && inventory != top) {
+			inventory = inventory.getParent();
+			distance++;
+		}
+		return distance;
+	}
+
+	private boolean hasMoreAncestors(InventoryOutVO top, int distance) {
+		Integer maxParentDepth = Settings.getIntNullable(SettingCodes.GRAPH_MAX_INVENTORY_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_INVENTORY_PARENT_DEPTH);
+		if (maxParentDepth != null && distance >= maxParentDepth) {
+			try {
+				return WebUtil.getServiceLocator().getInventoryService().getInventory(WebUtil.getAuthentication(), top.getId(), 2, 1, 0).getParent() != null;
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+			} catch (AuthenticationException e) {
+				WebUtil.publishException(e);
+			}
+		}
+		return false;
+	}
+
+	private void buildInventoryTree(InventoryOutVO top, int distance, Integer maxDepth) {
+		TreeNode container = inventoryRoot;
+		if (hasMoreAncestors(top, distance)) {
+			container = TreeNodeMarkers.createAncestorsNode(inventoryRoot, top.getId());
+		}
+		inventoryOutVOtoTreeNode(top, container, out, new ArrayList<IDVOTreeNode>(),
+				Settings.getIntNullable(SettingCodes.GRAPH_MAX_INVENTORY_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_INVENTORY_INSTANCES),
+				maxDepth, null, 0);
+	}
+
+	private void appendMoreNodes(TreeNode node) {
+		TreeNodeMarkers.appendMoreNodes(node, vo -> ((InventoryOutVO) vo).getChildrenCount());
+	}
+
+	public void expandNode() {
+		Long inventoryId = WebUtil.getLongParamValue(GetParamNames.INVENTORY_ID);
+		IDVOTreeNode node = TreeNodeMarkers.findNode(inventoryRoot, inventoryId);
+		if (node != null) {
+			Integer maxInstances = TreeNodeMarkers.getExpandMaxInstances(
+					Settings.getIntNullable(SettingCodes.GRAPH_MAX_INVENTORY_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_INVENTORY_INSTANCES),
+					((InventoryOutVO) node.getData()).getChildrenCount());
+			try {
+				InventoryOutVO inventory = WebUtil.getServiceLocator().getInventoryService().getInventory(WebUtil.getAuthentication(), inventoryId,
+						maxInstances, 0, TreeNodeMarkers.EXPAND_DEPTH);
+				TreeNode parent = node.getParent();
+				int index = TreeNodeMarkers.detach(node);
+				IDVOTreeNode expanded = inventoryOutVOtoTreeNode(inventory, parent, out, new ArrayList<IDVOTreeNode>(), maxInstances, TreeNodeMarkers.EXPAND_DEPTH,
+						null, 0);
+				if (expanded != null) {
+					TreeNodeMarkers.detach(expanded);
+					TreeNodeMarkers.attach(expanded, parent, index);
+					appendMoreNodes(expanded);
+					expanded.setExpanded(true);
+				} else {
+					TreeNodeMarkers.attach(node, parent, index);
+				}
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+			} catch (AuthenticationException e) {
+				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+				WebUtil.publishException(e);
+			}
+		}
+	}
+
+	public void expandAncestors() {
+		Long inventoryId = WebUtil.getLongParamValue(GetParamNames.INVENTORY_ID);
+		IDVOTreeNode topNode = TreeNodeMarkers.findNode(inventoryRoot, inventoryId);
+		if (topNode != null) {
+			try {
+				InventoryOutVO inventory = WebUtil.getServiceLocator().getInventoryService().getInventory(WebUtil.getAuthentication(), inventoryId,
+						Settings.getIntNullable(SettingCodes.GRAPH_MAX_INVENTORY_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_INVENTORY_INSTANCES),
+						Settings.getIntNullable(SettingCodes.GRAPH_MAX_INVENTORY_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_INVENTORY_PARENT_DEPTH),
+						0);
+				InventoryOutVO top = findInventoryRoot(inventory);
+				TreeNodeMarkers.detach(topNode);
+				inventoryRoot.getChildren().clear();
+				buildInventoryTree(top, getAncestorDistance(inventory, top), null);
+				IDVOTreeNode placeholder = TreeNodeMarkers.findNode(inventoryRoot, inventoryId);
+				if (placeholder != null) {
+					TreeNode parent = placeholder.getParent();
+					TreeNodeMarkers.attach(topNode, parent, TreeNodeMarkers.detach(placeholder));
+					parent.setExpanded(true);
+				}
+				appendMoreNodes(inventoryRoot);
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+			} catch (AuthenticationException e) {
+				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+				WebUtil.publishException(e);
+			}
+		}
+	}
+
 	public ArrayList<SelectItem> getCategories() {
 		return categories;
 	}
@@ -403,9 +500,9 @@ public class InventoryBean extends ManagedBeanBase {
 			} catch (NullPointerException e) {
 				maxDepth = null;
 			}
-			inventoryOutVOtoTreeNode(findInventoryRoot(out), inventoryRoot, out, new ArrayList<IDVOTreeNode>(),
-					Settings.getIntNullable(SettingCodes.GRAPH_MAX_INVENTORY_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_INVENTORY_INSTANCES),
-					maxDepth, null, 0);
+			InventoryOutVO top = findInventoryRoot(out);
+			buildInventoryTree(top, getAncestorDistance(out, top), maxDepth);
+			appendMoreNodes(inventoryRoot);
 		} else {
 			IDVOTreeNode loose = new IDVOTreeNode(createInventoryOutFromIn(in), inventoryRoot);
 			loose.setType(WebUtil.LEAF_NODE_TYPE);

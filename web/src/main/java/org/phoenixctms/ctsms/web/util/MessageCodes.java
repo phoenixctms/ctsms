@@ -366,6 +366,8 @@ public interface MessageCodes {
 	public final static String INVENTORY_TREE_MAX_LABEL = "inventory_tree_max_label";
 	public final static String INVENTORY_TREE_LEVELS_LABEL = "inventory_tree_levels_label";
 	public final static String INVENTORY_TREE_MAX_LEVELS_LABEL = "inventory_tree_max_levels_label";
+	public final static String TREE_MORE_NODES_LABEL = "tree_more_nodes_label";
+	public final static String TREE_ANCESTORS_LABEL = "tree_ancestors_label";
 	public static final String INVENTORY_TAG_VALUE_TITLE = "inventory_tag_value_title";
 	public static final String CREATE_NEW_INVENTORY_TAG_VALUE = "create_new_inventory_tag_value";
 	public static final String INVENTORY_STATUS_ENTRY_TITLE = "inventory_status_entry_title";
