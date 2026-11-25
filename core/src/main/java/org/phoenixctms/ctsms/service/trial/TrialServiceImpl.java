@@ -2680,8 +2680,8 @@ public class TrialServiceImpl
 		Iterator<ECRFFieldStatusEntry> ecrfFieldStatusEntriesIt = statusEntries.iterator();
 		while (ecrfFieldStatusEntriesIt.hasNext()) {
 			ECRFFieldStatusEntry fieldStatus = ecrfFieldStatusEntriesIt.next();
-			fieldStatus.getListEntry().removeEcrfFieldStatusEntries(fieldStatus);
-			fieldStatus.getEcrfField().removeEcrfFieldStatusEntries(fieldStatus);
+			ServiceUtil.removeFromInverseCollection(fieldStatus.getListEntry().getEcrfFieldStatusEntries(), fieldStatus);
+			ServiceUtil.removeFromInverseCollection(fieldStatus.getEcrfField().getEcrfFieldStatusEntries(), fieldStatus);
 			result.add(ServiceUtil.removeEcrfFieldStatusEntry(fieldStatus, now, user,
 					Settings.getBoolean(SettingCodes.LOG_ECRF_FIELD_STATUS_ENTRY_TRIAL, Bundle.SETTINGS, DefaultSettings.LOG_ECRF_FIELD_STATUS_ENTRY_TRIAL),
 					Settings.getBoolean(SettingCodes.LOG_ECRF_FIELD_STATUS_ENTRY_PROBAND, Bundle.SETTINGS, DefaultSettings.LOG_ECRF_FIELD_STATUS_ENTRY_PROBAND),
@@ -2701,8 +2701,8 @@ public class TrialServiceImpl
 		while (ecrfFieldValuesIt.hasNext()) {
 			ECRFFieldValue fieldValue = ecrfFieldValuesIt.next();
 			result.add(ecrfFieldValueDao.toECRFFieldValueOutVO(fieldValue));
-			fieldValue.getListEntry().removeEcrfValues(fieldValue);
-			fieldValue.getEcrfField().removeFieldValues(fieldValue);
+			ServiceUtil.removeFromInverseCollection(fieldValue.getListEntry().getEcrfValues(), fieldValue);
+			ServiceUtil.removeFromInverseCollection(fieldValue.getEcrfField().getFieldValues(), fieldValue);
 			ServiceUtil.removeEcrfFieldValue(fieldValue, now, user, false, false, inputFieldValueDao, ecrfFieldValueDao, journalEntryDao);
 		}
 		ServiceUtil.logSystemMessage(listEntry.getProband(), listEntryVO.getTrial(), now, user, SystemMessageCodes.ECRF_FIELD_VALUES_CLEARED, new Object() {
