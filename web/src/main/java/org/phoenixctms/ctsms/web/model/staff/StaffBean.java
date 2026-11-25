@@ -38,6 +38,7 @@ import org.phoenixctms.ctsms.web.model.IDVOTreeNode;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.model.SexSelector;
 import org.phoenixctms.ctsms.web.model.SexSelectorListener;
+import org.phoenixctms.ctsms.web.model.TreeNodeMarkers;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
 import org.phoenixctms.ctsms.web.util.JSValues;
@@ -360,6 +361,102 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 		}
 	}
 
+	private static int getAncestorDistance(StaffOutVO staff, StaffOutVO top) {
+		int distance = 0;
+		while (staff != null && staff != top) {
+			staff = staff.getParent();
+			distance++;
+		}
+		return distance;
+	}
+
+	private boolean hasMoreAncestors(StaffOutVO top, int distance) {
+		Integer maxParentDepth = Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_PARENT_DEPTH);
+		if (maxParentDepth != null && distance >= maxParentDepth) {
+			try {
+				return WebUtil.getServiceLocator().getStaffService().getStaff(WebUtil.getAuthentication(), top.getId(), 2, 1, 0).getParent() != null;
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+			} catch (AuthenticationException e) {
+				WebUtil.publishException(e);
+			}
+		}
+		return false;
+	}
+
+	private void buildStaffTree(StaffOutVO top, int distance, Integer maxDepth) {
+		TreeNode container = staffRoot;
+		if (hasMoreAncestors(top, distance)) {
+			container = TreeNodeMarkers.createAncestorsNode(staffRoot, top.getId());
+		}
+		staffOutVOtoTreeNode(top, container, out, new ArrayList<IDVOTreeNode>(),
+				Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_INSTANCES),
+				maxDepth, null, 0);
+	}
+
+	private void appendMoreNodes(TreeNode node) {
+		TreeNodeMarkers.appendMoreNodes(node, vo -> ((StaffOutVO) vo).getChildrenCount());
+	}
+
+	public void expandNode() {
+		Long staffId = WebUtil.getLongParamValue(GetParamNames.STAFF_ID);
+		IDVOTreeNode node = TreeNodeMarkers.findNode(staffRoot, staffId);
+		if (node != null) {
+			Integer maxInstances = TreeNodeMarkers.getExpandMaxInstances(
+					Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_INSTANCES),
+					((StaffOutVO) node.getData()).getChildrenCount());
+			try {
+				StaffOutVO staff = WebUtil.getServiceLocator().getStaffService().getStaff(WebUtil.getAuthentication(), staffId,
+						maxInstances, 0, TreeNodeMarkers.EXPAND_DEPTH);
+				TreeNode parent = node.getParent();
+				int index = TreeNodeMarkers.detach(node);
+				IDVOTreeNode expanded = staffOutVOtoTreeNode(staff, parent, out, new ArrayList<IDVOTreeNode>(), maxInstances, TreeNodeMarkers.EXPAND_DEPTH,
+						null, 0);
+				if (expanded != null) {
+					TreeNodeMarkers.detach(expanded);
+					TreeNodeMarkers.attach(expanded, parent, index);
+					appendMoreNodes(expanded);
+					expanded.setExpanded(true);
+				} else {
+					TreeNodeMarkers.attach(node, parent, index);
+				}
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+				Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
+			} catch (AuthenticationException e) {
+				Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
+				WebUtil.publishException(e);
+			}
+		}
+	}
+
+	public void expandAncestors() {
+		Long staffId = WebUtil.getLongParamValue(GetParamNames.STAFF_ID);
+		IDVOTreeNode topNode = TreeNodeMarkers.findNode(staffRoot, staffId);
+		if (topNode != null) {
+			try {
+				StaffOutVO staff = WebUtil.getServiceLocator().getStaffService().getStaff(WebUtil.getAuthentication(), staffId,
+						Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_INSTANCES),
+						Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_PARENT_DEPTH),
+						0);
+				StaffOutVO top = findStaffRoot(staff);
+				TreeNodeMarkers.detach(topNode);
+				staffRoot.getChildren().clear();
+				buildStaffTree(top, getAncestorDistance(staff, top), null);
+				IDVOTreeNode placeholder = TreeNodeMarkers.findNode(staffRoot, staffId);
+				if (placeholder != null) {
+					TreeNode parent = placeholder.getParent();
+					TreeNodeMarkers.attach(topNode, parent, TreeNodeMarkers.detach(placeholder));
+					parent.setExpanded(true);
+				}
+				appendMoreNodes(staffRoot);
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+				Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
+			} catch (AuthenticationException e) {
+				Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
+				WebUtil.publishException(e);
+			}
+		}
+	}
+
 	public ArrayList<SelectItem> getCategories() {
 		return categories;
 	}
@@ -600,9 +697,9 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 			} catch (NullPointerException e) {
 				maxDepth = null;
 			}
-			staffOutVOtoTreeNode(findStaffRoot(out), staffRoot, out, new ArrayList<IDVOTreeNode>(),
-					Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_INSTANCES),
-					maxDepth, null, 0);
+			StaffOutVO top = findStaffRoot(out);
+			buildStaffTree(top, getAncestorDistance(out, top), maxDepth);
+			appendMoreNodes(staffRoot);
 		} else {
 			IDVOTreeNode loose = new IDVOTreeNode(createStaffOutFromIn(in), staffRoot);
 			loose.setType(WebUtil.LEAF_NODE_TYPE);

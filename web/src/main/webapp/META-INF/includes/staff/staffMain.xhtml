@@ -61,6 +61,12 @@
 				actionListener="#{staffBean.changeByNode()}"
 				oncomplete="handleStaffChanged(xhr, status, args)"
 				update="staff_tree,staff_input" />
+			<p:remoteCommand process="@this" name="expandStaffTreeNode"
+				actionListener="#{staffBean.expandNode()}"
+				update="staff_tree" />
+			<p:remoteCommand process="@this" name="expandStaffTreeAncestors"
+				actionListener="#{staffBean.expandAncestors()}"
+				update="staff_tree" />
 			<h:panelGrid columns="2" cellpadding="0"
 				styleClass="ctsms-content-panelgrid ctsms-content-panelgrid-maxheight"
 				columnClasses="ctsms-staff-tree-column,ctsms-staff-input-column">
@@ -93,6 +99,18 @@
 								onclick="changeStaffByTreeNode(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('STAFF_ID')}:#{staff.id}}));">
 								<h:outputText
 									value="#{applicationScopeBean.clipStringMid(staff.name)}" />
+							</span>
+						</p:treeNode>
+						<p:treeNode type="#{applicationScopeBean.moreNodeType}">
+							<span class="ctsms-tree-node-marker"
+								onclick="expandStaffTreeNode(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('STAFF_ID')}:#{staff.id}}));">
+								<h:outputText value="#{staff.label}" />
+							</span>
+						</p:treeNode>
+						<p:treeNode type="#{applicationScopeBean.ancestorsNodeType}">
+							<span class="ctsms-tree-node-marker"
+								onclick="expandStaffTreeAncestors(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('STAFF_ID')}:#{staff.id}}));">
+								<h:outputText value="#{staff.label}" />
 							</span>
 						</p:treeNode>
 					</p:tree>
