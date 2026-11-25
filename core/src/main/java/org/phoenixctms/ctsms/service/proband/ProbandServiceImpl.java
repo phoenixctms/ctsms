@@ -1208,10 +1208,10 @@ public class ProbandServiceImpl
 						errorMessages.add(e.getMessage());
 					}
 				}
-				probandListEntry.getTrial().removeProbandListEntries(probandListEntry);
+				ServiceUtil.removeFromInverseCollection(probandListEntry.getTrial().getProbandListEntries(), probandListEntry);
 				ProbandGroup group = probandListEntry.getGroup();
 				if (group != null) {
-					group.removeProbandListEntries(probandListEntry);
+					ServiceUtil.removeFromInverseCollection(group.getProbandListEntries(), probandListEntry);
 				}
 				ServiceUtil.removeProbandListEntry(probandListEntry, true, now, user, true, false, probandListStatusEntryDao, probandListEntryTagValueDao, ecrfFieldValueDao,
 						ecrfFieldStatusEntryDao, signatureDao,
@@ -1243,7 +1243,7 @@ public class ProbandServiceImpl
 					}
 					errorMessages.add(e.getMessage());
 				}
-				inquiryValue.getInquiry().removeInquiryValues(inquiryValue);
+				ServiceUtil.removeFromInverseCollection(inquiryValue.getInquiry().getInquiryValues(), inquiryValue);
 				ServiceUtil.removeInquiryValue(inquiryValue, now, user,
 						Settings.getBoolean(SettingCodes.LOG_INQUIRY_VALUE_TRIAL, Bundle.SETTINGS, DefaultSettings.LOG_INQUIRY_VALUE_TRIAL),
 						false, inputFieldValueDao, inquiryValueDao, journalEntryDao);
@@ -2443,8 +2443,8 @@ public class ProbandServiceImpl
 		while (inquiryValuesIt.hasNext()) {
 			InquiryValue fieldValue = inquiryValuesIt.next();
 			result.add(inquiryValueDao.toInquiryValueOutVO(fieldValue));
-			fieldValue.getProband().removeInquiryValues(fieldValue);
-			fieldValue.getInquiry().removeInquiryValues(fieldValue);
+			ServiceUtil.removeFromInverseCollection(fieldValue.getProband().getInquiryValues(), fieldValue);
+			ServiceUtil.removeFromInverseCollection(fieldValue.getInquiry().getInquiryValues(), fieldValue);
 			ServiceUtil.removeInquiryValue(fieldValue, now, user, false, false, inputFieldValueDao, inquiryValueDao, journalEntryDao);
 		}
 		ServiceUtil.logSystemMessage(proband, trialVO, now, user, SystemMessageCodes.INQUIRY_VALUES_CLEARED, new Object() {

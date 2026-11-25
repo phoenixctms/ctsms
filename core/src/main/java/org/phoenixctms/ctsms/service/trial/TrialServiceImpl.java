@@ -10204,9 +10204,9 @@ public class TrialServiceImpl
 		ProbandListEntryOutVO result = probandListEntryDao.toProbandListEntryOutVO(probandListEntry);
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		ProbandGroup group = probandListEntry.getGroup();
-		trial.removeProbandListEntries(probandListEntry);
+		ServiceUtil.removeFromInverseCollection(trial.getProbandListEntries(), probandListEntry);
 		if (group != null) {
-			group.removeProbandListEntries(probandListEntry);
+			ServiceUtil.removeFromInverseCollection(group.getProbandListEntries(), probandListEntry);
 		}
 		proband.removeTrialParticipations(probandListEntry);
 		ServiceUtil.removeProbandListEntry(probandListEntry, deleteCascade, now, user, true, true, this.getProbandListStatusEntryDao(), this.getProbandListEntryTagValueDao(),
