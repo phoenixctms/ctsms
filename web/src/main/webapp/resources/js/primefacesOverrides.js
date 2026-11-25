@@ -1484,12 +1484,13 @@ PrimeFaces.widget.AutoComplete = PrimeFaces.widget.BaseWidget
                         var item = $(this), itemValue = item.attr('data-item-value');
 
                         if (_self.cfg.multiple) {
-                          var itemDisplayMarkup = '<li data-token-value="' + item.attr('data-item-value')
-                                  + '"class="ui-autocomplete-token ui-state-active ui-corner-all ui-helper-hidden">';
-                          itemDisplayMarkup += '<span class="ui-autocomplete-token-icon ui-icon ui-icon-close" />';
-                          itemDisplayMarkup += '<span class="ui-autocomplete-token-label">' + item.attr('data-item-label') + '</span></li>';
+                          // built with attr()/text(), so quotes or markup in a value or label stay literal
+                          var itemDisplay = $('<li class="ui-autocomplete-token ui-state-active ui-corner-all ui-helper-hidden"></li>')
+                                  .attr('data-token-value', itemValue);
+                          itemDisplay.append('<span class="ui-autocomplete-token-icon ui-icon ui-icon-close"></span>');
+                          itemDisplay.append($('<span class="ui-autocomplete-token-label"></span>').text(item.attr('data-item-label')));
 
-                          _self.inputContainer.before(itemDisplayMarkup);
+                          _self.inputContainer.before(itemDisplay);
                           _self.multiItemContainer.children('.ui-helper-hidden').fadeIn();
                           _self.input.val('').focus();
 
@@ -1685,7 +1686,9 @@ PrimeFaces.widget.AutoComplete = PrimeFaces.widget.BaseWidget
               var itemValue = item.attr('data-token-value'), _self = this;
 
               //remove from options
-              this.hinput.children('option').filter('[value="' + itemValue + '"]').remove();
+              this.hinput.children('option').filter(function() {
+                return this.value === itemValue;
+              }).remove();
 
               //remove from items
               item.fadeOut('fast', function() {
