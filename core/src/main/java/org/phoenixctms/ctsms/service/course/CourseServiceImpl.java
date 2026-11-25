@@ -1003,8 +1003,7 @@ public class CourseServiceImpl
 					DateCalc.dateDeltaDays(now, DateCalc.addInterval(course.getStop(), course.getValidityPeriod(), course.getValidityPeriodDays())));
 		}
 		if (course.isExpires()
-				&& now.compareTo(
-						ExpirationEntityAdapter.getInstance(course, now).getReminderStart(null, null, expiringCourseReminderPeriod, expiringCourseReminderPeriodDays)) >= 0) {
+				&& ExpirationEntityAdapter.getInstance(course, now).isReminderDue(false, null, null, expiringCourseReminderPeriod, expiringCourseReminderPeriodDays)) {
 			notificationDao.addExpiringCourseNotification(course, now, messageParameters);
 		} else {
 			ServiceUtil.cancelNotifications(course.getNotifications(), notificationDao, org.phoenixctms.ctsms.enumeration.NotificationType.EXPIRING_COURSE);
@@ -1014,8 +1013,8 @@ public class CourseServiceImpl
 		while (courseParticipationsIt.hasNext()) {
 			CourseParticipationStatusEntry courseParticipation = courseParticipationsIt.next();
 			if (course.isExpires()
-					&& now.compareTo(ExpirationEntityAdapter.getInstance(courseParticipation, now, particiaptionCourseIdsMap).getReminderStart(null, null,
-							expiringCourseParticipationReminderPeriod, expiringCourseParticipationReminderPeriodDays)) >= 0) {
+					&& ExpirationEntityAdapter.getInstance(courseParticipation, now, particiaptionCourseIdsMap).isReminderDue(false, null, null,
+							expiringCourseParticipationReminderPeriod, expiringCourseParticipationReminderPeriodDays)) {
 				notificationDao.addNotification(courseParticipation, true, false, now, messageParameters);
 			} else {
 				ServiceUtil.cancelNotifications(courseParticipation.getNotifications(), notificationDao,

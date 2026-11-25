@@ -1594,17 +1594,14 @@ public final class CriteriaUtil {
 			Iterator<T> it = expirationItems.iterator();
 			while (it.hasNext()) {
 				ExpirationEntityAdapter expirationItem = ExpirationEntityAdapter.getInstance(it.next(), today, caches);
-				if (expirationItem.isActive()) {
-					if (today.compareTo(expirationItem.getReminderStart(consistentValidityPeriod, consistentValidityPeriodDays, consistentReminderPeriod,
-							consistentReminderPeriodDays)) >= 0
-							&& (includeAlreadyPassed || today.compareTo(expirationItem.getExpiry(consistentValidityPeriod, consistentValidityPeriodDays)) <= 0)) {
-						if (notify != null) {
-							if (notify.booleanValue() == expirationItem.isNotify()) {
-								resultSet.add((T) expirationItem.getItem());
-							}
-						} else {
+				if (expirationItem.isReminderDue(includeAlreadyPassed, consistentValidityPeriod, consistentValidityPeriodDays, consistentReminderPeriod,
+						consistentReminderPeriodDays)) {
+					if (notify != null) {
+						if (notify.booleanValue() == expirationItem.isNotify()) {
 							resultSet.add((T) expirationItem.getItem());
 						}
+					} else {
+						resultSet.add((T) expirationItem.getItem());
 					}
 				}
 			}
