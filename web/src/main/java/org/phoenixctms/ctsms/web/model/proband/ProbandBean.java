@@ -38,6 +38,7 @@ import org.phoenixctms.ctsms.web.model.IDVOTreeNode;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.model.SexSelector;
 import org.phoenixctms.ctsms.web.model.SexSelectorListener;
+import org.phoenixctms.ctsms.web.model.TreeNodeMarkers;
 import org.phoenixctms.ctsms.web.model.shared.ProbandMultiPickerModel;
 import org.phoenixctms.ctsms.web.util.DateUtil;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
@@ -759,6 +760,7 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_PROBAND_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_PROBAND_INSTANCES),
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_PROBAND_PARENTS_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_PROBAND_PARENTS_DEPTH),
 					null, 0);
+			appendMoreNodes(parentsRoot, true);
 		} else {
 			IDVOTreeNode loose = new IDVOTreeNode(createProbandOutFromIn(in), parentsRoot);
 			loose.setType(WebUtil.LEAF_NODE_TYPE);
@@ -768,6 +770,7 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_PROBAND_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_PROBAND_INSTANCES),
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_PROBAND_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_PROBAND_CHILDREN_DEPTH),
 					null, 0);
+			appendMoreNodes(childrenRoot, false);
 		} else {
 			IDVOTreeNode loose = new IDVOTreeNode(createProbandOutFromIn(in), childrenRoot);
 			loose.setType(WebUtil.LEAF_NODE_TYPE);
@@ -870,6 +873,59 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 
 	private void loadSelectedCategory() {
 		category = WebUtil.getProbandCategory(in.getCategoryId());
+	}
+
+	private void appendMoreNodes(TreeNode node, boolean parents) {
+		if (parents) {
+			TreeNodeMarkers.appendMoreNodes(node, vo -> ((ProbandOutVO) vo).getParentsCount());
+		} else {
+			TreeNodeMarkers.appendMoreNodes(node, vo -> ((ProbandOutVO) vo).getChildrenCount());
+		}
+	}
+
+	public void expandParentNode() {
+		expandNode(true);
+	}
+
+	public void expandChildNode() {
+		expandNode(false);
+	}
+
+	private void expandNode(boolean parents) {
+		Long probandId = WebUtil.getLongParamValue(GetParamNames.PROBAND_ID);
+		IDVOTreeNode node = TreeNodeMarkers.findNode(parents ? parentsRoot : childrenRoot, probandId);
+		if (node != null) {
+			ProbandOutVO vo = (ProbandOutVO) node.getData();
+			Integer maxInstances = TreeNodeMarkers.getExpandMaxInstances(
+					Settings.getIntNullable(SettingCodes.GRAPH_MAX_PROBAND_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_PROBAND_INSTANCES),
+					parents ? vo.getParentsCount() : vo.getChildrenCount());
+			Integer maxDepth = TreeNodeMarkers.EXPAND_DEPTH;
+			try {
+				ProbandOutVO proband = WebUtil.getServiceLocator().getProbandService().getProband(WebUtil.getAuthentication(), probandId, maxInstances,
+						parents ? maxDepth : 0, parents ? 0 : maxDepth);
+				TreeNode parent = node.getParent();
+				int index = TreeNodeMarkers.detach(node);
+				IDVOTreeNode expanded;
+				if (parents) {
+					expanded = probandOutVOtoParentTreeNode(proband, parent, new ArrayList<IDVOTreeNode>(), maxInstances, maxDepth, null, 0);
+				} else {
+					expanded = probandOutVOtoChildTreeNode(proband, parent, new ArrayList<IDVOTreeNode>(), maxInstances, maxDepth, null, 0);
+				}
+				if (expanded != null) {
+					TreeNodeMarkers.detach(expanded);
+					TreeNodeMarkers.attach(expanded, parent, index);
+					appendMoreNodes(expanded, parents);
+					expanded.setExpanded(true);
+				} else {
+					TreeNodeMarkers.attach(node, parent, index);
+				}
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+				Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
+			} catch (AuthenticationException e) {
+				Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
+				WebUtil.publishException(e);
+			}
+		}
 	}
 
 	private IDVOTreeNode probandOutVOtoChildTreeNode(ProbandOutVO proband, TreeNode parent, ArrayList<IDVOTreeNode> nodes,
