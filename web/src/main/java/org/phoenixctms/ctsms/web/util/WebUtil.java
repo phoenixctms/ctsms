@@ -145,6 +145,8 @@ public final class WebUtil {
 	public static final String FILE_NODE_TYPE = "file";
 	public static final String PARENT_NODE_TYPE = "parent";
 	public static final String LEAF_NODE_TYPE = "leaf";
+	public static final String MORE_NODE_TYPE = "more";
+	public static final String ANCESTORS_NODE_TYPE = "ancestors";
 	public static final String JS_NULL = "null";
 	private final static Gson JSON_BEAUTIFIER = new GsonBuilder().setPrettyPrinting()
 			.serializeNulls()

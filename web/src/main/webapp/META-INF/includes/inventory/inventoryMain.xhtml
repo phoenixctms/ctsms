@@ -61,6 +61,16 @@
 				actionListener="#{inventoryBean.changeByNode()}"
 				oncomplete="handleInventoryChanged(xhr, status, args)"
 				update="inventory_tree,inventory_input" />
+			<p:remoteCommand
+				process="@this"
+				name="expandInventoryTreeNode"
+				actionListener="#{inventoryBean.expandNode()}"
+				update="inventory_tree" />
+			<p:remoteCommand
+				process="@this"
+				name="expandInventoryTreeAncestors"
+				actionListener="#{inventoryBean.expandAncestors()}"
+				update="inventory_tree" />
 			<h:panelGrid
 				columns="2"
 				cellpadding="0"
@@ -99,6 +109,20 @@
 								class="#{inventory.deferredDelete ? 'ctsms-strikethrough' : ''} ctsms-inventory-tree-node-leaf"
 								onclick="changeInventoryByTreeNode(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('INVENTORY_ID')}:#{inventory.id}}));"> <h:outputText
 									value="#{applicationScopeBean.clipStringMid(inventory.name)}" />
+							</span>
+						</p:treeNode>
+						<p:treeNode type="#{applicationScopeBean.moreNodeType}">
+							<span
+								class="ctsms-tree-node-marker"
+								onclick="expandInventoryTreeNode(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('INVENTORY_ID')}:#{inventory.id}}));"> <h:outputText
+									value="#{inventory.label}" />
+							</span>
+						</p:treeNode>
+						<p:treeNode type="#{applicationScopeBean.ancestorsNodeType}">
+							<span
+								class="ctsms-tree-node-marker"
+								onclick="expandInventoryTreeAncestors(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('INVENTORY_ID')}:#{inventory.id}}));"> <h:outputText
+									value="#{inventory.label}" />
 							</span>
 						</p:treeNode>
 					</p:tree>

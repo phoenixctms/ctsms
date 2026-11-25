@@ -2991,6 +2991,12 @@ overflow-y:scroll;
 	text-decoration: line-through;
 }
 
+.ctsms-tree-node-marker {
+	cursor: pointer;
+	font-style: italic;
+	opacity: 0.7;
+}
+
 /* value forms: entered but not yet saved field values. The background keeps the field color (saved/new/error);
    common.js puts the legend and the field's own save button in the theme's active state (ui-state-active, like a selected tab),
    and draws a bar on the row's left edge in the active legend's border color. The legend shows a pencil icon

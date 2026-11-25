@@ -523,6 +523,14 @@ public class ApplicationScopeBean {
 		return WebUtil.PARENT_NODE_TYPE;
 	}
 
+	public String getMoreNodeType() {
+		return WebUtil.MORE_NODE_TYPE;
+	}
+
+	public String getAncestorsNodeType() {
+		return WebUtil.ANCESTORS_NODE_TYPE;
+	}
+
 	public String getPercentageString(Float value) {
 		if (value != null) {
 			return Messages.getMessage(MessageCodes.PERCENTAGE_LABEL, 100.0f * value);
