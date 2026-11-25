@@ -247,6 +247,9 @@ public final class CommonUtil {
 	public final static Pattern VO_GETTER_METHOD_NAME_REGEXP = Pattern.compile("^" + GET_PROPERTY_METHOD_NAME_PREFIX); // Pattern.compile("^((get)|(is))");
 	public final static Pattern ENTITY_GETTER_METHOD_NAME_REGEXP = Pattern.compile("^((" + GET_PROPERTY_METHOD_NAME_PREFIX + ")|(" + IS_PROPERTY_METHOD_NAME_PREFIX + "))");
 	public final static boolean ENCRPYTED_PROBAND_LIST_STATUS_ENTRY_REASON = false;
+	// clearing a single series section index is limited to the last index, so indexes stay gapless
+	// (index gap checks on save, field calculation series arrays, bulk-processor eCRF import):
+	public final static boolean ECRF_FIELD_VALUES_CLEAR_LAST_INDEX_ONLY = true;
 	private final static HashSet<org.phoenixctms.ctsms.enumeration.FileModule> ENCRYPTED_FILE_MODULE = new HashSet<org.phoenixctms.ctsms.enumeration.FileModule>();
 	static {
 		ENCRYPTED_FILE_MODULE.add(org.phoenixctms.ctsms.enumeration.FileModule.PROBAND_DOCUMENT);

@@ -62,9 +62,10 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		filterSections.add(new SelectItem(item, seriesIndexFilterSectionLabel(item)));
 	}
 
-	private static void addSeriesIndexFilterSection(ArrayList<SelectItem> filterSections, ECRFSectionProgressVO indexProgress) {
+	private static void addSeriesIndexFilterSection(ArrayList<SelectItem> filterSections, ECRFSectionProgressVO indexProgress, Long maxIndex) {
 		EcrfSectionProgressItemValue item = new EcrfSectionProgressItemValue(indexProgress);
 		item.setSelectionIndex(indexProgress.getIndex());
+		item.setMaxIndex(maxIndex);
 		filterSections.add(new SelectItem(item, seriesIndexFilterSectionLabel(item)));
 	}
 
@@ -119,7 +120,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 						if (indexProgress.getIndex() == null) {
 							continue;
 						}
-						addSeriesIndexFilterSection(filterSections, indexProgress);
+						addSeriesIndexFilterSection(filterSections, indexProgress, summary.getIndex());
 						addedIndex = true;
 					}
 					if (!addedIndex) {
@@ -325,8 +326,22 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		actionPostProcess(clearValuesAction());
 	}
 
+	public final void clearSectionValues() {
+		actionPostProcess(clearValuesAction(true));
+	}
+
 	public String clearValuesAction() {
-		ecrfFieldValueBean.delete();
+		return clearValuesAction(false);
+	}
+
+	private String clearValuesAction(boolean wholeSection) {
+		String selectedSection = ecrfFieldValueBean.getFilterSection();
+		if (wholeSection) {
+			ecrfFieldValueBean.deleteSection();
+		} else {
+			ecrfFieldValueBean.delete();
+		}
+		Long selectedIndex = ecrfFieldValueBean.getFilterIndex(); // the index the value bean loaded after the clear
 		initSpecificSets();
 		password = null;
 		clearFromCache(probandListEntry, ecrf, visit);
@@ -334,6 +349,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		Long ecrfId = ecrf == null ? null : ecrf.getId();
 		Long visitId = visit != null ? visit.getId() : null;
 		filterSections = getEcrfFilterSections(listEntryId, ecrfId, visitId, true);
+		reselectFilterSection(selectedSection, selectedIndex);
 		if (ecrfStatus == null) {
 			ecrfStatus = WebUtil.getEcrfStatusEntry(listEntryId, ecrfId, visitId);
 			statusTypes = loadEcrfStatusTypes();
@@ -1158,6 +1174,47 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 					ecrfFieldValueBean.setFilterSectionProgress(item);
 					return;
 				}
+			}
+		}
+	}
+
+	// after a clear, the selected index may be gone: select the highest remaining index of the section
+	// not above the selected one (or the section's empty entry), and reload the values if it changed.
+	private void reselectFilterSection(String section, Long selectionIndex) {
+		if (filterSections == null || CommonUtil.isEmptyString(section)) {
+			return;
+		}
+		EcrfSectionProgressItemValue sectionItem = null;
+		EcrfSectionProgressItemValue match = null;
+		Iterator<SelectItem> it = filterSections.iterator();
+		while (it.hasNext()) {
+			Object value = it.next().getValue();
+			if (value instanceof EcrfSectionProgressItemValue) {
+				EcrfSectionProgressItemValue item = (EcrfSectionProgressItemValue) value;
+				if (!section.equals(item.getSection())) {
+					continue;
+				}
+				if (sectionItem == null) {
+					sectionItem = item;
+				}
+				Long itemIndex = item.getSelectionIndex();
+				if (selectionIndex == null) {
+					if (itemIndex == null) {
+						match = item;
+					}
+				} else if (itemIndex != null && itemIndex <= selectionIndex && (match == null || itemIndex > match.getSelectionIndex())) {
+					match = item;
+				}
+			}
+		}
+		if (match == null) {
+			match = sectionItem;
+		}
+		if (match != null) {
+			ecrfFieldValueBean.setFilterSectionProgress(match);
+			Long matchIndex = match.getSelectionIndex();
+			if (selectionIndex == null ? matchIndex != null : !selectionIndex.equals(matchIndex)) {
+				ecrfFieldValueBean.changeRootEntity(ecrf == null ? null : ecrf.getId());
 			}
 		}
 	}

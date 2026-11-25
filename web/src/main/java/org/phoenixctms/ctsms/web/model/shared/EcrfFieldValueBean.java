@@ -504,16 +504,29 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 
 	@Override
 	public String deleteAction() {
+		return clearAction(false);
+	}
+
+	public final void deleteSection() {
+		actionPostProcess(clearAction(true));
+	}
+
+	private String clearAction(boolean wholeSection) {
 		try {
 			Long listEntryId = probandListEntry == null ? null : probandListEntry.getId();
 			Long ecrfId = ecrf == null ? null : ecrf.getId();
 			Long visitId = visit != null ? visit.getId() : null;
 			if (CommonUtil.isEmptyString(filterSection)) {
 				WebUtil.getServiceLocator().getTrialService().clearEcrfFieldValues(WebUtil.getAuthentication(), listEntryId, ecrfId, visitId);
-			} else if (filterIndex != null) {
+			} else if (!wholeSection && filterIndex != null) {
 				WebUtil.getServiceLocator().getTrialService().clearEcrfFieldValues(WebUtil.getAuthentication(), listEntryId, ecrfId, visitId, filterSection, filterIndex);
 			} else {
 				WebUtil.getServiceLocator().getTrialService().clearEcrfFieldValues(WebUtil.getAuthentication(), listEntryId, ecrfId, visitId, filterSection);
+			}
+			if (!CommonUtil.isEmptyString(filterSection) && filterIndex != null) {
+				// the cleared index is gone: load the previous one (the section's empty index 0 after clearing it all),
+				// the status entry bean then selects the matching menu item without loading again
+				filterIndex = wholeSection ? 0l : Math.max(0l, filterIndex - 1l);
 			}
 			portionEcrfFieldValues(null);
 			drafts.clear();
@@ -873,6 +886,25 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 
 	public boolean isReasonForChangeRequired() {
 		return ecrfStatus == null ? false : ecrfStatus.getStatus().getAuditTrail() && ecrfStatus.getStatus().getReasonForChangeRequired();
+	}
+
+	public boolean isFilterSeriesSection() {
+		return !CommonUtil.isEmptyString(filterSection) && filterIndex != null;
+	}
+
+	public boolean isFilterSeriesSectionClearable() {
+		return isFilterSeriesSection() && isEditable();
+	}
+
+	public boolean isFilterSectionClearable() {
+		if (CommonUtil.isEmptyString(filterSection) || !isEditable()) {
+			return false;
+		}
+		if (filterIndex == null || !CommonUtil.ECRF_FIELD_VALUES_CLEAR_LAST_INDEX_ONLY) {
+			return true;
+		}
+		return filterSectionProgress instanceof EcrfSectionProgressItemValue
+				&& filterIndex.equals(((EcrfSectionProgressItemValue) filterSectionProgress).getMaxIndex());
 	}
 
 	@Override
@@ -1247,6 +1279,29 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 		actionPostProcess(updateSectionAction(section));
 	}
 
+	private void refreshFilterSectionProgress(Collection<ECRFSectionProgressVO> sectionProgresses) {
+		// the section's summary row comes first, followed by one row per series index:
+		Iterator<ECRFSectionProgressVO> it = sectionProgresses.iterator();
+		if (!it.hasNext()) {
+			return;
+		}
+		ECRFSectionProgressVO summary = it.next();
+		if (filterIndex == null) {
+			filterSectionProgress.copy(summary);
+			return;
+		}
+		while (it.hasNext()) {
+			ECRFSectionProgressVO indexProgress = it.next();
+			if (filterIndex.equals(indexProgress.getIndex())) {
+				filterSectionProgress.copy(indexProgress);
+				break;
+			}
+		}
+		if (filterSectionProgress instanceof EcrfSectionProgressItemValue) {
+			((EcrfSectionProgressItemValue) filterSectionProgress).setMaxIndex(summary.getIndex());
+		}
+	}
+
 	public String updateSectionAction(EcrfFieldSection section) {
 		try {
 			PSFVO psf = paginator.getPsfCopy(true);
@@ -1258,9 +1313,9 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 						.setEcrfFieldValues(WebUtil.getAuthentication(), getEcrfFieldInValues(section), filterSection, filterIndex, true, false, fieldQuery, psf));
 				if (filterSectionProgress != null && filterSectionProgress.getSeries()) {
 					try {
-						filterSectionProgress.copy(WebUtil.getServiceLocator().getTrialService()
+						refreshFilterSectionProgress(WebUtil.getServiceLocator().getTrialService()
 								.getEcrfProgress(WebUtil.getAuthentication(), probandListEntry.getId(), ecrf.getId(), visit != null ? visit.getId() : null, filterSection)
-								.getSections().iterator().next());
+								.getSections());
 					} catch (Exception e) {
 					}
 				}

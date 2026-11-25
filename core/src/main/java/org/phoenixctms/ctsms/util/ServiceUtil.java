@@ -4895,7 +4895,7 @@ public final class ServiceUtil {
 	}
 
 	public static ECRFProgressVO populateEcrfProgress(ProbandListEntryOutVO listEntryVO, ECRFOutVO ecrfVO, VisitOutVO visitVO, boolean dueDetail, boolean signatureDetail,
-			boolean sectionDetail, Date from,
+			boolean sectionDetail, boolean seriesIndexDetail, Date from,
 			Date to,
 			ECRFStatusEntryDao ecrfStatusEntryDao, //ECRFStatusTypeDao ecrfStatusTypeDao,
 			SignatureDao signatureDao,
@@ -4906,7 +4906,7 @@ public final class ServiceUtil {
 				visitScheduleItemDao);
 		if (result != null) {
 			if (sectionDetail) {
-				populateEcrfSectionProgress(ecrfFieldDao.findByTrialEcrfSeriesJs(null, ecrfVO.getId(), true, null, null, null), listEntryVO, ecrfVO, visitVO, result, true,
+				populateEcrfSectionProgress(ecrfFieldDao.findByTrialEcrfSeriesJs(null, ecrfVO.getId(), true, null, null, null), listEntryVO, ecrfVO, visitVO, result, true, seriesIndexDetail,
 						ecrfFieldValueDao,
 						ecrfFieldStatusEntryDao);
 			} else {
@@ -4918,7 +4918,7 @@ public final class ServiceUtil {
 
 	public static ECRFProgressVO populateEcrfProgress(ProbandListEntryOutVO listEntryVO, ECRFOutVO ecrfVO, VisitOutVO visitVO, boolean dueDetail, boolean signatureDetail,
 			Date from, Date to,
-			String section,
+			String section, boolean seriesIndexDetail,
 			ECRFStatusEntryDao ecrfStatusEntryDao, SignatureDao signatureDao, // ECRFStatusTypeDao ecrfStatusTypeDao,
 			ECRFFieldDao ecrfFieldDao, ECRFFieldValueDao ecrfFieldValueDao, ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao, VisitScheduleItemDao visitScheduleItemDao)
 			throws Exception {
@@ -4927,7 +4927,7 @@ public final class ServiceUtil {
 				visitScheduleItemDao);
 		if (result != null) {
 			populateEcrfSectionProgress(ecrfFieldDao.findByTrialEcrfSectionSeriesJs(null, ecrfVO.getId(), section, true, null, null, null), listEntryVO, ecrfVO, visitVO, result,
-					false,
+					false, seriesIndexDetail,
 					ecrfFieldValueDao, ecrfFieldStatusEntryDao);
 			populateEcrfProgress(listEntryVO, ecrfVO, visitVO, result, ecrfFieldDao, ecrfFieldValueDao, ecrfFieldStatusEntryDao);
 		}
@@ -4946,7 +4946,7 @@ public final class ServiceUtil {
 
 	private static void populateEcrfSectionProgress(Collection<ECRFField> ecrfFields, ProbandListEntryOutVO listEntryVO, ECRFOutVO ecrfVO, VisitOutVO visitVO,
 			ECRFProgressVO result,
-			boolean increment,
+			boolean increment, boolean seriesIndexDetail,
 			ECRFFieldValueDao ecrfFieldValueDao, ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao) throws Exception {
 		if (increment) {
 			result.setMandatoryFieldCount(0l);
@@ -4996,7 +4996,10 @@ public final class ServiceUtil {
 				result.setMandatoryFieldCount(result.getMandatoryFieldCount() + (ecrfField.isOptional() ? 0l : 1l));
 			}
 		}
-		appendSeriesIndexProgress(result, listEntryVO, ecrfVO, visitVO, ecrfFieldValueDao, ecrfFieldStatusEntryDao);
+		if (seriesIndexDetail) {
+			// per series section: the section summary row, followed by one row per index (0..max index):
+			appendSeriesIndexProgress(result, listEntryVO, ecrfVO, visitVO, ecrfFieldValueDao, ecrfFieldStatusEntryDao);
+		}
 	}
 
 	public static <T> T unwrapDao(Object dao, Class<T> type) {

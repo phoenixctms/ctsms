@@ -574,7 +574,7 @@
 
 
 											<p:ajax
-												update=":tabView:trialecrfstatusentry_form:ecrffield_input_grid"
+												update=":tabView:trialecrfstatusentry_form:ecrffield_input_grid,:tabView:trialecrfstatusentry_form:clear_section_message"
 												oncomplete="FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
 												listener="#{trialEcrfStatusEntryBean.handleFilterSectionChange}" />
 										</p:selectOneMenu>
@@ -744,9 +744,22 @@
 							<p:commandButton
 								value="#{triallabels.clear_ecrf_section_button_label}"
 								onclick="ecrfClearSectionConfirmation.show();"
-								rendered="#{trialEcrfStatusEntryBean.ecrfFieldValueBean.editable}"
-								disabled="#{!trialEcrfStatusEntryBean.ecrfFieldValueBean.editable or empty trialEcrfStatusEntryBean.ecrfFieldValueBean.filterSection}"
+								rendered="#{trialEcrfStatusEntryBean.ecrfFieldValueBean.editable and !trialEcrfStatusEntryBean.ecrfFieldValueBean.filterSeriesSection}"
+								disabled="#{!trialEcrfStatusEntryBean.ecrfFieldValueBean.filterSectionClearable}"
 								icon="ui-icon ui-icon-trash" type="button" />
+
+							<p:splitButton
+								rendered="#{trialEcrfStatusEntryBean.ecrfFieldValueBean.editable and trialEcrfStatusEntryBean.ecrfFieldValueBean.filterSeriesSection}"
+								disabled="#{!trialEcrfStatusEntryBean.ecrfFieldValueBean.filterSeriesSectionClearable}"
+								value="#{triallabels.clear_ecrf_section_button_label}"
+								onclick="ecrfClearWholeSectionConfirmation.show();return false;"
+								icon="ui-icon ui-icon-trash">
+								<p:menuitem
+									value="#{triallabels.clear_ecrf_section_index_button_label}"
+									disabled="#{!trialEcrfStatusEntryBean.ecrfFieldValueBean.filterSectionClearable}"
+									onclick="ecrfClearSectionConfirmation.show();"
+									icon="ctsms-menubar-icon ui-icon-trash" url="#" ajax="false" />
+							</p:splitButton>
 
 							<p:commandButton process="@this"
 								value="#{labels.load_button_label}"
@@ -889,6 +902,7 @@
 				widgetVar="ecrfClearSectionConfirmation">
 				<f:facet name="message">
 
+					<h:panelGroup id="clear_section_message">
 					<h:outputText
 						rendered="#{empty trialEcrfStatusEntryBean.ecrfFieldValueBean.filterIndex}"
 						value="#{triallabels.ecrf_clear_section_confirmation_dialog_message}"
@@ -897,6 +911,7 @@
 						rendered="#{not empty trialEcrfStatusEntryBean.ecrfFieldValueBean.filterIndex}"
 						value="#{triallabels.ecrf_clear_section_series_confirmation_dialog_message}"
 						escape="false" />
+					</h:panelGroup>
 				</f:facet>
 
 				<p:commandButton process="@this" value="#{labels.yes_button_label}"
@@ -910,6 +925,22 @@
 					onclick="ecrfClearSectionConfirmation.hide();" type="button" />
 
 
+			</p:confirmDialog>
+			<p:confirmDialog appendToBody="false" severity="alert"
+				widgetVar="ecrfClearWholeSectionConfirmation">
+				<f:facet name="message">
+					<h:outputText
+						value="#{triallabels.ecrf_clear_section_confirmation_dialog_message}"
+						escape="false" />
+				</f:facet>
+				<p:commandButton process="@this" value="#{labels.yes_button_label}"
+					actionListener="#{trialEcrfStatusEntryBean.clearSectionValues}"
+					onstart="ecrfClearWholeSectionConfirmation.hide();"
+					oncomplete="FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args);handleUpdateTrialTabTitles(xhr, status, args)"
+					icon="ui-icon ui-icon-trash" ajax="true"
+					update=":tabView:trialecrfstatusentry_form:trialecrfstatus_proband_list,:tabView:trialecrfstatusentry_form:trialecrfstatus_ecrf_list,:tabView:trialecrfstatusentry_form:section_filter,:tabView:trialecrfstatusentry_form:ecrf_detail,:tabView:trialecrfstatusentry_form:ecrf_title,:tabView:trialecrfstatusentry_form:ecrffield_input_grid" />
+				<p:commandButton value="#{labels.no_button_label}"
+					onclick="ecrfClearWholeSectionConfirmation.hide();" type="button" />
 			</p:confirmDialog>
 			<c:forEach var="statusType"
 				items="#{trialEcrfStatusEntryBean.allStatusTypes}">

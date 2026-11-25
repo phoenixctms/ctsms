@@ -5,6 +5,7 @@ import org.phoenixctms.ctsms.vo.ECRFSectionProgressVO;
 public class EcrfSectionProgressItemValue extends ECRFSectionProgressVO {
 
 	private Long selectionIndex;
+	private Long maxIndex; // max index of the series section, not part of equals
 
 	public EcrfSectionProgressItemValue() {
 		super();
@@ -22,6 +23,14 @@ public class EcrfSectionProgressItemValue extends ECRFSectionProgressVO {
 		this.selectionIndex = selectionIndex;
 	}
 
+	public Long getMaxIndex() {
+		return maxIndex;
+	}
+
+	public void setMaxIndex(Long maxIndex) {
+		this.maxIndex = maxIndex;
+	}
+
 	@Override
 	public boolean equals(final Object obj) {
 		if (this == obj) {
@@ -30,10 +39,11 @@ public class EcrfSectionProgressItemValue extends ECRFSectionProgressVO {
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof ECRFSectionProgressVO)) {
+		// symmetric with the generated VO equals: only menu items compare by section and selection index
+		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		ECRFSectionProgressVO other = (ECRFSectionProgressVO) obj;
+		EcrfSectionProgressItemValue other = (EcrfSectionProgressItemValue) obj;
 		if (section == null) {
 			if (other.getSection() != null) {
 				return false;
@@ -41,7 +51,7 @@ public class EcrfSectionProgressItemValue extends ECRFSectionProgressVO {
 		} else if (!section.equals(other.getSection())) {
 			return false;
 		}
-		Long otherSelectionIndex = (other instanceof EcrfSectionProgressItemValue) ? ((EcrfSectionProgressItemValue) other).getSelectionIndex() : null;
+		Long otherSelectionIndex = other.getSelectionIndex();
 		if (selectionIndex == null) {
 			if (otherSelectionIndex != null) {
 				return false;
