@@ -41,6 +41,7 @@ import org.phoenixctms.ctsms.web.model.DefaultTreeNode;
 import org.phoenixctms.ctsms.web.model.IDVO;
 import org.phoenixctms.ctsms.web.model.IDVOTreeNode;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
+import org.phoenixctms.ctsms.web.model.TreeNodeMarkers;
 import org.phoenixctms.ctsms.web.model.VariablePeriodSelector;
 import org.phoenixctms.ctsms.web.model.VariablePeriodSelectorListener;
 import org.phoenixctms.ctsms.web.model.shared.CourseMultiPickerModel;
@@ -312,6 +313,59 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 			this.initIn();
 			initSets();
 			appendRequestContextCallbackArgs(true);
+		}
+	}
+
+	private void appendMoreNodes(TreeNode node, boolean preceding) {
+		if (preceding) {
+			TreeNodeMarkers.appendMoreNodes(node, vo -> ((CourseOutVO) vo).getPrecedingCoursesCount());
+		} else {
+			TreeNodeMarkers.appendMoreNodes(node, vo -> ((CourseOutVO) vo).getRenewalsCount());
+		}
+	}
+
+	public void expandPrecedingCourseNode() {
+		expandNode(true);
+	}
+
+	public void expandRenewalNode() {
+		expandNode(false);
+	}
+
+	private void expandNode(boolean preceding) {
+		Long courseId = WebUtil.getLongParamValue(GetParamNames.COURSE_ID);
+		IDVOTreeNode node = TreeNodeMarkers.findNode(preceding ? precedingCoursesRoot : renewalsRoot, courseId);
+		if (node != null) {
+			CourseOutVO vo = (CourseOutVO) node.getData();
+			Integer maxInstances = TreeNodeMarkers.getExpandMaxInstances(
+					Settings.getIntNullable(SettingCodes.GRAPH_MAX_COURSE_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_COURSE_INSTANCES),
+					preceding ? vo.getPrecedingCoursesCount() : vo.getRenewalsCount());
+			Integer maxDepth = TreeNodeMarkers.EXPAND_DEPTH;
+			try {
+				CourseOutVO course = WebUtil.getServiceLocator().getCourseService().getCourse(WebUtil.getAuthentication(), courseId, maxInstances,
+						preceding ? maxDepth : 0, preceding ? 0 : maxDepth);
+				TreeNode parent = node.getParent();
+				int index = TreeNodeMarkers.detach(node);
+				IDVOTreeNode expanded;
+				if (preceding) {
+					expanded = courseOutVOtoPrecedingCourseTreeNode(course, parent, new ArrayList<IDVOTreeNode>(), maxInstances, maxDepth, null, 0);
+				} else {
+					expanded = courseOutVOtoRenewalTreeNode(course, parent, new ArrayList<IDVOTreeNode>(), maxInstances, maxDepth, null, 0);
+				}
+				if (expanded != null) {
+					TreeNodeMarkers.detach(expanded);
+					TreeNodeMarkers.attach(expanded, parent, index);
+					appendMoreNodes(expanded, preceding);
+					expanded.setExpanded(true);
+				} else {
+					TreeNodeMarkers.attach(node, parent, index);
+				}
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+			} catch (AuthenticationException e) {
+				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+				WebUtil.publishException(e);
+			}
 		}
 	}
 
@@ -693,6 +747,7 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_COURSE_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_COURSE_INSTANCES),
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_PRECEDING_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_PRECEDING_DEPTH),
 					null, 0);
+			appendMoreNodes(precedingCoursesRoot, true);
 		} else {
 			IDVOTreeNode loose = new IDVOTreeNode(createCourseOutFromIn(in), precedingCoursesRoot);
 			loose.setType(WebUtil.LEAF_NODE_TYPE);
@@ -702,6 +757,7 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_COURSE_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_COURSE_INSTANCES),
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_RENEWALS_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_RENEWALS_DEPTH),
 					null, 0);
+			appendMoreNodes(renewalsRoot, false);
 		} else {
 			IDVOTreeNode loose = new IDVOTreeNode(createCourseOutFromIn(in), renewalsRoot);
 			loose.setType(WebUtil.LEAF_NODE_TYPE);

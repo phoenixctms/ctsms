@@ -45,6 +45,12 @@
 				actionListener="#{courseBean.changeByNode()}"
 				oncomplete="handleCourseChanged(xhr, status, args)"
 				update="preceding_course_tree,renewal_tree,course_input" />
+			<p:remoteCommand process="@this" name="expandPrecedingCourseTreeNode"
+				actionListener="#{courseBean.expandPrecedingCourseNode()}"
+				update="preceding_course_tree" />
+			<p:remoteCommand process="@this" name="expandRenewalTreeNode"
+				actionListener="#{courseBean.expandRenewalNode()}"
+				update="renewal_tree" />
 			<h:panelGrid columns="2" cellpadding="0"
 				styleClass="ctsms-content-panelgrid ctsms-content-panelgrid-maxheight"
 				columnClasses="ctsms-course-tree-column,ctsms-course-input-column">
@@ -85,6 +91,12 @@
 										value="#{applicationScopeBean.clipStringMid(course.name)}: #{courseBean.getCourseExpired(course) ? courselabels.course_tree_expired_label : courselabels.course_tree_valid_label}" />
 								</span>
 							</p:treeNode>
+							<p:treeNode type="#{applicationScopeBean.moreNodeType}">
+								<span class="ctsms-tree-node-marker"
+									onclick="expandPrecedingCourseTreeNode(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('COURSE_ID')}:#{course.id}}));">
+									<h:outputText value="#{course.label}" />
+								</span>
+							</p:treeNode>
 						</p:tree>
 						<h:outputText value="#{courseBean.courseTreeRenewalCoursesLabel}" />
 
@@ -113,6 +125,12 @@
 									onclick="changeCourseByTreeNode(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('COURSE_ID')}:'#{course.id}'}));">
 									<h:outputText
 										value="#{applicationScopeBean.clipStringMid(course.name)}: #{courseBean.getCourseExpired(course) ? courselabels.course_tree_expired_label : courselabels.course_tree_valid_label}" />
+								</span>
+							</p:treeNode>
+							<p:treeNode type="#{applicationScopeBean.moreNodeType}">
+								<span class="ctsms-tree-node-marker"
+									onclick="expandRenewalTreeNode(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('COURSE_ID')}:#{course.id}}));">
+									<h:outputText value="#{course.label}" />
 								</span>
 							</p:treeNode>
 						</p:tree>
