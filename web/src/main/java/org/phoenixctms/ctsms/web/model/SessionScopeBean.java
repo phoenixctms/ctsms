@@ -858,8 +858,12 @@ public class SessionScopeBean implements FilterItemsStore {
 
 	// JavaScript object for the change-password strength meter. Same rules as PasswordPolicy.checkStrength:
 	// length range, minimum occurrences, and only characters from allowed classes. Max occurrences are not enforced.
+	// Without character sets (no policy loaded) the meter falls back to the PrimeFaces scoring.
 	public String getPasswordPolicyMeterJson() {
 		PasswordPolicyVO passwordPolicy = getPasswordPolicy();
+		if (passwordPolicy.getCharacterSets() == null || passwordPolicy.getCharacterSets().isEmpty()) {
+			return "null";
+		}
 		StringBuilder json = new StringBuilder();
 		json.append('{');
 		json.append("\"minLength\":").append(passwordPolicy.getMinLength());

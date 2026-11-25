@@ -2266,7 +2266,7 @@ PrimeFaces.widget.Password.prototype.testStrength = (function(originalTestStreng
 
 	return function(password) {
 		var policy = window.ctsmsPasswordPolicy;
-		if (!policy || !policy.classes) {
+		if (!policy || !policy.classes || policy.classes.length === 0) {
 			return originalTestStrength.call(this, password);
 		}
 		var length = password.length;
