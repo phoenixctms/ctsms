@@ -14,19 +14,12 @@ public abstract class CourseExpirationAdapterBase extends ExpirationEntityAdapte
 		Iterator<Course> it = result.iterator();
 		Date maxExpirationDate = null;
 		Course newest = null;
-		boolean expires = true;
 		while (it.hasNext()) {
 			Course renewal = it.next();
-			Date expirationDate;
-			if (expires && renewal.isExpires()) {
-				expirationDate = DateCalc.addInterval(renewal.getStop(), renewal.getValidityPeriod(), renewal.getValidityPeriodDays());
-			} else {
-				if (expires) {
-					maxExpirationDate = null;
-					expires = false;
-				}
-				expirationDate = renewal.getStop();
+			if (!renewal.isExpires()) {
+				return renewal;
 			}
+			Date expirationDate = DateCalc.addInterval(renewal.getStop(), renewal.getValidityPeriod(), renewal.getValidityPeriodDays());
 			if (maxExpirationDate == null || expirationDate.compareTo(maxExpirationDate) > 0) {
 				maxExpirationDate = expirationDate;
 				newest = renewal;
