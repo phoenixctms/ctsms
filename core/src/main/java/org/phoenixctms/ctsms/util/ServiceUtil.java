@@ -6150,10 +6150,10 @@ public final class ServiceUtil {
 				if (checkTrialLocked) {
 					checkTrialLocked(trial);
 				}
-				trial.removeProbandListEntries(probandListEntry);
+				removeFromInverseCollection(trial.getProbandListEntries(), probandListEntry);
 				ProbandGroup group = probandListEntry.getGroup();
 				if (group != null) {
-					group.removeProbandListEntries(probandListEntry);
+					removeFromInverseCollection(group.getProbandListEntries(), probandListEntry);
 				}
 				removeProbandListEntry(probandListEntry, true, now, user, true, false, probandListStatusEntryDao, probandListEntryTagValueDao, ecrfFieldValueDao,
 						ecrfFieldStatusEntryDao, signatureDao,
@@ -6168,7 +6168,7 @@ public final class ServiceUtil {
 				if (checkTrialLocked) {
 					checkTrialLocked(inquiry.getTrial());
 				}
-				inquiry.removeInquiryValues(inquiryValue);
+				removeFromInverseCollection(inquiry.getInquiryValues(), inquiryValue);
 				removeInquiryValue(inquiryValue, now, user, Settings.getBoolean(SettingCodes.LOG_INQUIRY_VALUE_TRIAL, Bundle.SETTINGS, DefaultSettings.LOG_INQUIRY_VALUE_TRIAL),
 						false, inputFieldValueDao, inquiryValueDao, journalEntryDao);
 			}
@@ -6301,7 +6301,7 @@ public final class ServiceUtil {
 			Iterator<ProbandListEntryTagValue> tagValuesIt = probandListEntry.getTagValues().iterator();
 			while (tagValuesIt.hasNext()) {
 				ProbandListEntryTagValue tagValue = tagValuesIt.next();
-				tagValue.getTag().removeTagValues(tagValue);
+				removeFromInverseCollection(tagValue.getTag().getTagValues(), tagValue);
 				removeProbandListEntryTagValue(tagValue, now, user,
 						logTrial && Settings.getBoolean(SettingCodes.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_TRIAL, Bundle.SETTINGS,
 								DefaultSettings.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_TRIAL),
