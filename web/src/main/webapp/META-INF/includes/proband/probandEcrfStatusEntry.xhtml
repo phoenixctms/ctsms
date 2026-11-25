@@ -474,7 +474,7 @@
 											</p:column>
 
 											<p:ajax
-												update=":tabView:probandecrfstatusentry_form:ecrffield_input_grid"
+												update=":tabView:probandecrfstatusentry_form:ecrffield_input_grid,:tabView:probandecrfstatusentry_form:clear_section_message"
 												oncomplete="FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
 												listener="#{probandEcrfStatusEntryBean.handleFilterSectionChange}" />
 										</p:selectOneMenu>
@@ -642,9 +642,22 @@
 							<p:commandButton
 								value="#{probandlabels.clear_ecrf_section_button_label}"
 								onclick="ecrfClearSectionConfirmation.show();"
-								rendered="#{probandEcrfStatusEntryBean.ecrfFieldValueBean.editable}"
-								disabled="#{!probandEcrfStatusEntryBean.ecrfFieldValueBean.editable or empty probandEcrfStatusEntryBean.ecrfFieldValueBean.filterSection}"
+								rendered="#{probandEcrfStatusEntryBean.ecrfFieldValueBean.editable and !probandEcrfStatusEntryBean.ecrfFieldValueBean.filterSeriesSection}"
+								disabled="#{!probandEcrfStatusEntryBean.ecrfFieldValueBean.filterSectionClearable}"
 								icon="ui-icon ui-icon-trash" type="button" />
+
+							<p:splitButton
+								rendered="#{probandEcrfStatusEntryBean.ecrfFieldValueBean.editable and probandEcrfStatusEntryBean.ecrfFieldValueBean.filterSeriesSection}"
+								disabled="#{!probandEcrfStatusEntryBean.ecrfFieldValueBean.filterSeriesSectionClearable}"
+								value="#{probandlabels.clear_ecrf_section_button_label}"
+								onclick="ecrfClearWholeSectionConfirmation.show();return false;"
+								icon="ui-icon ui-icon-trash">
+								<p:menuitem
+									value="#{probandlabels.clear_ecrf_section_index_button_label}"
+									disabled="#{!probandEcrfStatusEntryBean.ecrfFieldValueBean.filterSectionClearable}"
+									onclick="ecrfClearSectionConfirmation.show();"
+									icon="ctsms-menubar-icon ui-icon-trash" url="#" ajax="false" />
+							</p:splitButton>
 
 							<p:commandButton process="@this"
 								value="#{labels.load_button_label}"
@@ -788,6 +801,7 @@
 				widgetVar="ecrfClearSectionConfirmation">
 				<f:facet name="message">
 
+					<h:panelGroup id="clear_section_message">
 					<h:outputText
 						rendered="#{empty probandEcrfStatusEntryBean.ecrfFieldValueBean.filterIndex}"
 						value="#{probandlabels.ecrf_clear_section_confirmation_dialog_message}"
@@ -796,6 +810,7 @@
 						rendered="#{not empty probandEcrfStatusEntryBean.ecrfFieldValueBean.filterIndex}"
 						value="#{probandlabels.ecrf_clear_section_series_confirmation_dialog_message}"
 						escape="false" />
+					</h:panelGroup>
 				</f:facet>
 
 				<p:commandButton process="@this" value="#{labels.yes_button_label}"
@@ -806,6 +821,22 @@
 					update=":tabView:probandecrfstatusentry_form:probandecrfstatus_proband_list,:tabView:probandecrfstatusentry_form:probandecrfstatus_ecrf_list,:tabView:probandecrfstatusentry_form:section_filter,:tabView:probandecrfstatusentry_form:ecrf_detail,:tabView:probandecrfstatusentry_form:ecrf_title,:tabView:probandecrfstatusentry_form:ecrffield_input_grid" />
 				<p:commandButton value="#{labels.no_button_label}"
 					onclick="ecrfClearSectionConfirmation.hide();" type="button" />
+			</p:confirmDialog>
+			<p:confirmDialog appendToBody="false" severity="alert"
+				widgetVar="ecrfClearWholeSectionConfirmation">
+				<f:facet name="message">
+					<h:outputText
+						value="#{probandlabels.ecrf_clear_section_confirmation_dialog_message}"
+						escape="false" />
+				</f:facet>
+				<p:commandButton process="@this" value="#{labels.yes_button_label}"
+					actionListener="#{probandEcrfStatusEntryBean.clearSectionValues}"
+					onstart="ecrfClearWholeSectionConfirmation.hide();"
+					oncomplete="FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args);handleUpdateProbandTabTitles(xhr, status, args)"
+					icon="ui-icon ui-icon-trash" ajax="true"
+					update=":tabView:probandecrfstatusentry_form:probandecrfstatus_proband_list,:tabView:probandecrfstatusentry_form:probandecrfstatus_ecrf_list,:tabView:probandecrfstatusentry_form:section_filter,:tabView:probandecrfstatusentry_form:ecrf_detail,:tabView:probandecrfstatusentry_form:ecrf_title,:tabView:probandecrfstatusentry_form:ecrffield_input_grid" />
+				<p:commandButton value="#{labels.no_button_label}"
+					onclick="ecrfClearWholeSectionConfirmation.hide();" type="button" />
 			</p:confirmDialog>
 			<c:forEach var="statusType"
 				items="#{probandEcrfStatusEntryBean.allStatusTypes}">

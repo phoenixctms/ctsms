@@ -38,6 +38,7 @@ import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CommonUtil.EllipsisPlacement;
+import org.phoenixctms.ctsms.security.CryptoUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.DefaultSettings;
 import org.phoenixctms.ctsms.util.L10nUtil;
@@ -1296,11 +1297,12 @@ public class ECRFFieldValueDaoImpl
 		out.setDateValue(CoreUtil.forceDate(input.getDateValue()));
 		out.setTimestampValue(input.getTimestampValue());
 		out.setTimeValue(CoreUtil.forceDate(input.getTimeValue()));
+		// only what the string adapter reads (file name/size, selection value names), no full out vos:
 		if (InputFieldType.FILE.equals(field.getFieldType()) && input.getFileValue() != null) {
-			out.setFileValue(this.getFileDao().toFileOutVO(input.getFileValue()));
+			out.setFileValue(toSummaryFileOutVO(input.getFileValue()));
 		}
 		if (input.getSelectionValues() != null && input.getSelectionValues().size() > 0) {
-			out.setSelectionValues(toInputFieldSelectionSetValueOutVOCollection(input.getSelectionValues()));
+			out.setSelectionValues(toSummarySelectionSetValueOutVOCollection(input.getSelectionValues()));
 		}
 		String text = seriesIndexValueAdapter(checkboxLabel).toString(out);
 		if (text == null) {
@@ -1309,12 +1311,58 @@ public class ECRFFieldValueDaoImpl
 		return text.replaceAll("\\s+", " ").trim();
 	}
 
+	private static FileOutVO toSummaryFileOutVO(File file) {
+		FileOutVO out = new FileOutVO();
+		out.setId(file.getId());
+		out.setSize(file.getSize());
+		if (CommonUtil.getUseFileEncryption(file.getModule())) {
+			try {
+				if (!CoreUtil.isPassDecryption()) {
+					throw new Exception();
+				}
+				out.setFileName((String) CryptoUtil.decryptValue(file.getFileNameIv(), file.getEncryptedFileName()));
+			} catch (Exception e) {
+				out.setFileName(null);
+			}
+		} else {
+			out.setFileName(file.getFileName());
+		}
+		return out;
+	}
+
+	private static ArrayList<InputFieldSelectionSetValueOutVO> toSummarySelectionSetValueOutVOCollection(Collection<InputFieldSelectionSetValue> selectionValues) {
+		ArrayList<InputFieldSelectionSetValueOutVO> result = new ArrayList<InputFieldSelectionSetValueOutVO>(selectionValues.size());
+		Iterator<InputFieldSelectionSetValue> it = selectionValues.iterator();
+		while (it.hasNext()) {
+			InputFieldSelectionSetValue selectionValue = it.next();
+			InputFieldSelectionSetValueOutVO out = new InputFieldSelectionSetValueOutVO();
+			out.setId(selectionValue.getId());
+			out.setName(selectionValue.isLocalized() ? L10nUtil.getInputFieldSelectionSetValueName(Locales.USER, selectionValue.getNameL10nKey())
+					: selectionValue.getNameL10nKey());
+			result.add(out);
+		}
+		Collections.sort(result, SELECTION_SET_VALUE_OUT_VO_ID_COMPARATOR);
+		return result;
+	}
+
 	private static String checkboxLabel(ECRFField ecrfField) {
-		if (ecrfField == null || CommonUtil.isEmptyString(ecrfField.getTitleL10nKey())) {
+		// eCRF field title, else input field title, else input field name (localized like the field out VOs):
+		InputField field = ecrfField != null ? ecrfField.getField() : null;
+		if (field == null) {
 			return "";
 		}
-		String title = L10nUtil.getInputFieldTitle(Locales.USER, ecrfField.getTitleL10nKey());
-		return title != null ? title : "";
+		boolean localized = field.isLocalized();
+		String label = null;
+		if (!CommonUtil.isEmptyString(ecrfField.getTitleL10nKey())) {
+			label = localized ? L10nUtil.getInputFieldTitle(Locales.USER, ecrfField.getTitleL10nKey()) : ecrfField.getTitleL10nKey();
+		}
+		if (CommonUtil.isEmptyString(label) && !CommonUtil.isEmptyString(field.getTitleL10nKey())) {
+			label = localized ? L10nUtil.getInputFieldTitle(Locales.USER, field.getTitleL10nKey()) : field.getTitleL10nKey();
+		}
+		if (CommonUtil.isEmptyString(label) && !CommonUtil.isEmptyString(field.getNameL10nKey())) {
+			label = localized ? L10nUtil.getInputFieldName(Locales.USER, field.getNameL10nKey()) : field.getNameL10nKey();
+		}
+		return label != null ? label : "";
 	}
 
 	private static InputFieldValueStringAdapterBase<ECRFFieldValueOutVO> seriesIndexValueAdapter(final String checkboxLabel) {

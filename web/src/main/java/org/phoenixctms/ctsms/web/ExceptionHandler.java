@@ -3,6 +3,7 @@ package org.phoenixctms.ctsms.web;
 import java.io.IOException;
 import java.util.Iterator;
 
+import javax.el.ELException;
 import javax.faces.FacesException;
 import javax.faces.application.ViewExpiredException;
 import javax.faces.context.ExceptionHandlerWrapper;
@@ -52,9 +53,14 @@ public class ExceptionHandler extends ExceptionHandlerWrapper {
 			} else if (e instanceof AuthenticationException) {
 				authenticationExceptionEventContext = eventContext;
 				it.remove();
-			} else {
-				System.out.println(e.getClass().toString() + ": " + e.getMessage());
-				e.printStackTrace();
+			} else if (e instanceof FacesException || e instanceof ELException) {
+				// one line, the message names the page, line and EL expression (e.g. unknown property):
+				Throwable rootCause = e;
+				while (rootCause.getCause() != null && rootCause.getCause() != rootCause) {
+					rootCause = rootCause.getCause();
+				}
+				System.out.println(e.getClass().getName() + ": " + e.getMessage()
+						+ (rootCause != e ? " (caused by " + rootCause.getClass().getName() + ": " + rootCause.getMessage() + ")" : ""));
 			}
 		}
 		if (viewExpiredExceptionEventContext != null) {

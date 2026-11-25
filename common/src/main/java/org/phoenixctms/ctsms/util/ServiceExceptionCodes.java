@@ -126,6 +126,8 @@ public interface ServiceExceptionCodes {
 	public final static String ECRF_FIELD_VALUE_INDEX_NOT_ZERO = "ecrf_field_value_index_not_zero";
 	public final static String ECRF_FIELD_VALUE_INDEX_LESS_THAN_ZERO = "ecrf_field_value_index_less_than_zero";
 	public final static String ECRF_FIELD_VALUE_INDEX_GAP = "ecrf_field_value_index_gap";
+	public final static String ECRF_SECTION_INDEX_NOT_FOUND = "ecrf_section_index_not_found";
+	public final static String ECRF_SECTION_INDEX_NOT_LAST = "ecrf_section_index_not_last";
 	public final static String ECRF_FIELD_STATUS_ENTRY_INDEX_NOT_NULL = "ecrf_field_status_entry_index_not_null";
 	public final static String ECRF_FIELD_STATUS_ENTRY_INDEX_NULL = "ecrf_field_status_entry_index_null";
 	public final static String ECRF_FIELD_STATUS_ENTRY_INDEX_NOT_ZERO = "ecrf_field_status_entry_index_not_zero";

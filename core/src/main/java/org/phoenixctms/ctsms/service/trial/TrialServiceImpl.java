@@ -1686,7 +1686,7 @@ public class TrialServiceImpl
 	private void checkMissingEcrfFieldValues(ProbandListEntry listEntry, ECRF ecrf, Visit visit) throws Exception {
 		ECRFProgressVO ecrfProgress = ServiceUtil.populateEcrfProgress(this.getProbandListEntryDao().toProbandListEntryOutVO(listEntry), this.getECRFDao().toECRFOutVO(ecrf),
 				this.getVisitDao().toVisitOutVO(visit),
-				false, false, false, null, null,
+				false, false, false, false, null, null,
 				this.getECRFStatusEntryDao(), this.getSignatureDao(), this.getECRFFieldDao(), this.getECRFFieldValueDao(), this.getECRFFieldStatusEntryDao(),
 				this.getVisitScheduleItemDao());
 		if (ecrfProgress.getMandatoryFieldCount() > ecrfProgress.getMandatorySavedValueCount()) {
@@ -2260,7 +2260,7 @@ public class TrialServiceImpl
 				this.getProbandListEntryDao().toProbandListEntryOutVO(listEntry),
 				this.getECRFDao().toECRFOutVO(ecrf),
 				this.getVisitDao().toVisitOutVO(visit),
-				false, false, false, null, null,
+				false, false, false, false, null, null,
 				this.getECRFStatusEntryDao(), this.getSignatureDao(), this.getECRFFieldDao(), this.getECRFFieldValueDao(), this.getECRFFieldStatusEntryDao(),
 				this.getVisitScheduleItemDao());
 		Iterator<ECRFFieldStatusQueueCountVO> it = ecrfProgress.getEcrfFieldStatusQueueCounts().iterator();
@@ -2752,7 +2752,7 @@ public class TrialServiceImpl
 					ECRFOutVO ecrfVO = ecrfDao.toECRFOutVO(ecrf);
 					while (visitIt.hasNext()) {
 						Visit visit = visitIt.next();
-						ECRFProgressVO ecrfProgress = ServiceUtil.populateEcrfProgress(listEntryVO, ecrfVO, visitDao.toVisitOutVO(visit), dueDetail, signatureDetail, sectionDetail,
+						ECRFProgressVO ecrfProgress = ServiceUtil.populateEcrfProgress(listEntryVO, ecrfVO, visitDao.toVisitOutVO(visit), dueDetail, signatureDetail, sectionDetail, false,
 								from, to,
 								ecrfStatusEntryDao, signatureDao, ecrfFieldDao, ecrfFieldValueDao, ecrfFieldStatusEntryDao, visitScheduleItemDao);
 						if (ecrfProgress != null) {
@@ -2772,7 +2772,7 @@ public class TrialServiceImpl
 						}
 					}
 				} else {
-					ECRFProgressVO ecrfProgress = ServiceUtil.populateEcrfProgress(listEntryVO, ecrfDao.toECRFOutVO(ecrf), null, dueDetail, signatureDetail, sectionDetail,
+					ECRFProgressVO ecrfProgress = ServiceUtil.populateEcrfProgress(listEntryVO, ecrfDao.toECRFOutVO(ecrf), null, dueDetail, signatureDetail, sectionDetail, false,
 							from, to,
 							ecrfStatusEntryDao, signatureDao, ecrfFieldDao, ecrfFieldValueDao, ecrfFieldStatusEntryDao, visitScheduleItemDao);
 					if (ecrfProgress != null) {
@@ -4089,6 +4089,9 @@ public class TrialServiceImpl
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
 		ProbandListEntry listEntry = checkClearEcrfFieldValues(probandListEntryId, ecrfId, visitId, now, user);
+		if (index != null) {
+			checkClearEcrfFieldValuesIndex(probandListEntryId, ecrfId, visitId, section, index);
+		}
 		Collection<ECRFFieldStatusEntry> statusEntries = this.getECRFFieldStatusEntryDao().findByListEntryEcrfVisitSection(probandListEntryId, ecrfId, visitId, section, true,
 				null);
 		Collection<ECRFFieldValue> values = this.getECRFFieldValueDao().findByListEntryEcrfVisitSection(probandListEntryId, ecrfId, visitId, section, true, null);
@@ -4098,6 +4101,15 @@ public class TrialServiceImpl
 		}
 		clearEcrfFieldStatusEntries(listEntry, statusEntries, now, user);
 		return clearEcrfFieldValues(listEntry, values, now, user);
+	}
+
+	private void checkClearEcrfFieldValuesIndex(Long probandListEntryId, Long ecrfId, Long visitId, String section, Long index) throws ServiceException {
+		Long maxIndex = this.getECRFFieldValueDao().getMaxIndex(probandListEntryId, ecrfId, visitId, section); // null for a non-series section
+		if (maxIndex == null || index < 0l || index > maxIndex) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_SECTION_INDEX_NOT_FOUND, section, index.toString());
+		} else if (CommonUtil.ECRF_FIELD_VALUES_CLEAR_LAST_INDEX_ONLY && index < maxIndex) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_SECTION_INDEX_NOT_LAST, section, maxIndex.toString());
+		}
 	}
 
 	private static Collection<ECRFFieldStatusEntry> filterFieldStatusByIndex(Collection<ECRFFieldStatusEntry> statusEntries, Long index) {
@@ -7469,7 +7481,7 @@ public class TrialServiceImpl
 		if (visitId != null) {
 			visitVO = this.getVisitDao().toVisitOutVO(CheckIDUtil.checkVisitId(visitId, this.getVisitDao()));
 		}
-		return ServiceUtil.populateEcrfProgress(listEntryVO, ecrfVO, visitVO, false, false, sectionDetail, null, null,
+		return ServiceUtil.populateEcrfProgress(listEntryVO, ecrfVO, visitVO, false, false, sectionDetail, true, null, null,
 				this.getECRFStatusEntryDao(), this.getSignatureDao(), this.getECRFFieldDao(), this.getECRFFieldValueDao(), this.getECRFFieldStatusEntryDao(),
 				this.getVisitScheduleItemDao());
 	}
@@ -7485,7 +7497,7 @@ public class TrialServiceImpl
 		if (visitId != null) {
 			visitVO = this.getVisitDao().toVisitOutVO(CheckIDUtil.checkVisitId(visitId, this.getVisitDao()));
 		}
-		return ServiceUtil.populateEcrfProgress(listEntryVO, ecrfVO, visitVO, false, false, null, null, section,
+		return ServiceUtil.populateEcrfProgress(listEntryVO, ecrfVO, visitVO, false, false, null, null, section, true,
 				this.getECRFStatusEntryDao(), this.getSignatureDao(), this.getECRFFieldDao(), this.getECRFFieldValueDao(), this.getECRFFieldStatusEntryDao(),
 				this.getVisitScheduleItemDao());
 	}
