@@ -192,13 +192,17 @@ function getQueryTextHints() {
 		} catch (e) {
 		}
 		data = data || {};
+		// the suggestions keep the order of the query builder, names are matched against the ...ByLength lists
 		queryTextHints = {
-			ties : sortQueryTextHintsByLength(data.ties || []),
-			properties : sortQueryTextHintsByLength(data.properties || [])
+			ties : data.ties || [],
+			properties : data.properties || []
 		};
+		queryTextHints.tiesByLength = sortQueryTextHintsByLength(queryTextHints.ties);
+		queryTextHints.propertiesByLength = sortQueryTextHintsByLength(queryTextHints.properties);
 		for (var i = 0; i < queryTextHints.properties.length; i++) {
 			var property = queryTextHints.properties[i];
-			property.restrictions = sortQueryTextHintsByLength(property.restrictions || []);
+			property.restrictions = property.restrictions || [];
+			property.restrictionsByLength = sortQueryTextHintsByLength(property.restrictions);
 			property.values = property.values || [];
 		}
 	}
@@ -254,7 +258,7 @@ function skipQueryTextBlanks(text, i) {
 function scanQueryTextValueEnd(text, i, hints) {
 	for (var end = i; end < text.length; end++) {
 		if (end == i || isQueryTextBoundary(text.charAt(end - 1))) {
-			var tie = matchQueryTextHint(text, end, hints.ties);
+			var tie = matchQueryTextHint(text, end, hints.tiesByLength);
 			if (tie != null && tie.key != "LEFT_PARENTHESIS" && tie.key != "RIGHT_PARENTHESIS") {
 				return {
 					end : end,
@@ -303,13 +307,13 @@ function queryTextExpressionHint(cm, typed) {
 				i++;
 			} else if ((position = /^\d+:/.exec(text.substring(i))) != null) {
 				i += position[0].length;
-			} else if ((tie = matchQueryTextHint(text, i, hints.ties)) != null) {
+			} else if ((tie = matchQueryTextHint(text, i, hints.tiesByLength)) != null) {
 				i += tie.name.length;
 			} else {
 				break;
 			}
 		}
-		var property = matchQueryTextHint(text, i, hints.properties);
+		var property = matchQueryTextHint(text, i, hints.propertiesByLength);
 		var propertyEnd = property != null ? i + property.name.length : -1;
 		if (property == null || propertyEnd == text.length) {
 			// a property name, which can be the start of a longer one
@@ -324,7 +328,7 @@ function queryTextExpressionHint(cm, typed) {
 			return queryTextHintResult(cursor, i, query, candidates, typed);
 		}
 		var restrictionStart = skipQueryTextBlanks(text, propertyEnd);
-		var restriction = matchQueryTextHint(text, restrictionStart, property.restrictions);
+		var restriction = matchQueryTextHint(text, restrictionStart, property.restrictionsByLength);
 		var restrictionEnd = restriction != null ? restrictionStart + restriction.name.length : -1;
 		if (restriction == null || restrictionEnd == text.length) {
 			return queryTextHintResult(cursor, restrictionStart, text.substring(restrictionStart), getQueryTextHintFields(property.restrictions, "name"), typed);
