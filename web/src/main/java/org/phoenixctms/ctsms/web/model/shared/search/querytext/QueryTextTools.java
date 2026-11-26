@@ -13,6 +13,7 @@ import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.vo.CriterionInVO;
+import org.phoenixctms.ctsms.vo.CriterionPropertyVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
@@ -35,6 +36,7 @@ public class QueryTextTools {
 	public static final String SEARCH_TRIAL_INQUIRIES = "searchTrialInquiries";
 	public static final String SEARCH_TRIAL_PROBAND_LIST_ATTRIBUTES = "searchTrialProbandListAttributes";
 	public static final String SEARCH_TRIAL_ECRF_FIELDS = "searchTrialEcrfFields";
+	public static final String SEARCH_PROPERTY_VALUES = "searchPropertyValues";
 	public static final String PARSE_QUERY = "parseQuery";
 	private static final int PAGE_SIZE = 100;
 	// each listed input field costs three usage count queries
@@ -44,13 +46,15 @@ public class QueryTextTools {
 	private final AuthenticationVO auth;
 	private final DBModule module;
 	private final Integer maxCriterions;
+	private final Collection<CriterionPropertyVO> properties;
 	private String lastValidText;
 	private Collection<CriterionInVO> lastValidCriterions;
 
-	public QueryTextTools(AuthenticationVO auth, DBModule module, Integer maxCriterions) {
+	public QueryTextTools(AuthenticationVO auth, DBModule module, Integer maxCriterions, Collection<CriterionPropertyVO> properties) {
 		this.auth = auth;
 		this.module = module;
 		this.maxCriterions = maxCriterions;
+		this.properties = properties;
 	}
 
 	/**
@@ -218,6 +222,44 @@ public class QueryTextTools {
 		} catch (AuthenticationException | AuthorisationException | ServiceException | IllegalArgumentException e) {
 			return errorText(e);
 		}
+	}
+
+	@Tool(name = SEARCH_PROPERTY_VALUES, value = "Search the values of a property marked with " + SEARCH_PROPERTY_VALUES + " under Properties. "
+			+ "Returns one line per value: the name for the expression format, or id | name for values that JSON gives by id.")
+	public String searchPropertyValues(@P(name = "property", value = "the property as listed under Properties") String property,
+			@P(name = "valuePart", value = "part of the value, case-insensitive") String valuePart) {
+		CriterionPropertyVO propertyVO = findProperty(property);
+		if (propertyVO == null || !QueryTextValues.isLookup(propertyVO)) {
+			return "error: no property " + property + " with values to look up";
+		}
+		try {
+			boolean ids = QueryTextValues.isEntityLookup(propertyVO);
+			StringBuilder result = new StringBuilder();
+			Iterator<QueryTextValues.Value> it = QueryTextValues.lookup(auth, propertyVO, valuePart).iterator();
+			while (it.hasNext()) {
+				QueryTextValues.Value value = it.next();
+				appendLine(result, ids ? value.getKey() + " | " + value.getName() : value.getName());
+			}
+			return result.length() > 0 ? result.toString() : NO_MATCHES;
+		} catch (AuthenticationException | AuthorisationException | ServiceException | IllegalArgumentException e) {
+			return errorText(e);
+		}
+	}
+
+	// by the name the expression format lists, or the property JSON lists
+	private CriterionPropertyVO findProperty(String property) {
+		if (properties == null || CommonUtil.isEmptyString(property)) {
+			return null;
+		}
+		String name = property.trim();
+		Iterator<CriterionPropertyVO> it = properties.iterator();
+		while (it.hasNext()) {
+			CriterionPropertyVO propertyVO = it.next();
+			if (name.equalsIgnoreCase(propertyVO.getName()) || name.equalsIgnoreCase(propertyVO.getProperty())) {
+				return propertyVO;
+			}
+		}
+		return null;
 	}
 
 	@Tool(name = PARSE_QUERY, value = "Parse a query. Returns ok and the number of criteria, or the parse error to fix.")

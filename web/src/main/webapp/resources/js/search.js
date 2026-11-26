@@ -244,6 +244,97 @@ function handleQueryTextHintsLoaded(xhr, status, args) {
 	}
 }
 
+// the values the complete methods of the properties found, by property id and then by the value typed
+var queryTextValueHints = {};
+var queryTextValueHintsLoading = false;
+var queryTextValueHintsRequest = null;
+var queryTextValueHintsTimer = null;
+var QUERY_TEXT_VALUE_HINTS_DELAY_MS = 300;
+
+// until the values of the typed text are loaded, those of the longest typed text before it, which the suggestions filter further
+function getQueryTextValueHints(cm, typed, property, query) {
+	var cached = queryTextValueHints[property.id];
+	if (cached == null) {
+		cached = queryTextValueHints[property.id] = {};
+	}
+	if (cached.hasOwnProperty(query)) {
+		return cached[query];
+	}
+	queryTextValueHintsRequest = {
+		cm : cm,
+		typed : typed,
+		id : property.id,
+		query : query
+	};
+	if (queryTextValueHintsTimer != null) {
+		window.clearTimeout(queryTextValueHintsTimer);
+	}
+	queryTextValueHintsTimer = window.setTimeout(sendQueryTextValueHints, QUERY_TEXT_VALUE_HINTS_DELAY_MS);
+	var lowerCaseQuery = query.toLowerCase();
+	var best = null;
+	for ( var known in cached) {
+		if (cached.hasOwnProperty(known) && lowerCaseQuery.indexOf(known.toLowerCase()) == 0 && (best == null || known.length > best.length)) {
+			best = known;
+		}
+	}
+	return best != null ? cached[best] : null;
+}
+
+// one request at a time, the latest value typed is sent once it is back
+function sendQueryTextValueHints() {
+	queryTextValueHintsTimer = null;
+	var request = queryTextValueHintsRequest;
+	if (request == null || queryTextValueHintsLoading || typeof loadQueryTextValueHints !== "function") {
+		return;
+	}
+	queryTextValueHintsLoading = true;
+	loadQueryTextValueHints([ {
+		name : "criterionpropertyid",
+		value : request.id
+	}, {
+		name : "valuequery",
+		value : request.query
+	} ]);
+}
+
+function handleQueryTextValueHintsLoaded(xhr, status, args) {
+	queryTextValueHintsLoading = false;
+	var data = null;
+	if (args && args.queryTextValueHintsBase64) {
+		try {
+			data = JSON.parse(decodeBase64(args.queryTextValueHintsBase64));
+		} catch (e) {
+		}
+	}
+	var request = queryTextValueHintsRequest;
+	if (data == null || data.id == null) {
+		queryTextValueHintsRequest = null;
+		return;
+	}
+	var query = data.query || "";
+	if (queryTextValueHints[data.id] == null) {
+		queryTextValueHints[data.id] = {};
+	}
+	queryTextValueHints[data.id][query] = data.values || [];
+	if (request == null) {
+		return;
+	}
+	if (request.id != data.id || request.query != query) {
+		if (queryTextValueHintsTimer == null) {
+			sendQueryTextValueHints();
+		}
+		return;
+	}
+	queryTextValueHintsRequest = null;
+	if (document.activeElement === request.cm.getInputField()) {
+		if (request.typed) {
+			showTypedCodeMirrorHint(request.cm, typedQueryTextHint);
+		} else {
+			showQueryTextHint(request.cm);
+		}
+	}
+}
+
 // longest first, so a name is not taken for the start of a longer one, like the server's parser does
 function sortQueryTextHintsByLength(hints) {
 	var sorted = hints.slice(0);
@@ -377,7 +468,12 @@ function queryTextExpressionHint(cm, typed) {
 		var valueStart = skipQueryTextBlanks(text, restrictionEnd);
 		var value = scanQueryTextValueEnd(text, valueStart, hints);
 		if (value.tie == null) {
-			return queryTextHintResult(cursor, valueStart, text.substring(valueStart), getQueryTextHintFields(property.values, "name"), typed);
+			var valueQuery = text.substring(valueStart);
+			var values = property.values;
+			if (values.length == 0 && property.lookup) {
+				values = getQueryTextValueHints(cm, typed, property, valueQuery) || [];
+			}
+			return queryTextHintResult(cursor, valueStart, valueQuery, getQueryTextHintFields(values, "name"), typed);
 		}
 		i = value.end + value.tie.name.length;
 	}
@@ -433,7 +529,15 @@ function queryTextJsonHint(cm, typed) {
 			return property != null ? queryTextHintResult(cursor, start, query, getQueryTextHintFields(property.restrictions, "key"), typed) : null;
 		} else if (field[1] == "value" || /Value$/.test(field[1])) {
 			property = getQueryTextJsonProperty(cm, cursor, hints);
-			return property != null ? queryTextHintResult(cursor, start, query, getQueryTextHintFields(property.values, "key"), typed) : null;
+			if (property == null) {
+				return null;
+			}
+			var values = property.values;
+			// entity values are ids in JSON, which are not looked up by name
+			if (values.length == 0 && property.lookup == "name" && field[2]) {
+				values = getQueryTextValueHints(cm, typed, property, query) || [];
+			}
+			return queryTextHintResult(cursor, start, query, getQueryTextHintFields(values, "key"), typed);
 		}
 		return null;
 	}

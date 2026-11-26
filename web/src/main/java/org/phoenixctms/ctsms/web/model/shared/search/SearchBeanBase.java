@@ -52,6 +52,7 @@ import org.phoenixctms.ctsms.web.model.SessionScopeBean;
 import org.phoenixctms.ctsms.web.model.shared.search.querytext.QueryTextAgent;
 import org.phoenixctms.ctsms.web.model.shared.search.querytext.QueryTextRun;
 import org.phoenixctms.ctsms.web.model.shared.search.querytext.QueryTextTools;
+import org.phoenixctms.ctsms.web.model.shared.search.querytext.QueryTextValues;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
 import org.phoenixctms.ctsms.web.util.JSValues;
@@ -1386,6 +1387,11 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 				}
 				propertyHint.put("restrictions", propertyRestrictions);
 				propertyHint.put("noValue", CriterionValueType.NONE.equals(propertyVO.getValueType()));
+				propertyHint.put("id", propertyVO.getId());
+				// "name" values are looked up by loadQueryTextValueHints in both formats, "id" values only in expressions, as JSON takes their id
+				if (QueryTextValues.isLookup(propertyVO)) {
+					propertyHint.put("lookup", QueryTextValues.isEntityLookup(propertyVO) ? "id" : "name");
+				}
 				ArrayList<HashMap<String, Object>> valueHints = new ArrayList<HashMap<String, Object>>();
 				ArrayList<String[]> options = promptOptionMap == null ? null : promptOptionMap.get(propertyVO.getId());
 				if (options != null) {
@@ -1403,6 +1409,31 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		hints.put("restrictions", restrictionHints);
 		hints.put("properties", propertyHints);
 		return JsUtil.voToJson(hints);
+	}
+
+	// the values of a property found by its complete method, for the value the query text editor's cursor is in (search.js)
+	public void loadQueryTextValueHints() {
+		Long propertyId = WebUtil.getLongParamValue(GetParamNames.CRITERION_PROPERTY_ID);
+		String query = WebUtil.getParamValue(GetParamNames.VALUE_QUERY);
+		HashMap<String, Object> hints = new HashMap<String, Object>();
+		hints.put("id", propertyId);
+		hints.put("query", query);
+		ArrayList<HashMap<String, Object>> valueHints = new ArrayList<HashMap<String, Object>>();
+		CriterionPropertyVO propertyVO = propertyId == null || propertyVOsMap == null ? null : propertyVOsMap.get(propertyId);
+		if (propertyVO != null) {
+			try {
+				Iterator<QueryTextValues.Value> it = QueryTextValues.lookup(WebUtil.getAuthentication(), propertyVO, query).iterator();
+				while (it.hasNext()) {
+					QueryTextValues.Value value = it.next();
+					valueHints.add(queryTextHint(value.getName(), value.getKey()));
+				}
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+			} catch (AuthenticationException e) {
+				WebUtil.publishException(e);
+			}
+		}
+		hints.put("values", valueHints);
+		RequestContext.getCurrentInstance().addCallbackParam(JSValues.AJAX_QUERY_TEXT_VALUE_HINTS_BASE64.toString(), JsUtil.encodeBase64(JsUtil.voToJson(hints), false));
 	}
 
 	private static HashMap<String, Object> queryTextHint(String name, String key) {
@@ -1489,7 +1520,8 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		try {
 			// the prompt needs the faces context, so it is built here and not in the worker thread.
 			// the worker gets its own copy of the session auth, as the session bean hands out copies only
-			QueryTextAgent.start(buildQueryTextPrompt(true), queryText, new QueryTextTools(WebUtil.getAuthentication(), getDBModule(), maxCriterions), run);
+			QueryTextAgent.start(buildQueryTextPrompt(true), queryText, new QueryTextTools(WebUtil.getAuthentication(), getDBModule(), maxCriterions,
+					propertyVOsMap == null ? null : new ArrayList<CriterionPropertyVO>(propertyVOsMap.values())), run);
 		} catch (Exception e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, Labels.getMessageLocalized("search_query_text_llm_failed",
 					e.getMessage() != null ? e.getMessage() : e.getClass().getName()));
@@ -1642,7 +1674,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		prompt = prompt.replace("{commentHint}",
 				Labels.getStringLocalized(json ? "search_query_text_prompt_comment_json" : "search_query_text_prompt_comment_expression"));
 		prompt = prompt.replace("{ties}", indentQueryTextLines(queryTextTieSection(json)));
-		prompt = prompt.replace("{properties}", indentQueryTextLines(queryTextPropertySection(json)));
+		prompt = prompt.replace("{properties}", indentQueryTextLines(queryTextPropertySection(json, agent)));
 		if (agent) {
 			prompt = prompt.replace("{fieldLists}", indentQueryTextLines(queryTextAgentFieldListSection(json)));
 		} else {
@@ -1827,7 +1859,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		return section.toString();
 	}
 
-	private String queryTextPropertySection(boolean json) {
+	private String queryTextPropertySection(boolean json, boolean agent) {
 		StringBuilder section = new StringBuilder();
 		if (properties == null || propertyVOsMap == null) {
 			return "";
@@ -1843,12 +1875,12 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 			if (section.length() > 0) {
 				section.append('\n');
 			}
-			section.append(queryTextPropertyLine(propertyVO, json));
+			section.append(queryTextPropertyLine(propertyVO, json, agent));
 		}
 		return section.toString();
 	}
 
-	private String queryTextPropertyLine(CriterionPropertyVO propertyVO, boolean json) {
+	private String queryTextPropertyLine(CriterionPropertyVO propertyVO, boolean json, boolean agent) {
 		String name = json || CommonUtil.isEmptyString(propertyVO.getName()) ? propertyVO.getProperty() : propertyVO.getName();
 		ArrayList<SelectItem> restrictions = restrictionsMap == null ? null : restrictionsMap.get(propertyVO.getId());
 		ArrayList<String> operators = new ArrayList<String>();
@@ -1880,6 +1912,10 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		line.append(joinQueryTextTokens(operators));
 		line.append(" | ");
 		line.append(queryTextValueDescription(propertyVO, json, needsValue));
+		if (agent && needsValue && QueryTextValues.isLookup(propertyVO)) {
+			line.append(' ');
+			line.append(Labels.getMessageLocalized("search_query_text_agent_prompt_value_lookup", QueryTextTools.SEARCH_PROPERTY_VALUES));
+		}
 		return line.toString();
 	}
 
