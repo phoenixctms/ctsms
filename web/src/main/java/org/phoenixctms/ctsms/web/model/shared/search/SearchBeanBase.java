@@ -1329,6 +1329,73 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		return queryTextFormat;
 	}
 
+	// the suggestions of the query text editor (search.js): each with the name an expression uses and the key JSON uses, like the prompt lists them
+	public String getQueryTextHintsJson() {
+		HashMap<String, Object> hints = new HashMap<String, Object>();
+		ArrayList<HashMap<String, Object>> tieHints = new ArrayList<HashMap<String, Object>>();
+		if (ties != null && tieVOsMap != null) {
+			Iterator<SelectItem> it = ties.iterator();
+			while (it.hasNext()) {
+				CriterionTieVO tieVO = tieVOsMap.get(Long.valueOf(it.next().getValue().toString()));
+				if (tieVO != null && tieVO.getTie() != null) {
+					tieHints.add(queryTextHint(CommonUtil.isEmptyString(tieVO.getName()) ? tieVO.getTie().name() : tieVO.getName(), tieVO.getTie().name()));
+				}
+			}
+		}
+		hints.put("ties", tieHints);
+		ArrayList<HashMap<String, Object>> propertyHints = new ArrayList<HashMap<String, Object>>();
+		if (properties != null && propertyVOsMap != null) {
+			Iterator<SelectItem> it = properties.iterator();
+			while (it.hasNext()) {
+				CriterionPropertyVO propertyVO = propertyVOsMap.get(Long.valueOf(it.next().getValue().toString()));
+				if (propertyVO == null) {
+					continue;
+				}
+				HashMap<String, Object> propertyHint = queryTextHint(CommonUtil.isEmptyString(propertyVO.getName()) ? propertyVO.getProperty() : propertyVO.getName(),
+						propertyVO.getProperty());
+				ArrayList<HashMap<String, Object>> restrictionHints = new ArrayList<HashMap<String, Object>>();
+				ArrayList<SelectItem> restrictions = restrictionsMap == null ? null : restrictionsMap.get(propertyVO.getId());
+				if (restrictions != null) {
+					Iterator<SelectItem> restrictionIt = restrictions.iterator();
+					while (restrictionIt.hasNext()) {
+						SelectItem item = restrictionIt.next();
+						org.phoenixctms.ctsms.enumeration.CriterionRestriction restriction = restrictionVOsMap == null ? null
+								: restrictionVOsMap.get(Long.valueOf(item.getValue().toString()));
+						if (restriction != null) {
+							HashMap<String, Object> restrictionHint = queryTextHint(CommonUtil.isEmptyString(item.getLabel()) ? restriction.name() : item.getLabel(),
+									restriction.name());
+							restrictionHint.put("unary", CommonUtil.isUnaryCriterionRestriction(restriction)
+									|| CriterionValueType.NONE.equals(propertyVO.getValueType()));
+							restrictionHints.add(restrictionHint);
+						}
+					}
+				}
+				propertyHint.put("restrictions", restrictionHints);
+				ArrayList<HashMap<String, Object>> valueHints = new ArrayList<HashMap<String, Object>>();
+				ArrayList<String[]> options = promptOptionMap == null ? null : promptOptionMap.get(propertyVO.getId());
+				if (options != null) {
+					for (int i = 0; i < options.size(); i++) {
+						String[] option = options.get(i);
+						if (!CommonUtil.isEmptyString(option[0]) && !CommonUtil.isEmptyString(option[1])) {
+							valueHints.add(queryTextHint(option[0], option[1]));
+						}
+					}
+				}
+				propertyHint.put("values", valueHints);
+				propertyHints.add(propertyHint);
+			}
+		}
+		hints.put("properties", propertyHints);
+		return JsUtil.voToJson(hints);
+	}
+
+	private static HashMap<String, Object> queryTextHint(String name, String key) {
+		HashMap<String, Object> hint = new HashMap<String, Object>();
+		hint.put("name", name);
+		hint.put("key", key);
+		return hint;
+	}
+
 	public void loadQueryText() {
 		refreshQueryText();
 	}

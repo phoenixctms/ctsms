@@ -257,7 +257,11 @@
 									label="#{labels.search_query_text_tab_label}"
 									required="false" lineWrapping="true" lineNumbers="true"
 									style="width:100%;"
-									styleClass="ctsms-query-text-editor" />
+									styleClass="ctsms-query-text-editor"
+									extraKeys="{ 'Ctrl-Space': function(cm) { showQueryTextHint(cm); } }" />
+								<h:outputText id="query_text_hints" style="display:none;"
+									styleClass="ctsms-query-text-hints"
+									value="#{searchBean.queryTextHintsJson}" />
 							</h:panelGroup>
 							<h:panelGroup id="query_text_progress" layout="block">
 								<h:panelGroup layout="block" styleClass="ctsms-query-text-progress ui-widget-content"

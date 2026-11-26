@@ -1975,7 +1975,8 @@ function updateJobListPoll(polled) {
 	}
 }
 
-// code editor (codeMirror) suggestions, shared by the value and output expression editors (trial.js) and the mass mail text template editor (massMail.js)
+// code editor (codeMirror) suggestions, shared by the value and output expression editors (trial.js), the mass mail text template editor (massMail.js)
+// and the query text editor (search.js)
 
 // the names starting with the query, or if there are none, the names containing it
 function filterHintNames(candidates, query) {

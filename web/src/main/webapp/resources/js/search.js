@@ -68,6 +68,7 @@ function bindQueryTextActionButtons() {
 	var cm = queryTextEditor.instance;
 	if (!cm.ctsmsQueryTextButtonsBound) {
 		cm.ctsmsQueryTextButtonsBound = true;
+		cm.setOption("onKeyEvent", handleQueryTextKeyEvent);
 		if (typeof cm.on === "function") {
 			cm.on("change", updateQueryTextActionButtons);
 			cm.on("change", clearQueryTextErrorLine);
@@ -180,7 +181,252 @@ function useQueryTextExpressionMode() {
 	}
 }
 
+// query text editor suggestions: the names of SearchBeanBase.getQueryTextHintsJson, the expression ones or the JSON keys
+var queryTextHints = null;
+
+function getQueryTextHints() {
+	if (queryTextHints == null) {
+		var data = null;
+		try {
+			data = JSON.parse(jQuery(".ctsms-query-text-hints").first().text() || "null");
+		} catch (e) {
+		}
+		data = data || {};
+		queryTextHints = {
+			ties : sortQueryTextHintsByLength(data.ties || []),
+			properties : sortQueryTextHintsByLength(data.properties || [])
+		};
+		for (var i = 0; i < queryTextHints.properties.length; i++) {
+			var property = queryTextHints.properties[i];
+			property.restrictions = sortQueryTextHintsByLength(property.restrictions || []);
+			property.values = property.values || [];
+		}
+	}
+	return queryTextHints;
+}
+
+// longest first, so a name is not taken for the start of a longer one, like the server's parser does
+function sortQueryTextHintsByLength(hints) {
+	var sorted = hints.slice(0);
+	sorted.sort(function(a, b) {
+		return (b.name || "").length - (a.name || "").length;
+	});
+	return sorted;
+}
+
+function getQueryTextHintFields(hints, field) {
+	var names = [];
+	for (var i = 0; i < hints.length; i++) {
+		if (hints[i][field] != null && jQuery.inArray(hints[i][field], names) < 0) {
+			names.push(hints[i][field]);
+		}
+	}
+	return names;
+}
+
+function isQueryTextBoundary(c) {
+	return /[\s<()>=!#]/.test(c);
+}
+
+// the hint whose name is at offset of the text, the longest one, followed by the end of the text or a boundary (see CriterionText.matchLongest)
+function matchQueryTextHint(text, offset, hints) {
+	for (var i = 0; i < hints.length; i++) {
+		var name = hints[i].name || "";
+		var end = offset + name.length;
+		if (name.length == 0 || end > text.length || text.substring(offset, end).toLowerCase() != name.toLowerCase()) {
+			continue;
+		}
+		if (end == text.length || isQueryTextBoundary(text.charAt(end)) || (/[=<>!]$/.test(name) && /[\w".+\-]/.test(text.charAt(end)))) {
+			return hints[i];
+		}
+	}
+	return null;
+}
+
+function skipQueryTextBlanks(text, i) {
+	while (i < text.length && /[ \t]/.test(text.charAt(i))) {
+		i++;
+	}
+	return i;
+}
+
+// the end of the value starting at i: a tie other than a parenthesis ends it (see CriterionText.scanValueEnd)
+function scanQueryTextValueEnd(text, i, hints) {
+	for (var end = i; end < text.length; end++) {
+		if (end == i || isQueryTextBoundary(text.charAt(end - 1))) {
+			var tie = matchQueryTextHint(text, end, hints.ties);
+			if (tie != null && tie.key != "LEFT_PARENTHESIS" && tie.key != "RIGHT_PARENTHESIS") {
+				return {
+					end : end,
+					tie : tie
+				};
+			}
+		}
+	}
+	return {
+		end : text.length,
+		tie : null
+	};
+}
+
+function queryTextHintResult(cursor, start, query, candidates, typed) {
+	var list = filterHintNames(candidates, query);
+	if (typed && (list.length == 0 || (list.length == 1 && list[0].toLowerCase() == query.toLowerCase()))) {
+		return null;
+	}
+	return {
+		list : list,
+		from : {
+			line : cursor.line,
+			ch : start
+		},
+		to : cursor
+	};
+}
+
+// expression lines: [position:] [tie] property operator value, where a tie can also start another criterion on the line
+function queryTextExpressionHint(cm, typed) {
+	var cursor = cm.getCursor();
+	var token = cm.getTokenAt(cursor);
+	if (token.className == "comment") {
+		return null;
+	}
+	var text = cm.getLine(cursor.line).substring(0, cursor.ch);
+	var hints = getQueryTextHints();
+	var i = 0;
+	while (true) {
+		// the separators before a criterion: blanks, a position such as "1:", ties and parentheses
+		var tie;
+		var position;
+		while (i < text.length) {
+			if (/[\s<>()]/.test(text.charAt(i))) {
+				i++;
+			} else if ((position = /^\d+:/.exec(text.substring(i))) != null) {
+				i += position[0].length;
+			} else if ((tie = matchQueryTextHint(text, i, hints.ties)) != null) {
+				i += tie.name.length;
+			} else {
+				break;
+			}
+		}
+		var property = matchQueryTextHint(text, i, hints.properties);
+		var propertyEnd = property != null ? i + property.name.length : -1;
+		if (property == null || propertyEnd == text.length) {
+			// a property name, which can be the start of a longer one
+			var query = text.substring(i);
+			if (typed && query.length == 0) {
+				return null;
+			}
+			var candidates = getQueryTextHintFields(hints.properties, "name");
+			if (query.length == 0) {
+				candidates = candidates.concat(getQueryTextHintFields(hints.ties, "name"));
+			}
+			return queryTextHintResult(cursor, i, query, candidates, typed);
+		}
+		var restrictionStart = skipQueryTextBlanks(text, propertyEnd);
+		var restriction = matchQueryTextHint(text, restrictionStart, property.restrictions);
+		var restrictionEnd = restriction != null ? restrictionStart + restriction.name.length : -1;
+		if (restriction == null || restrictionEnd == text.length) {
+			return queryTextHintResult(cursor, restrictionStart, text.substring(restrictionStart), getQueryTextHintFields(property.restrictions, "name"), typed);
+		}
+		if (restriction.unary) {
+			return null;
+		}
+		var valueStart = skipQueryTextBlanks(text, restrictionEnd);
+		var value = scanQueryTextValueEnd(text, valueStart, hints);
+		if (value.tie == null) {
+			return queryTextHintResult(cursor, valueStart, text.substring(valueStart), getQueryTextHintFields(property.values, "name"), typed);
+		}
+		i = value.end + value.tie.name.length;
+	}
+}
+
+var QUERY_TEXT_JSON_KEYS = [ "position", "tie", "property", "restriction", "stringValue", "longValue", "floatValue", "booleanValue", "dateValue", "timeValue",
+		"timestampValue" ];
+
+// the property of the JSON object around the cursor, by its key or name
+function getQueryTextJsonProperty(cm, cursor, hints) {
+	var before = cm.getRange({
+		line : 0,
+		ch : 0
+	}, cursor);
+	var after = cm.getRange(cursor, {
+		line : cm.lineCount(),
+		ch : 0
+	});
+	var open = before.lastIndexOf("{");
+	var close = after.indexOf("}");
+	var object = (open >= 0 ? before.substring(open) : before) + (close >= 0 ? after.substring(0, close) : after);
+	var match = /"property"\s*:\s*"([^"]*)"/.exec(object);
+	if (match != null) {
+		var name = match[1].toLowerCase();
+		for (var i = 0; i < hints.properties.length; i++) {
+			if ((hints.properties[i].key || "").toLowerCase() == name || (hints.properties[i].name || "").toLowerCase() == name) {
+				return hints.properties[i];
+			}
+		}
+	}
+	return null;
+}
+
+// JSON criterions: the keys, and in the strings of tie, property, restriction and the values the keys of those
+function queryTextJsonHint(cm, typed) {
+	var cursor = cm.getCursor();
+	var text = cm.getLine(cursor.line).substring(0, cursor.ch);
+	var hints = getQueryTextHints();
+	var field = /"(\w+)"\s*:\s*("?)([^"\\,]*)$/.exec(text);
+	if (field != null) {
+		var query = field[3];
+		var start = cursor.ch - query.length;
+		var property;
+		if (field[1] == "tie" && field[2]) {
+			return queryTextHintResult(cursor, start, query, getQueryTextHintFields(hints.ties, "key"), typed);
+		} else if (field[1] == "property" && field[2]) {
+			return queryTextHintResult(cursor, start, query, getQueryTextHintFields(hints.properties, "key"), typed);
+		} else if (field[1] == "restriction" && field[2]) {
+			property = getQueryTextJsonProperty(cm, cursor, hints);
+			return property != null ? queryTextHintResult(cursor, start, query, getQueryTextHintFields(property.restrictions, "key"), typed) : null;
+		} else if (field[1] == "value" || /Value$/.test(field[1])) {
+			property = getQueryTextJsonProperty(cm, cursor, hints);
+			return property != null ? queryTextHintResult(cursor, start, query, getQueryTextHintFields(property.values, "key"), typed) : null;
+		}
+		return null;
+	}
+	var key = /(^|[{,])\s*"(\w*)$/.exec(text);
+	if (key != null) {
+		return queryTextHintResult(cursor, cursor.ch - key[2].length, key[2], QUERY_TEXT_JSON_KEYS, typed);
+	}
+	return null;
+}
+
+function queryTextHint(cm, typed) {
+	if (cm.getOption("readOnly")) {
+		return null;
+	}
+	// the JSON format has an object as mode
+	return typeof cm.getOption("mode") === "object" ? queryTextJsonHint(cm, typed) : queryTextExpressionHint(cm, typed);
+}
+
+function typedQueryTextHint(cm) {
+	return queryTextHint(cm, true);
+}
+
+// Ctrl-Space
+function showQueryTextHint(cm) {
+	showCodeMirrorHint(cm, function(editor) {
+		return queryTextHint(editor, false);
+	});
+}
+
+function handleQueryTextKeyEvent(cm, event) {
+	if (event.type == "keypress" && !event.ctrlKey && !event.altKey && (event.charCode || event.keyCode) >= 32) {
+		showTypedCodeMirrorHint(cm, typedQueryTextHint);
+	}
+	return false;
+}
+
 function refreshQueryTextEditor() {
+	queryTextHints = null;
 	useQueryTextExpressionMode();
 	bindQueryTextEditorResize();
 	sizeQueryTextEditor();
