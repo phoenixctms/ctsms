@@ -30,46 +30,39 @@ public final class QueryTextAnswer {
 		if (CommonUtil.isEmptyString(text)) {
 			return new QueryTextAnswer("", null);
 		}
-		String[] lines = text.split("\r\n|\n|\r");
-		int noteIndex = -1;
+		int noteAt = -1;
 		String marker = null;
-		for (int i = 0; i < lines.length; i++) {
-			String trimmed = lines[i].trim();
-			for (int m = 0; m < NOTE_MARKERS.length; m++) {
-				String candidate = NOTE_MARKERS[m];
-				if (trimmed.length() >= candidate.length() && trimmed.regionMatches(true, 0, candidate, 0, candidate.length())) {
-					noteIndex = i;
-					marker = candidate;
-					break;
-				}
-			}
-			if (noteIndex >= 0) {
-				break;
+		for (int m = 0; m < NOTE_MARKERS.length; m++) {
+			int at = indexOfMarker(text, NOTE_MARKERS[m]);
+			if (at >= 0 && (noteAt < 0 || at < noteAt)) {
+				noteAt = at;
+				marker = NOTE_MARKERS[m];
 			}
 		}
-		if (noteIndex < 0) {
+		if (noteAt < 0) {
 			return new QueryTextAnswer(text.trim(), null);
 		}
-		StringBuilder query = new StringBuilder();
-		for (int i = 0; i < noteIndex; i++) {
-			if (query.length() > 0) {
-				query.append('\n');
+		String query = text.substring(0, noteAt).trim();
+		String note = text.substring(noteAt + marker.length()).trim().replaceAll("\\s+", " ").trim();
+		return new QueryTextAnswer(query, CommonUtil.isEmptyString(note) ? null : note);
+	}
+
+	// at the start of the text, after a newline, or after other whitespace (inline after the query)
+	private static int indexOfMarker(String text, String marker) {
+		String lower = text.toLowerCase();
+		String needle = marker.toLowerCase();
+		int from = 0;
+		while (from <= lower.length() - needle.length()) {
+			int at = lower.indexOf(needle, from);
+			if (at < 0) {
+				return -1;
 			}
-			query.append(lines[i]);
+			if (at == 0 || Character.isWhitespace(text.charAt(at - 1))) {
+				return at;
+			}
+			from = at + 1;
 		}
-		StringBuilder note = new StringBuilder(lines[noteIndex].trim().substring(marker.length()).trim());
-		for (int i = noteIndex + 1; i < lines.length; i++) {
-			String line = lines[i].trim();
-			if (line.length() == 0) {
-				continue;
-			}
-			if (note.length() > 0) {
-				note.append(' ');
-			}
-			note.append(line);
-		}
-		String noteText = note.toString().trim();
-		return new QueryTextAnswer(query.toString().trim(), CommonUtil.isEmptyString(noteText) ? null : noteText);
+		return -1;
 	}
 
 	private static String stripFence(String text) {
