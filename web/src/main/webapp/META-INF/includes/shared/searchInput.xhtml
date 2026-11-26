@@ -45,6 +45,11 @@
 			actionListener="#{searchBean.pollQueryText}"
 			update=":search_form:tabView:query_text_progress,:search_form:messages"
 			oncomplete="handleQueryTextPollComplete(xhr, status, args)" />
+		<p:remoteCommand name="loadQueryTextHints"
+			rendered="#{sessionScopeBean.experimentalUser}"
+			process="@this" global="false"
+			actionListener="#{searchBean.loadQueryTextHints}"
+			oncomplete="handleQueryTextHintsLoaded(xhr, status, args)" />
 		<script type="text/javascript">
 		//<![CDATA[
 		searchQueryTextTabVisible = #{sessionScopeBean.experimentalUser};
@@ -259,9 +264,6 @@
 									style="width:100%;"
 									styleClass="ctsms-query-text-editor"
 									extraKeys="{ 'Ctrl-Space': function(cm) { showQueryTextHint(cm); } }" />
-								<h:outputText id="query_text_hints" style="display:none;"
-									styleClass="ctsms-query-text-hints"
-									value="#{searchBean.queryTextHintsJson}" />
 							</h:panelGroup>
 							<h:panelGroup id="query_text_progress" layout="block">
 								<h:panelGroup layout="block" styleClass="ctsms-query-text-progress ui-widget-content"

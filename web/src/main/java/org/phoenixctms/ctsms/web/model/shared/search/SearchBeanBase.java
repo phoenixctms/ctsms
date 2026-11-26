@@ -1329,8 +1329,14 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		return queryTextFormat;
 	}
 
-	// the suggestions of the query text editor (search.js): each with the name an expression uses and the key JSON uses, like the prompt lists them
-	public String getQueryTextHintsJson() {
+	// the suggestions of the query text editor, loaded once its first suggestions are requested (search.js)
+	public void loadQueryTextHints() {
+		RequestContext.getCurrentInstance().addCallbackParam(JSValues.AJAX_QUERY_TEXT_HINTS_BASE64.toString(), JsUtil.encodeBase64(getQueryTextHintsJson(), false));
+	}
+
+	// each with the name an expression uses and the key JSON uses, like the prompt lists them. The properties refer to the
+	// restrictions by their index, as most properties share them
+	private String getQueryTextHintsJson() {
 		HashMap<String, Object> hints = new HashMap<String, Object>();
 		ArrayList<HashMap<String, Object>> tieHints = new ArrayList<HashMap<String, Object>>();
 		if (ties != null && tieVOsMap != null) {
@@ -1343,6 +1349,8 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 			}
 		}
 		hints.put("ties", tieHints);
+		ArrayList<HashMap<String, Object>> restrictionHints = new ArrayList<HashMap<String, Object>>();
+		HashMap<Long, Integer> restrictionIndexes = new HashMap<Long, Integer>();
 		ArrayList<HashMap<String, Object>> propertyHints = new ArrayList<HashMap<String, Object>>();
 		if (properties != null && propertyVOsMap != null) {
 			Iterator<SelectItem> it = properties.iterator();
@@ -1353,24 +1361,31 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 				}
 				HashMap<String, Object> propertyHint = queryTextHint(CommonUtil.isEmptyString(propertyVO.getName()) ? propertyVO.getProperty() : propertyVO.getName(),
 						propertyVO.getProperty());
-				ArrayList<HashMap<String, Object>> restrictionHints = new ArrayList<HashMap<String, Object>>();
+				ArrayList<Integer> propertyRestrictions = new ArrayList<Integer>();
 				ArrayList<SelectItem> restrictions = restrictionsMap == null ? null : restrictionsMap.get(propertyVO.getId());
 				if (restrictions != null) {
 					Iterator<SelectItem> restrictionIt = restrictions.iterator();
 					while (restrictionIt.hasNext()) {
 						SelectItem item = restrictionIt.next();
-						org.phoenixctms.ctsms.enumeration.CriterionRestriction restriction = restrictionVOsMap == null ? null
-								: restrictionVOsMap.get(Long.valueOf(item.getValue().toString()));
-						if (restriction != null) {
+						Long restrictionId = Long.valueOf(item.getValue().toString());
+						org.phoenixctms.ctsms.enumeration.CriterionRestriction restriction = restrictionVOsMap == null ? null : restrictionVOsMap.get(restrictionId);
+						if (restriction == null) {
+							continue;
+						}
+						Integer index = restrictionIndexes.get(restrictionId);
+						if (index == null) {
 							HashMap<String, Object> restrictionHint = queryTextHint(CommonUtil.isEmptyString(item.getLabel()) ? restriction.name() : item.getLabel(),
 									restriction.name());
-							restrictionHint.put("unary", CommonUtil.isUnaryCriterionRestriction(restriction)
-									|| CriterionValueType.NONE.equals(propertyVO.getValueType()));
+							restrictionHint.put("unary", CommonUtil.isUnaryCriterionRestriction(restriction));
+							index = restrictionHints.size();
 							restrictionHints.add(restrictionHint);
+							restrictionIndexes.put(restrictionId, index);
 						}
+						propertyRestrictions.add(index);
 					}
 				}
-				propertyHint.put("restrictions", restrictionHints);
+				propertyHint.put("restrictions", propertyRestrictions);
+				propertyHint.put("noValue", CriterionValueType.NONE.equals(propertyVO.getValueType()));
 				ArrayList<HashMap<String, Object>> valueHints = new ArrayList<HashMap<String, Object>>();
 				ArrayList<String[]> options = promptOptionMap == null ? null : promptOptionMap.get(propertyVO.getId());
 				if (options != null) {
@@ -1385,6 +1400,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 				propertyHints.add(propertyHint);
 			}
 		}
+		hints.put("restrictions", restrictionHints);
 		hints.put("properties", propertyHints);
 		return JsUtil.voToJson(hints);
 	}

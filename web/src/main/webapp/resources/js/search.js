@@ -181,32 +181,67 @@ function useQueryTextExpressionMode() {
 	}
 }
 
-// query text editor suggestions: the names of SearchBeanBase.getQueryTextHintsJson, the expression ones or the JSON keys
+// query text editor suggestions: the names of SearchBeanBase.getQueryTextHintsJson, the expression ones or the JSON keys.
+// They are loaded once the first suggestions are requested, which are shown when they arrive
 var queryTextHints = null;
+var queryTextHintsLoading = false;
+var queryTextHintsPending = null;
 
-function getQueryTextHints() {
+function getQueryTextHints(cm, typed) {
 	if (queryTextHints == null) {
-		var data = null;
-		try {
-			data = JSON.parse(jQuery(".ctsms-query-text-hints").first().text() || "null");
-		} catch (e) {
-		}
-		data = data || {};
-		// the suggestions keep the order of the query builder, names are matched against the ...ByLength lists
-		queryTextHints = {
-			ties : data.ties || [],
-			properties : data.properties || []
+		queryTextHintsPending = {
+			cm : cm,
+			typed : typed
 		};
-		queryTextHints.tiesByLength = sortQueryTextHintsByLength(queryTextHints.ties);
-		queryTextHints.propertiesByLength = sortQueryTextHintsByLength(queryTextHints.properties);
-		for (var i = 0; i < queryTextHints.properties.length; i++) {
-			var property = queryTextHints.properties[i];
-			property.restrictions = property.restrictions || [];
-			property.restrictionsByLength = sortQueryTextHintsByLength(property.restrictions);
-			property.values = property.values || [];
+		if (!queryTextHintsLoading && typeof loadQueryTextHints === "function") {
+			queryTextHintsLoading = true;
+			loadQueryTextHints();
 		}
 	}
 	return queryTextHints;
+}
+
+function handleQueryTextHintsLoaded(xhr, status, args) {
+	queryTextHintsLoading = false;
+	var data = null;
+	if (args && args.queryTextHintsBase64) {
+		try {
+			data = JSON.parse(decodeBase64(args.queryTextHintsBase64));
+		} catch (e) {
+		}
+	}
+	if (data == null) {
+		return;
+	}
+	// the suggestions keep the order of the query builder, names are matched against the ...ByLength lists
+	var restrictions = data.restrictions || [];
+	queryTextHints = {
+		ties : data.ties || [],
+		properties : data.properties || []
+	};
+	queryTextHints.tiesByLength = sortQueryTextHintsByLength(queryTextHints.ties);
+	queryTextHints.propertiesByLength = sortQueryTextHintsByLength(queryTextHints.properties);
+	for (var i = 0; i < queryTextHints.properties.length; i++) {
+		var property = queryTextHints.properties[i];
+		var indexes = property.restrictions || [];
+		property.restrictions = [];
+		for (var j = 0; j < indexes.length; j++) {
+			if (restrictions[indexes[j]] != null) {
+				property.restrictions.push(restrictions[indexes[j]]);
+			}
+		}
+		property.restrictionsByLength = sortQueryTextHintsByLength(property.restrictions);
+		property.values = property.values || [];
+	}
+	var pending = queryTextHintsPending;
+	queryTextHintsPending = null;
+	if (pending != null && document.activeElement === pending.cm.getInputField()) {
+		if (pending.typed) {
+			showTypedCodeMirrorHint(pending.cm, typedQueryTextHint);
+		} else {
+			showQueryTextHint(pending.cm);
+		}
+	}
 }
 
 // longest first, so a name is not taken for the start of a longer one, like the server's parser does
@@ -296,7 +331,10 @@ function queryTextExpressionHint(cm, typed) {
 		return null;
 	}
 	var text = cm.getLine(cursor.line).substring(0, cursor.ch);
-	var hints = getQueryTextHints();
+	var hints = getQueryTextHints(cm, typed);
+	if (hints == null) {
+		return null;
+	}
 	var i = 0;
 	while (true) {
 		// the separators before a criterion: blanks, a position such as "1:", ties and parentheses
@@ -333,7 +371,7 @@ function queryTextExpressionHint(cm, typed) {
 		if (restriction == null || restrictionEnd == text.length) {
 			return queryTextHintResult(cursor, restrictionStart, text.substring(restrictionStart), getQueryTextHintFields(property.restrictions, "name"), typed);
 		}
-		if (restriction.unary) {
+		if (restriction.unary || property.noValue) {
 			return null;
 		}
 		var valueStart = skipQueryTextBlanks(text, restrictionEnd);
@@ -377,7 +415,10 @@ function getQueryTextJsonProperty(cm, cursor, hints) {
 function queryTextJsonHint(cm, typed) {
 	var cursor = cm.getCursor();
 	var text = cm.getLine(cursor.line).substring(0, cursor.ch);
-	var hints = getQueryTextHints();
+	var hints = getQueryTextHints(cm, typed);
+	if (hints == null) {
+		return null;
+	}
 	var field = /"(\w+)"\s*:\s*("?)([^"\\,]*)$/.exec(text);
 	if (field != null) {
 		var query = field[3];
@@ -430,7 +471,6 @@ function handleQueryTextKeyEvent(cm, event) {
 }
 
 function refreshQueryTextEditor() {
-	queryTextHints = null;
 	useQueryTextExpressionMode();
 	bindQueryTextEditorResize();
 	sizeQueryTextEditor();
