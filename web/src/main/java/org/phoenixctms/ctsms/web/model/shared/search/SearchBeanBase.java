@@ -50,6 +50,7 @@ import org.phoenixctms.ctsms.web.model.IDVO;
 import org.phoenixctms.ctsms.web.model.PickerBeanBase;
 import org.phoenixctms.ctsms.web.model.SessionScopeBean;
 import org.phoenixctms.ctsms.web.model.shared.search.querytext.QueryTextAgent;
+import org.phoenixctms.ctsms.web.model.shared.search.querytext.QueryTextAnswer;
 import org.phoenixctms.ctsms.web.model.shared.search.querytext.QueryTextRun;
 import org.phoenixctms.ctsms.web.model.shared.search.querytext.QueryTextTools;
 import org.phoenixctms.ctsms.web.model.shared.search.querytext.QueryTextValues;
@@ -1590,11 +1591,18 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 	private void applyGeneratedQueryText(QueryTextRun run) {
 		// the prompt makes the model validate its final query, so the last accepted text is the answer.
 		// it was parsed by the agent already, which can take long when values are looked up by name
+		QueryTextAnswer answer = QueryTextAnswer.parse(run.getAnswer());
+		String note = !CommonUtil.isEmptyString(run.getNote()) ? run.getNote() : answer.getNote();
 		boolean validated = !CommonUtil.isEmptyString(run.getLastValidText()) && run.getLastValidCriterions() != null;
-		String result = validated ? run.getLastValidText() : stripQueryTextFence(run.getAnswer());
+		String result = validated ? run.getLastValidText() : answer.getQuery();
 		if (CommonUtil.isEmptyString(result)) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR,
-					Labels.getStringLocalized(queryTextRunTruncated(run) ? "search_query_text_llm_truncated" : "search_query_text_llm_empty"));
+			if (queryTextRunTruncated(run)) {
+				Messages.addMessage(FacesMessage.SEVERITY_ERROR, Labels.getStringLocalized("search_query_text_llm_truncated"));
+			} else if (!CommonUtil.isEmptyString(note)) {
+				Messages.addMessage(FacesMessage.SEVERITY_WARN, note);
+			} else {
+				Messages.addMessage(FacesMessage.SEVERITY_ERROR, Labels.getStringLocalized("search_query_text_llm_empty"));
+			}
 			return;
 		}
 		Integer maxCriterions = Integer.valueOf(Settings.getInt(SettingCodes.MAX_CRITERIONS, Bundle.SETTINGS, DefaultSettings.MAX_CRITERIONS));
@@ -1620,8 +1628,17 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		} catch (AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_WARN, Labels.getMessageLocalized("search_query_text_llm_invalid", e.getMessage()));
 		}
+		StringBuilder leadingComments = new StringBuilder();
 		if (!CommonUtil.isEmptyString(run.getNaturalLanguageRequest())) {
-			queryText = commentQueryText(run.getNaturalLanguageRequest(), QUERY_TEXT_FORMAT_JSON.equals(queryTextFormat)) + queryText;
+			leadingComments.append(commentQueryText(run.getNaturalLanguageRequest(), QUERY_TEXT_FORMAT_JSON.equals(queryTextFormat)));
+		}
+		if (!CommonUtil.isEmptyString(note)) {
+			Messages.addMessage(FacesMessage.SEVERITY_WARN, note);
+			leadingComments.append(commentQueryText(Labels.getMessageLocalized("search_query_text_llm_note_comment", note),
+					QUERY_TEXT_FORMAT_JSON.equals(queryTextFormat)));
+		}
+		if (leadingComments.length() > 0) {
+			queryText = leadingComments.toString() + queryText;
 		}
 		if (!validated) {
 			// after the comment lines are on top, so the line matches the editor
@@ -2046,29 +2063,5 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 			}
 		}
 		return false;
-	}
-
-	private static String stripQueryTextFence(String text) {
-		if (text == null) {
-			return "";
-		}
-		String trimmed = text.trim();
-		// reasoning models may put their thinking before the answer
-		int think = trimmed.lastIndexOf("</think>");
-		if (think >= 0) {
-			trimmed = trimmed.substring(think + "</think>".length()).trim();
-		}
-		// take the last fenced block, models tend to wrap the query in prose
-		int end = trimmed.lastIndexOf("```");
-		int start = end > 0 ? trimmed.lastIndexOf("```", end - 1) : -1;
-		if (start >= 0) {
-			String block = trimmed.substring(start + 3, end);
-			int newline = block.indexOf('\n');
-			if (newline >= 0) {
-				block = block.substring(newline + 1);
-			}
-			trimmed = block.trim();
-		}
-		return trimmed;
 	}
 }

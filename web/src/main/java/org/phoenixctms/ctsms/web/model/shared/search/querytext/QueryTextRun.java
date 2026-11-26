@@ -22,6 +22,7 @@ public class QueryTextRun {
 	private volatile Status status = Status.RUNNING;
 	private volatile long endMillis;
 	private volatile String answer;
+	private volatile String note;
 	private volatile String lastValidText;
 	private volatile Collection<CriterionInVO> lastValidCriterions;
 	private volatile String error;
@@ -55,9 +56,10 @@ public class QueryTextRun {
 		}
 	}
 
-	synchronized void done(String answer, String lastValidText, Collection<CriterionInVO> lastValidCriterions) {
+	synchronized void done(String answer, String note, String lastValidText, Collection<CriterionInVO> lastValidCriterions) {
 		if (status == Status.RUNNING) {
 			this.answer = answer;
+			this.note = note;
 			this.lastValidText = lastValidText;
 			this.lastValidCriterions = lastValidCriterions;
 			endMillis = System.currentTimeMillis();
@@ -75,6 +77,13 @@ public class QueryTextRun {
 
 	public String getAnswer() {
 		return answer;
+	}
+
+	/**
+	 * Short model note about omitted criteria or why the query is empty, if any.
+	 */
+	public String getNote() {
+		return note;
 	}
 
 	public long getElapsedMillis() {

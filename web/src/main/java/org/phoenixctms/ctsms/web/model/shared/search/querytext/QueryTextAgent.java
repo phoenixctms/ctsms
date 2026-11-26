@@ -212,7 +212,12 @@ public final class QueryTextAgent {
 				.build();
 		Thread thread = new Thread(() -> {
 			try {
-				run.done(assistant.generate(request), tools.getLastValidText(), tools.getLastValidCriterions());
+				String answer = assistant.generate(request);
+				QueryTextAnswer parsed = QueryTextAnswer.parse(answer);
+				if (!CommonUtil.isEmptyString(parsed.getNote())) {
+					run.addStep("   note: " + parsed.getNote());
+				}
+				run.done(answer, parsed.getNote(), tools.getLastValidText(), tools.getLastValidCriterions());
 			} catch (Exception e) {
 				logger.warn("query agent failed", e);
 				run.failed(e.getMessage() != null ? e.getMessage() : e.getClass().getName());
