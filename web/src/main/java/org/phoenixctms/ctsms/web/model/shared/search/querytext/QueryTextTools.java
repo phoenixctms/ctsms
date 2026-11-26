@@ -139,15 +139,19 @@ public class QueryTextTools {
 		}
 	}
 
-	@Tool(name = SEARCH_INPUT_FIELDS, value = "Search input fields whose name or title contains the given text. Returns one line per field: "
+	@Tool(name = SEARCH_INPUT_FIELDS, value = "Search input fields whose name, title or selectable option text contains the given text. Returns one line per field: "
 			+ "id | name | title | type | how many inquiries, eCRF fields and proband list attributes use it, followed by the selectable option texts for selection fields. "
-			+ "A field has data only in the collections that use it. Search again with other terms, such as an abbreviation or the full name in another language, to find all fitting fields.")
-	public String searchInputFields(@P(name = "namePart", value = "part of the input field name or title, case-insensitive") String namePart) {
+			+ "A field has data only in the collections that use it. Search again with other terms, such as an abbreviation or the full name in another language, to find all fitting fields. "
+			+ "For a free-text answer already entered in an inquiry, eCRF field or proband list attribute, also use " + SEARCH_PROPERTY_VALUES
+			+ " on the Text value and Selection input - value properties of those collections.")
+	public String searchInputFields(@P(name = "namePart", value = "part of the input field name, title or option text, case-insensitive") String namePart) {
 		try {
-			// fields name the same measure differently, so the title is searched too
+			// fields name the same measure differently, so the title is searched too;
+			// brand or product names often sit only in a selectable option, not in the field name
 			LinkedHashMap<Long, InputFieldOutVO> fields = new LinkedHashMap<Long, InputFieldOutVO>();
 			addInputFields(fields, WebUtil.getServiceLocator().getInputFieldService().getInputFieldList(auth, null, createPsf("nameL10nKey", namePart)));
 			addInputFields(fields, WebUtil.getServiceLocator().getInputFieldService().getInputFieldList(auth, null, createPsf("titleL10nKey", namePart)));
+			addInputFieldsBySelectionValue(fields, namePart);
 			StringBuilder result = new StringBuilder();
 			Iterator<InputFieldOutVO> it = fields.values().iterator();
 			int count = 0;
@@ -163,6 +167,25 @@ public class QueryTextTools {
 			return result.length() > 0 ? result.toString() : NO_MATCHES;
 		} catch (AuthenticationException | AuthorisationException | ServiceException | IllegalArgumentException e) {
 			return errorText(e);
+		}
+	}
+
+	private void addInputFieldsBySelectionValue(LinkedHashMap<Long, InputFieldOutVO> fields, String namePart)
+			throws AuthenticationException, AuthorisationException, ServiceException {
+		if (CommonUtil.isEmptyString(namePart)) {
+			return;
+		}
+		Collection<InputFieldSelectionSetValueOutVO> values = WebUtil.getServiceLocator().getToolsService().completeInputFieldSelectionSetValue(auth, namePart.trim(), null,
+				Integer.valueOf(MAX_SELECTION_VALUES));
+		if (values == null) {
+			return;
+		}
+		Iterator<InputFieldSelectionSetValueOutVO> it = values.iterator();
+		while (it.hasNext()) {
+			InputFieldSelectionSetValueOutVO value = it.next();
+			if (value != null && value.getField() != null) {
+				fields.put(value.getField().getId(), value.getField());
+			}
 		}
 	}
 
@@ -225,6 +248,7 @@ public class QueryTextTools {
 	}
 
 	@Tool(name = SEARCH_PROPERTY_VALUES, value = "Search the values of a property marked with " + SEARCH_PROPERTY_VALUES + " under Properties. "
+			+ "Use this for catalog values and for answers already entered as Text value or Selection input - value on an inquiry, eCRF field or proband list attribute. "
 			+ "Returns one line per value: the name for the expression format, or id | name for values that JSON gives by id.")
 	public String searchPropertyValues(@P(name = "property", value = "the property as listed under Properties") String property,
 			@P(name = "valuePart", value = "part of the value, case-insensitive") String valuePart) {
