@@ -462,12 +462,12 @@ function queryTextExpressionHint(cm, typed) {
 		if (restriction == null || restrictionEnd == text.length) {
 			return queryTextHintResult(cursor, restrictionStart, text.substring(restrictionStart), getQueryTextHintFields(property.restrictions, "name"), typed);
 		}
-		if (restriction.unary || property.noValue) {
-			return null;
-		}
 		var valueStart = skipQueryTextBlanks(text, restrictionEnd);
 		var value = scanQueryTextValueEnd(text, valueStart, hints);
 		if (value.tie == null) {
+			if (restriction.unary || property.noValue) {
+				return null;
+			}
 			var valueQuery = text.substring(valueStart);
 			var values = property.values;
 			if (values.length == 0 && property.lookup) {
@@ -482,6 +482,45 @@ function queryTextExpressionHint(cm, typed) {
 var QUERY_TEXT_JSON_KEYS = [ "position", "tie", "property", "restriction", "stringValue", "longValue", "floatValue", "booleanValue", "dateValue", "timeValue",
 		"timestampValue" ];
 
+// the innermost JSON object around offset, skipping the braces in strings
+function getQueryTextJsonObjectBounds(text, offset) {
+	var opens = [];
+	var inString = false;
+	var start = 0;
+	for (var i = 0; i < text.length; i++) {
+		var c = text.charAt(i);
+		if (i == offset) {
+			start = opens.length > 0 ? opens[opens.length - 1] : 0;
+		}
+		if (inString) {
+			if (c == "\\") {
+				i++;
+			} else if (c == "\"") {
+				inString = false;
+			}
+		} else if (c == "\"") {
+			inString = true;
+		} else if (c == "{") {
+			opens.push(i);
+		} else if (c == "}") {
+			if (i >= offset && opens.length > 0 && opens[opens.length - 1] == start) {
+				return {
+					start : start,
+					end : i
+				};
+			}
+			opens.pop();
+		}
+	}
+	if (offset >= text.length) {
+		start = opens.length > 0 ? opens[opens.length - 1] : 0;
+	}
+	return {
+		start : start,
+		end : text.length
+	};
+}
+
 // the property of the JSON object around the cursor, by its key or name
 function getQueryTextJsonProperty(cm, cursor, hints) {
 	var before = cm.getRange({
@@ -492,9 +531,8 @@ function getQueryTextJsonProperty(cm, cursor, hints) {
 		line : cm.lineCount(),
 		ch : 0
 	});
-	var open = before.lastIndexOf("{");
-	var close = after.indexOf("}");
-	var object = (open >= 0 ? before.substring(open) : before) + (close >= 0 ? after.substring(0, close) : after);
+	var bounds = getQueryTextJsonObjectBounds(before + after, before.length);
+	var object = (before + after).substring(bounds.start, bounds.end);
 	var match = /"property"\s*:\s*"([^"]*)"/.exec(object);
 	if (match != null) {
 		var name = match[1].toLowerCase();
