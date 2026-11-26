@@ -1593,7 +1593,9 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		// it was parsed by the agent already, which can take long when values are looked up by name
 		QueryTextAnswer answer = QueryTextAnswer.parse(run.getAnswer());
 		String note = !CommonUtil.isEmptyString(run.getNote()) ? run.getNote() : answer.getNote();
-		boolean validated = !CommonUtil.isEmptyString(run.getLastValidText()) && run.getLastValidCriterions() != null;
+		// a final empty query (note-only / nothing resolved) must not revive an intermediate parseQuery result
+		boolean emptyFinal = CommonUtil.isEmptyString(answer.getQuery());
+		boolean validated = !emptyFinal && !CommonUtil.isEmptyString(run.getLastValidText()) && run.getLastValidCriterions() != null;
 		String result = validated ? run.getLastValidText() : answer.getQuery();
 		if (CommonUtil.isEmptyString(result)) {
 			if (queryTextRunTruncated(run)) {
