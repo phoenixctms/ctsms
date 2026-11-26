@@ -33,7 +33,7 @@ public final class QueryTextAnswer {
 		int noteAt = -1;
 		String marker = null;
 		for (int m = 0; m < NOTE_MARKERS.length; m++) {
-			int at = indexOfMarker(text, NOTE_MARKERS[m]);
+			int at = indexOfLineStartMarker(text, NOTE_MARKERS[m]);
 			if (at >= 0 && (noteAt < 0 || at < noteAt)) {
 				noteAt = at;
 				marker = NOTE_MARKERS[m];
@@ -47,8 +47,11 @@ public final class QueryTextAnswer {
 		return new QueryTextAnswer(query, CommonUtil.isEmptyString(note) ? null : note);
 	}
 
-	// at the start of the text, after a newline, or after other whitespace (inline after the query)
-	private static int indexOfMarker(String text, String marker) {
+	/**
+	 * Note / Hinweis only at the start of a line (prompt: blank line then one Note: line). Mid-line
+	 * markers stay inside criterion values, e.g. {@code Text value = Patient Note: pending}.
+	 */
+	private static int indexOfLineStartMarker(String text, String marker) {
 		String lower = text.toLowerCase();
 		String needle = marker.toLowerCase();
 		int from = 0;
@@ -57,12 +60,20 @@ public final class QueryTextAnswer {
 			if (at < 0) {
 				return -1;
 			}
-			if (at == 0 || Character.isWhitespace(text.charAt(at - 1))) {
+			if (isLineStart(text, at)) {
 				return at;
 			}
 			from = at + 1;
 		}
 		return -1;
+	}
+
+	private static boolean isLineStart(String text, int at) {
+		int i = at - 1;
+		while (i >= 0 && (text.charAt(i) == ' ' || text.charAt(i) == '\t')) {
+			i--;
+		}
+		return i < 0 || text.charAt(i) == '\n' || text.charAt(i) == '\r';
 	}
 
 	private static String stripFence(String text) {
@@ -84,7 +95,12 @@ public final class QueryTextAnswer {
 			if (newline >= 0) {
 				block = block.substring(newline + 1);
 			}
+			String after = trimmed.substring(end + 3).trim();
 			trimmed = block.trim();
+			// keep a trailing Note / Hinweis that the model put after the fence
+			if (!CommonUtil.isEmptyString(after)) {
+				trimmed = trimmed + "\n" + after;
+			}
 		}
 		return trimmed;
 	}
