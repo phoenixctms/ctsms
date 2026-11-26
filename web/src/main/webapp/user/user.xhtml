@@ -55,6 +55,16 @@
 						</c:if>
 					</p:tab>
 					<p:tab
+						id="trusteddevices"
+						rendered="#{sessionScopeBean.userVisibleTabSet.contains('trusteddevices')}"
+						disabled="#{!userBean.created}"
+						titleStyleClass="#{userBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_TRUSTED_DEVICE_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
+						title="#{userBean.getTabTitle(applicationScopeBean.jsValue('AJAX_TRUSTED_DEVICE_COUNT'))}">
+						<c:if test="#{applicationScopeBean.isTabBuilt('trusteddevices')}">
+							<ui:include src="/META-INF/includes/user/trustedDevices.xhtml" />
+						</c:if>
+					</p:tab>
+					<p:tab
 						id="setpermissions"
 						rendered="#{sessionScopeBean.userVisibleTabSet.contains('setpermissions')}"
 						disabled="#{!userBean.created}"

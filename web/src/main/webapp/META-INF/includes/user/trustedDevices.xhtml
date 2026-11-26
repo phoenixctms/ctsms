@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>trusted devices</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:form id="trusteddevices_form">
+			<p:remoteCommand process="@this" name="changeTrustedDevices"
+				actionListener="#{trustedDeviceBean.changeRootEntity(userBean.in.id)}"
+				oncomplete="handleUpdateUserTabTitles(xhr, status, args)"
+				update=":tabView:trusteddevices_form:trusteddevices_list :tabView:trusteddevices_form:trusteddevices_toolbar" />
+			<h:panelGrid columns="1" cellpadding="0" styleClass="ctsms-content-panelgrid">
+				<p:dataTable styleClass="ctsms-datatable" var="device"
+					value="#{trustedDeviceBean.devices}" id="trusteddevices_list"
+					rowKey="#{device.id}" selectionMode="single"
+					selection="#{trustedDeviceBean.selected}"
+					emptyMessage="#{labels.datatable_empty_message}">
+					<p:ajax event="rowSelect" process="@this" update=":tabView:trusteddevices_form:trusteddevices_toolbar" />
+					<p:ajax event="rowUnselect" process="@this" update=":tabView:trusteddevices_form:trusteddevices_toolbar" />
+					<f:facet name="header">
+						<h:outputText value="#{trustedDeviceBean.devices.size()} #{userlabels.trusted_device_list_header}" />
+					</f:facet>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{userlabels.trusted_device_user_agent_column}" />
+						</f:facet>
+						<h:outputText value="#{device.userAgent}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{userlabels.trusted_device_created_column}" />
+						</f:facet>
+						<h:outputText value="#{device.created}">
+							<f:converter converterId="ctsms.DateTime" />
+							<f:attribute name="timeZone"
+								value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+						</h:outputText>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{userlabels.trusted_device_created_host_column}" />
+						</f:facet>
+						<h:outputText value="#{device.createdHost}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{userlabels.trusted_device_last_used_column}" />
+						</f:facet>
+						<h:outputText value="#{device.lastUsed}">
+							<f:converter converterId="ctsms.DateTime" />
+							<f:attribute name="timeZone"
+								value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+						</h:outputText>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{userlabels.trusted_device_last_used_host_column}" />
+						</f:facet>
+						<h:outputText value="#{device.lastUsedHost}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{userlabels.trusted_device_expired_column}" />
+						</f:facet>
+						<ui:include src="../shared/listBooleanIcon.xhtml">
+							<ui:param name="value" value="#{device.expired}" />
+						</ui:include>
+					</p:column>
+				</p:dataTable>
+				<p:toolbar id="trusteddevices_toolbar">
+					<p:toolbarGroup>
+						<p:commandButton value="#{userlabels.trusted_device_drop_button}"
+							icon="ui-icon ui-icon-trash" type="button"
+							disabled="#{!trustedDeviceBean.removable}"
+							onclick="trustedDeviceDropConfirmation.show()" />
+						<p:commandButton value="#{userlabels.trusted_device_drop_all_button}"
+							icon="ui-icon ui-icon-trash" type="button"
+							disabled="#{!trustedDeviceBean.dropAllEnabled}"
+							onclick="trustedDeviceDropAllConfirmation.show()" />
+					</p:toolbarGroup>
+					<p:toolbarGroup align="right">
+						<ui:include src="../shared/toolbarAjaxStatus.xhtml" />
+					</p:toolbarGroup>
+				</p:toolbar>
+			</h:panelGrid>
+			<p:confirmDialog appendToBody="false" severity="alert" width="420"
+				widgetVar="trustedDeviceDropConfirmation">
+				<f:facet name="message">
+					<h:outputText value="#{userlabels.trusted_device_drop_confirmation}" />
+				</f:facet>
+				<p:commandButton value="#{labels.yes_button_label}"
+					actionListener="#{trustedDeviceBean.delete}"
+					onclick="trustedDeviceDropConfirmation.hide()" ajax="true"
+					oncomplete="handleUpdateUserTabTitles(xhr, status, args)"
+					update=":tabView:trusteddevices_form:trusteddevices_list :tabView:trusteddevices_form:trusteddevices_toolbar" />
+				<p:commandButton value="#{labels.no_button_label}"
+					onclick="trustedDeviceDropConfirmation.hide()" type="button" />
+			</p:confirmDialog>
+			<p:confirmDialog appendToBody="false" severity="alert" width="420"
+				widgetVar="trustedDeviceDropAllConfirmation">
+				<f:facet name="message">
+					<h:outputText value="#{userlabels.trusted_device_drop_all_confirmation}" />
+				</f:facet>
+				<p:commandButton value="#{labels.yes_button_label}"
+					actionListener="#{trustedDeviceBean.deleteAll}"
+					onclick="trustedDeviceDropAllConfirmation.hide()" ajax="true"
+					oncomplete="handleUpdateUserTabTitles(xhr, status, args)"
+					update=":tabView:trusteddevices_form:trusteddevices_list :tabView:trusteddevices_form:trusteddevices_toolbar" />
+				<p:commandButton value="#{labels.no_button_label}"
+					onclick="trustedDeviceDropAllConfirmation.hide()" type="button" />
+			</p:confirmDialog>
+		</h:form>
+	</ui:composition>
+</h:body>
+</html>

@@ -2026,6 +2026,7 @@ public class SessionScopeBean implements FilterItemsStore {
 		if (userTabTitleMap == null) {
 			userTabTitleMap = new LinkedHashMap<String, String>();
 			userTabTitleMap.put("setpassword", Messages.getString(MessageCodes.PASSWORD_TAB_TITLE));
+			userTabTitleMap.put("trusteddevices", Messages.getString(MessageCodes.TRUSTED_DEVICES_TAB_TITLE));
 			userTabTitleMap.put("setpermissions", Messages.getString(MessageCodes.USER_PERMISSION_PROFILES_TAB_TITLE));
 			userTabTitleMap.put("useractivity", Messages.getString(MessageCodes.USER_ACTIVITY_TAB_LABEL));
 			userTabTitleMap.put("userjournal", Messages.getString(MessageCodes.USER_JOURNAL_TAB_TITLE));

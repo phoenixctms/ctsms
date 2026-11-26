@@ -3844,6 +3844,23 @@ public final class WebUtil {
 	 * Remembers the device of a user: HttpOnly, SameSite=Strict and (on https) Secure. The core checks the expiration
 	 * (trusted_device_days), the cookie itself is kept for the browser's maximum.
 	 */
+	public static void clearTrustedDeviceToken(String username) {
+		FacesContext context = FacesContext.getCurrentInstance();
+		if (context != null && !CommonUtil.isEmptyString(username)) {
+			HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
+			HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
+			String path = request.getContextPath();
+			StringBuilder cookie = new StringBuilder(getTrustedDeviceCookieName(username));
+			cookie.append("=; Max-Age=0");
+			cookie.append("; Path=").append(CommonUtil.isEmptyString(path) ? "/" : path);
+			cookie.append("; HttpOnly; SameSite=Strict");
+			if (request.isSecure() || "https".equalsIgnoreCase(request.getHeader(FORWARDED_PROTO_HEADER_NAME))) {
+				cookie.append("; Secure");
+			}
+			response.addHeader("Set-Cookie", cookie.toString());
+		}
+	}
+
 	public static void setTrustedDeviceToken(String username, String token) {
 		FacesContext context = FacesContext.getCurrentInstance();
 		if (context != null && !CommonUtil.isEmptyString(username) && !CommonUtil.isEmptyString(token)) {

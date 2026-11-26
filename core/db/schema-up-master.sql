@@ -947,5 +947,15 @@ if get_database_version() < '010901022' then
 
 end if;
 
+if get_database_version() < '010901023' then
+
+  update USERS set VISIBLE_USER_TAB_LIST = VISIBLE_USER_TAB_LIST || ',trusteddevices'
+    where VISIBLE_USER_TAB_LIST is not null and VISIBLE_USER_TAB_LIST <> ''
+    and VISIBLE_USER_TAB_LIST not like '%trusteddevices%';
+
+  perform set_database_version('010901023');
+
+end if;
+
 end
 $$;
