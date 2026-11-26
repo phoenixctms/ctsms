@@ -15,6 +15,7 @@
 				oncomplete="handleUpdateUserTabTitles(xhr, status, args)"
 				update=":tabView:trusteddevices_form:trusteddevices_list :tabView:trusteddevices_form:trusteddevices_toolbar" />
 			<h:panelGrid columns="1" cellpadding="0" styleClass="ctsms-content-panelgrid">
+			<h:outputLabel styleClass="ctsms-trusted-device-description" value="#{userlabels.trusted_device_description}" />
 			<p:dataTable styleClass="ctsms-datatable" var="device"
 				value="#{trustedDeviceBean.devices}" id="trusteddevices_list"
 				rowKey="#{device.id}" selectionMode="single"

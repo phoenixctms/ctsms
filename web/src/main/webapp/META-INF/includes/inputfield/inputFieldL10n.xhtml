@@ -50,9 +50,16 @@
 						<p:ajax event="toggle" process="@this" oncomplete="sizeInputFieldL10nEditors()" />
 						<h:outputText rendered="#{inputFieldL10nBean.missingKeysEmpty}"
 							value="#{inputfieldlabels.input_field_l10n_no_missing_keys}" />
-						<p:dataTable rendered="#{!inputFieldL10nBean.missingKeysEmpty}"
+						<p:dataTable id="l10nmissingkeys" rendered="#{!inputFieldL10nBean.missingKeysEmpty}"
 							value="#{inputFieldL10nBean.missingKeys}" var="missingKey"
-							styleClass="ctsms-datatable">
+							styleClass="ctsms-datatable"
+							rows="#{dataTablesRowsDefault}"
+							paginator="#{dataTablesPaginatorDefault}"
+							paginatorTemplate="#{dataTablesPaginatorTemplateDefault}"
+							rowsPerPageTemplate="#{dataTablesRowsPerPageTemplateDefault}"
+							paginatorPosition="#{dataTablesPaginatorPositionDefault}"
+							pageLinks="#{dataTablesPageLinksDefault}"
+							paginatorAlwaysVisible="#{dataTablesPaginatorAlwaysVisibleDefault}">
 							<p:column headerText="#{inputfieldlabels.input_field_l10n_missing_key_bundle_column}">
 								<h:outputText value="#{inputFieldL10nBean.getBundleLabel(missingKey.bundle)}" />
 							</p:column>
