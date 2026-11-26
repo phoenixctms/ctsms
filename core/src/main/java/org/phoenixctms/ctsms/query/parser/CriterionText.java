@@ -524,7 +524,7 @@ final class CriterionText {
 				i += tie.name.length();
 				continue;
 			}
-			throw invalid(text, i);
+			throw wrongModuleOrInvalid(text, i, catalog);
 		}
 		if (pendingTieId != null) {
 			throw invalid(text, text.length());
@@ -1140,6 +1140,69 @@ final class CriterionText {
 
 	private static ServiceException invalid(String text, int offset) {
 		return L10nUtil.initServiceException(ServiceExceptionCodes.CRITERION_TEXT_INVALID, snippet(text, offset));
+	}
+
+	private static final class OtherModuleProperty {
+
+		private final String name;
+		private final DBModule module;
+
+		private OtherModuleProperty(String name, DBModule module) {
+			this.name = name;
+			this.module = module;
+		}
+	}
+
+	/**
+	 * When the cursor matches no tie and no property of the current module, check whether the same
+	 * localized (or technical) property name belongs to another {@link DBModule} catalog.
+	 */
+	private static ServiceException wrongModuleOrInvalid(String text, int offset, Catalog catalog) {
+		OtherModuleProperty other = matchOtherModuleProperty(text, offset, catalog);
+		if (other != null) {
+			String moduleName = L10nUtil.getDBModuleName(Locales.USER, other.module.name());
+			return L10nUtil.initServiceException(ServiceExceptionCodes.CRITERION_TEXT_PROPERTY_WRONG_MODULE, other.name, moduleName);
+		}
+		return invalid(text, offset);
+	}
+
+	private static OtherModuleProperty matchOtherModuleProperty(String text, int offset, Catalog catalog) {
+		if (catalog == null || catalog.parser == null) {
+			return null;
+		}
+		List<NamedId> names = new ArrayList<NamedId>();
+		HashMap<Long, DBModule> propertyModules = new HashMap<Long, DBModule>();
+		DBModule[] modules = DBModule.values();
+		for (int m = 0; m < modules.length; m++) {
+			DBModule module = modules[m];
+			if (module == null || module.equals(catalog.module)) {
+				continue;
+			}
+			HashMap<Long, CriterionProperty> properties = catalog.parser.getPropertyMap(module);
+			if (properties == null) {
+				continue;
+			}
+			Iterator<CriterionProperty> propertyIt = properties.values().iterator();
+			while (propertyIt.hasNext()) {
+				CriterionProperty property = propertyIt.next();
+				if (property == null || property.getId() == null) {
+					continue;
+				}
+				propertyModules.put(property.getId(), module);
+				addName(names, property.getProperty(), property.getId());
+				addName(names, L10nUtil.getCriterionPropertyName(Locales.USER, property.getNameL10nKey()), property.getId());
+			}
+		}
+		sortByLength(names);
+		NamedId match = matchLongest(text, offset, names);
+		if (match == null) {
+			return null;
+		}
+		DBModule module = propertyModules.get(match.id);
+		if (module == null) {
+			return null;
+		}
+		return new OtherModuleProperty(match.name, module);
 	}
 
 	private static CriterionTie tieOf(CriterionInstantVO criterion, HashMap<Long, CriterionTie> ties) {
