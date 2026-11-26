@@ -151,6 +151,15 @@ td .ui-selectonemenu,td .ui-selectcheckboxmenu {
 	padding-right: 5px;
 }
 
+/* headers center their text, and a dropdown in the header inherits that, so a short
+   selected value sits in the middle of the box. Keep it at the left, clear of the arrow. */
+.ui-datatable th .ui-selectonemenu-label,
+.ui-datatable tfoot td .ui-selectonemenu-label {
+	text-align: left;
+	box-sizing: border-box;
+	padding-right: 22px;
+}
+
 .ctsms-upload-control .fileupload-content {
 	border-top-width: 0;
 	height: 100%;
