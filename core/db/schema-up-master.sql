@@ -957,5 +957,16 @@ if get_database_version() < '010901023' then
 
 end if;
 
+if get_database_version() < '010901024' then
+
+  -- a database whose version was stamped at 010901023 without this update still hides the Devices tab:
+  update USERS set VISIBLE_USER_TAB_LIST = VISIBLE_USER_TAB_LIST || ',trusteddevices'
+    where VISIBLE_USER_TAB_LIST is not null and VISIBLE_USER_TAB_LIST <> ''
+    and VISIBLE_USER_TAB_LIST not like '%trusteddevices%';
+
+  perform set_database_version('010901024');
+
+end if;
+
 end
 $$;
