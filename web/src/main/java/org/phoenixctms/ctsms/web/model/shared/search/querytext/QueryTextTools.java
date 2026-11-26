@@ -1,9 +1,13 @@
 package org.phoenixctms.ctsms.web.model.shared.search.querytext;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.phoenixctms.ctsms.enumeration.DBModule;
@@ -107,14 +111,35 @@ public class QueryTextTools {
 		}
 	}
 
-	private String inputFieldUsage(long fieldId) throws AuthenticationException, AuthorisationException, ServiceException {
+	private static final class InputFieldUsage {
+		private final long inquiryCount;
+		private final long ecrfCount;
+		private final long tagCount;
+
+		private InputFieldUsage(long inquiryCount, long ecrfCount, long tagCount) {
+			this.inquiryCount = inquiryCount;
+			this.ecrfCount = ecrfCount;
+			this.tagCount = tagCount;
+		}
+
+		private boolean include() {
+			return inquiryCount > 0 || ecrfCount > 0 || tagCount > 0;
+		}
+
+		private String format() {
+			return "inquiryCount=" + inquiryCount + " ecrfCount=" + ecrfCount + " tagCount=" + tagCount
+					+ (include() ? " - INCLUDE" : " - unused, skip");
+		}
+	}
+
+	private InputFieldUsage inputFieldUsage(long fieldId) throws AuthenticationException, AuthorisationException, ServiceException {
 		PSFVO inquiryPsf = createCountPsf();
 		long inquiries = rowCount(WebUtil.getServiceLocator().getInputFieldService().getInquiryList(auth, fieldId, inquiryPsf), inquiryPsf);
 		PSFVO ecrfFieldPsf = createCountPsf();
 		long ecrfFields = rowCount(WebUtil.getServiceLocator().getInputFieldService().getEcrfFieldList(auth, fieldId, ecrfFieldPsf), ecrfFieldPsf);
 		PSFVO tagPsf = createCountPsf();
 		long tags = rowCount(WebUtil.getServiceLocator().getInputFieldService().getProbandListEntryTagList(auth, fieldId, tagPsf), tagPsf);
-		return "used by " + inquiries + " inquiries, " + ecrfFields + " eCRF fields, " + tags + " proband list attributes";
+		return new InputFieldUsage(inquiries, ecrfFields, tags);
 	}
 
 	private static String errorText(Exception e) {
@@ -140,8 +165,9 @@ public class QueryTextTools {
 	}
 
 	@Tool(name = SEARCH_INPUT_FIELDS, value = "Search input fields whose name, title or selectable option text contains the given text. Returns one line per field: "
-			+ "id | name | title | type | how many inquiries, eCRF fields and proband list attributes use it, followed by the selectable option texts for selection fields. "
-			+ "A field has data only in the collections that use it. Search again with other terms, such as an abbreviation or the full name in another language, to find all fitting fields. "
+			+ "id | name | title | type | inquiryCount=... ecrfCount=... tagCount=... - INCLUDE or unused, skip, with INCLUDE fields listed first, then selectable option texts. "
+			+ "INCLUDE means at least one inquiry, eCRF field or proband list attribute uses the field - bind those collections. Skip unused fields. "
+			+ "Search again with other terms, such as an abbreviation or the full name in another language, to find all fitting fields. "
 			+ "For a free-text answer already entered in an inquiry, eCRF field or proband list attribute, also use " + SEARCH_PROPERTY_VALUES
 			+ " on the Text value and Selection input - value properties of those collections.")
 	public String searchInputFields(@P(name = "namePart", value = "part of the input field name, title or option text, case-insensitive") String namePart) {
@@ -152,16 +178,30 @@ public class QueryTextTools {
 			addInputFields(fields, WebUtil.getServiceLocator().getInputFieldService().getInputFieldList(auth, null, createPsf("nameL10nKey", namePart)));
 			addInputFields(fields, WebUtil.getServiceLocator().getInputFieldService().getInputFieldList(auth, null, createPsf("titleL10nKey", namePart)));
 			addInputFieldsBySelectionValue(fields, namePart);
+			List<InputFieldOutVO> ordered = new ArrayList<InputFieldOutVO>(fields.values());
+			Map<Long, InputFieldUsage> usages = new HashMap<Long, InputFieldUsage>();
+			for (InputFieldOutVO field : ordered) {
+				usages.put(field.getId(), inputFieldUsage(field.getId()));
+			}
+			Collections.sort(ordered, new Comparator<InputFieldOutVO>() {
+				@Override
+				public int compare(InputFieldOutVO a, InputFieldOutVO b) {
+					boolean aInclude = usages.get(a.getId()).include();
+					boolean bInclude = usages.get(b.getId()).include();
+					if (aInclude == bInclude) {
+						return 0;
+					}
+					return aInclude ? -1 : 1;
+				}
+			});
 			StringBuilder result = new StringBuilder();
-			Iterator<InputFieldOutVO> it = fields.values().iterator();
 			int count = 0;
-			while (it.hasNext()) {
+			for (InputFieldOutVO field : ordered) {
 				if (count++ >= MAX_INPUT_FIELDS) {
 					appendLine(result, "more than " + MAX_INPUT_FIELDS + " fields match, search again with a more specific text");
 					break;
 				}
-				InputFieldOutVO field = it.next();
-				appendLine(result, field.getId() + " | " + field.getName() + " | " + field.getTitle() + " | " + fieldType(field) + " | " + inputFieldUsage(field.getId()));
+				appendLine(result, field.getId() + " | " + field.getName() + " | " + field.getTitle() + " | " + fieldType(field) + " | " + usages.get(field.getId()).format());
 				appendSelectionValues(result, field);
 			}
 			return result.length() > 0 ? result.toString() : NO_MATCHES;
