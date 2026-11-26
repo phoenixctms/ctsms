@@ -77,6 +77,7 @@ public enum JSValues {
 	AJAX_QUERY_TEXT_DONE("queryTextDone"),
 	AJAX_QUERY_TEXT_ERROR_LINE("queryTextErrorLine"),
 	AJAX_QUERY_TEXT_HINTS_BASE64("queryTextHintsBase64"),
+	AJAX_QUERY_TEXT_VALUE_HINTS_BASE64("queryTextValueHintsBase64"),
 	AJAX_WINDOW_TITLE_BASE64("windowTitleBase64"),
 	AJAX_WINDOW_NAME("windowName"),
 	AJAX_PICKER("picker"),

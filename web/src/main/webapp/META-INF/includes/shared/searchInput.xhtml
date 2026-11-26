@@ -50,6 +50,11 @@
 			process="@this" global="false"
 			actionListener="#{searchBean.loadQueryTextHints}"
 			oncomplete="handleQueryTextHintsLoaded(xhr, status, args)" />
+		<p:remoteCommand name="loadQueryTextValueHints"
+			rendered="#{sessionScopeBean.experimentalUser}"
+			process="@this" global="false"
+			actionListener="#{searchBean.loadQueryTextValueHints}"
+			oncomplete="handleQueryTextValueHintsLoaded(xhr, status, args)" />
 		<script type="text/javascript">
 		//<![CDATA[
 		searchQueryTextTabVisible = #{sessionScopeBean.experimentalUser};

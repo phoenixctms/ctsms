@@ -79,6 +79,8 @@ public enum GetParamNames {
 	UUID("uuid"),
 	VALIDATE("validate"),
 	BEACON("beacon"),
+	CRITERION_PROPERTY_ID("criterionpropertyid"),
+	VALUE_QUERY("valuequery"),
 	QR_CODE_CHLD("chld"),
 	QR_CODE_CHS("chs"),
 	QR_CODE_CHL("chl");
