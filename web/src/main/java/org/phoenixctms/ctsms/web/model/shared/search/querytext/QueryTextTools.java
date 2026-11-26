@@ -249,6 +249,7 @@ public class QueryTextTools {
 
 	@Tool(name = SEARCH_PROPERTY_VALUES, value = "Search the values of a property marked with " + SEARCH_PROPERTY_VALUES + " under Properties. "
 			+ "Use this for catalog values and for answers already entered as Text value or Selection input - value on an inquiry, eCRF field or proband list attribute. "
+			+ "For Selection input (inquiry/eCRF/proband list attribute), each hit is field: option, so you learn which Inquiry/eCRF/list-attribute field to constrain. "
 			+ "Returns one line per value: the name for the expression format, or id | name for values that JSON gives by id.")
 	public String searchPropertyValues(@P(name = "property", value = "the property as listed under Properties") String property,
 			@P(name = "valuePart", value = "part of the value, case-insensitive") String valuePart) {
@@ -264,9 +265,47 @@ public class QueryTextTools {
 				QueryTextValues.Value value = it.next();
 				appendLine(result, ids ? value.getKey() + " | " + value.getName() : value.getName());
 			}
+			// plain Text / Selection - value hits do not name the field; add Selection input (entity) uniqueNames that do
+			appendSelectionFieldHints(result, propertyVO, valuePart);
 			return result.length() > 0 ? result.toString() : NO_MATCHES;
 		} catch (AuthenticationException | AuthorisationException | ServiceException | IllegalArgumentException e) {
 			return errorText(e);
+		}
+	}
+
+	private void appendSelectionFieldHints(StringBuilder result, CriterionPropertyVO propertyVO, String valuePart)
+			throws AuthenticationException, AuthorisationException, ServiceException {
+		if (propertyVO == null || QueryTextValues.isEntityLookup(propertyVO) || CommonUtil.isEmptyString(valuePart)) {
+			return;
+		}
+		String path = propertyVO.getProperty();
+		if (path == null) {
+			return;
+		}
+		String entityPropertyPath = null;
+		if (path.indexOf("inquiryValues.value.stringValue") >= 0 || path.indexOf("inquiryValues.value.selectionValues.value") >= 0) {
+			entityPropertyPath = "proband.inquiryValues.value.selectionValues.id";
+		} else if (path.indexOf("tagValues.value.stringValue") >= 0 || path.indexOf("tagValues.value.selectionValues.value") >= 0) {
+			entityPropertyPath = "proband.trialParticipations.tagValues.value.selectionValues.id";
+		} else if (path.indexOf("ecrfValues.value.stringValue") >= 0 || path.indexOf("ecrfValues.value.selectionValues.value") >= 0) {
+			entityPropertyPath = "proband.trialParticipations.ecrfValues.value.selectionValues.id";
+		}
+		if (entityPropertyPath == null) {
+			return;
+		}
+		CriterionPropertyVO entityProperty = findProperty(entityPropertyPath);
+		if (entityProperty == null || !QueryTextValues.isLookup(entityProperty)) {
+			return;
+		}
+		Iterator<QueryTextValues.Value> it = QueryTextValues.lookup(auth, entityProperty, valuePart).iterator();
+		boolean header = false;
+		while (it.hasNext()) {
+			QueryTextValues.Value value = it.next();
+			if (!header) {
+				appendLine(result, "field hints (" + entityProperty.getName() + "):");
+				header = true;
+			}
+			appendLine(result, "  " + value.getName());
 		}
 	}
 
