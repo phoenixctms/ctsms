@@ -225,6 +225,8 @@ public enum JSValues {
 	AJAX_MASS_MAIL_JOURNAL_ENTRY_COUNT("massMailJournalEntryCount"),
 	AJAX_PASSWORD_TAB_TITLE_BASE64("passwordTabTitleBase64"),
 	AJAX_PASSWORD_COUNT("passwordCount"),
+	AJAX_TRUSTED_DEVICE_TAB_TITLE_BASE64("trustedDeviceTabTitleBase64"),
+	AJAX_TRUSTED_DEVICE_COUNT("trustedDeviceCount"),
 	AJAX_USER_PERMISSION_PROFILE_TAB_TITLE_BASE64("userPermissionProfileTabTitleBase64"),
 	AJAX_USER_PERMISSION_PROFILE_COUNT("userPermissionProfileCount"),
 	AJAX_USER_JOURNAL_TAB_TITLE_BASE64("userJournalTabTitleBase64"),

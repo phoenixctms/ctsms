@@ -8,10 +8,13 @@
 package org.phoenixctms.ctsms.domain;
 
 import java.util.Collection;
+import java.util.Date;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.phoenixctms.ctsms.security.TrustedDeviceUtil;
+import org.phoenixctms.ctsms.vo.TrustedDeviceOutVO;
 
 /**
  * @see TrustedDevice
@@ -35,5 +38,25 @@ public class TrustedDeviceDaoImpl
 		trustedDeviceCriteria.addOrder(Order.desc("created"));
 		trustedDeviceCriteria.addOrder(Order.desc("id"));
 		return trustedDeviceCriteria.list();
+	}
+
+	/**
+	 * Devices are created only after a successful second factor, never from an output VO.
+	 */
+	@Override
+	public TrustedDevice trustedDeviceOutVOToEntity(TrustedDeviceOutVO trustedDeviceOutVO) {
+		throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.trustedDeviceOutVOToEntity(TrustedDeviceOutVO) not yet implemented.");
+	}
+
+	@Override
+	public void toTrustedDeviceOutVO(TrustedDevice source, TrustedDeviceOutVO target) {
+		super.toTrustedDeviceOutVO(source, target);
+		if (source.getCreated() != null) {
+			target.setCreated(source.getCreated());
+		}
+		if (source.getLastUsed() != null) {
+			target.setLastUsed(source.getLastUsed());
+		}
+		target.setExpired(source.getCreated() != null && TrustedDeviceUtil.isExpired(source, new Date()));
 	}
 }

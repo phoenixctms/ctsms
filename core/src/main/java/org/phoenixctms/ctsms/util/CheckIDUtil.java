@@ -875,6 +875,14 @@ public final class CheckIDUtil {
 		return user;
 	}
 
+	public static TrustedDevice checkTrustedDeviceId(Long trustedDeviceId, TrustedDeviceDao trustedDeviceDao) throws ServiceException {
+		TrustedDevice trustedDevice = trustedDeviceDao.load(trustedDeviceId);
+		if (trustedDevice == null) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_TRUSTED_DEVICE_ID, trustedDeviceId == null ? null : trustedDeviceId.toString());
+		}
+		return trustedDevice;
+	}
+
 	public static UserPermissionProfile checkUserPermissionProfileId(Long userPermissionProfileId, UserPermissionProfileDao userPermissionProfileDao) throws ServiceException {
 		UserPermissionProfile userPermissionProfile = userPermissionProfileDao.load(userPermissionProfileId);
 		if (userPermissionProfile == null) {

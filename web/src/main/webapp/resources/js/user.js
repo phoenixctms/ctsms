@@ -17,8 +17,10 @@ function handleUserTabChange(index) {
 		case 3:
 			refreshUser();
 			break;
-			
 		case 4:
+			refreshUser();
+			break;
+		case 5:
 			changeUserByJournalEntry();
 			break;
 
@@ -32,14 +34,17 @@ function handleUserTabChange(index) {
 		changePassword();
 		break;
 	case 2:
+		changeTrustedDevices();
+		break;
+	case 3:
 		changeUserPermissionProfiles();
 		break;
 
-	case 3:
+	case 4:
 		changeUserActivity();
 		break;
 
-	case 4:
+	case 5:
 		changeUserJournalEntry();
 		break;
 
@@ -82,14 +87,19 @@ function handleUpdateUserTabTitles(xhr, status, args) {
 		userTabView.emphasizeTab(reverseTabIndex(1), args[AJAX_PASSWORD_COUNT] == 0);
 	}
 
+	if (_testPropertyExists(args, AJAX_TRUSTED_DEVICE_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_TRUSTED_DEVICE_COUNT)) {
+		userTabView.setTabTitle(reverseTabIndex(2), decodeBase64(args[AJAX_TRUSTED_DEVICE_TAB_TITLE_BASE64]));
+		userTabView.emphasizeTab(reverseTabIndex(2), args[AJAX_TRUSTED_DEVICE_COUNT] > 0);
+	}
+
 	if (_testPropertyExists(args, AJAX_USER_PERMISSION_PROFILE_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_USER_PERMISSION_PROFILE_COUNT)) {
-		userTabView.setTabTitle(reverseTabIndex(2), decodeBase64(args[AJAX_USER_PERMISSION_PROFILE_TAB_TITLE_BASE64]));
-		userTabView.emphasizeTab(reverseTabIndex(2), args[AJAX_USER_PERMISSION_PROFILE_COUNT] == 0);
+		userTabView.setTabTitle(reverseTabIndex(3), decodeBase64(args[AJAX_USER_PERMISSION_PROFILE_TAB_TITLE_BASE64]));
+		userTabView.emphasizeTab(reverseTabIndex(3), args[AJAX_USER_PERMISSION_PROFILE_COUNT] == 0);
 	}
 
 	if (_testPropertyExists(args, AJAX_USER_JOURNAL_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_USER_JOURNAL_ENTRY_COUNT)) {
-		userTabView.setTabTitle(reverseTabIndex(4), decodeBase64(args[AJAX_USER_JOURNAL_TAB_TITLE_BASE64]));
-		userTabView.emphasizeTab(reverseTabIndex(4), args[AJAX_USER_JOURNAL_ENTRY_COUNT] == 0);
+		userTabView.setTabTitle(reverseTabIndex(5), decodeBase64(args[AJAX_USER_JOURNAL_TAB_TITLE_BASE64]));
+		userTabView.emphasizeTab(reverseTabIndex(5), args[AJAX_USER_JOURNAL_ENTRY_COUNT] == 0);
 	}
 
 }

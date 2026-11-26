@@ -55,6 +55,7 @@ import org.phoenixctms.ctsms.domain.MassMailDao;
 import org.phoenixctms.ctsms.domain.MassMailRecipientDao;
 import org.phoenixctms.ctsms.domain.MedicationDao;
 import org.phoenixctms.ctsms.domain.MoneyTransferDao;
+import org.phoenixctms.ctsms.domain.Password;
 import org.phoenixctms.ctsms.domain.Permission;
 import org.phoenixctms.ctsms.domain.PermissionDao;
 import org.phoenixctms.ctsms.domain.Proband;
@@ -83,6 +84,7 @@ import org.phoenixctms.ctsms.domain.TimelineEventDao;
 import org.phoenixctms.ctsms.domain.Trial;
 import org.phoenixctms.ctsms.domain.TrialDao;
 import org.phoenixctms.ctsms.domain.TrialTagValueDao;
+import org.phoenixctms.ctsms.domain.TrustedDeviceDao;
 import org.phoenixctms.ctsms.domain.User;
 import org.phoenixctms.ctsms.domain.UserDao;
 import org.phoenixctms.ctsms.domain.UserPermissionProfile;
@@ -322,6 +324,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 	private BankAccountDao bankAccountDao;
 	private MoneyTransferDao moneyTransferDao;
 	private UserPermissionProfileDao userPermissionProfileDao;
+	private TrustedDeviceDao trustedDeviceDao;
 	private DiagnosisDao diagnosisDao;
 	private MedicationDao medicationDao;
 	private ProcedureDao procedureDao;
@@ -1284,6 +1287,10 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 		this.userPermissionProfileDao = userPermissionProfileDao;
 	}
 
+	public void setTrustedDeviceDao(TrustedDeviceDao trustedDeviceDao) {
+		this.trustedDeviceDao = trustedDeviceDao;
+	}
+
 	public void setVisitDao(VisitDao visitDao) {
 		this.visitDao = visitDao;
 	}
@@ -1522,6 +1529,14 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 					return null;
 				case USER_PERMISSION_PROFILE_ID_TO_USER_ID:
 					return parameterValue == null ? null : CheckIDUtil.checkUserPermissionProfileId((Long) parameterValue, userPermissionProfileDao).getUser().getId();
+				case TRUSTED_DEVICE_ID_TO_USER_ID:
+					if (parameterValue != null) {
+						Password password = CheckIDUtil.checkTrustedDeviceId((Long) parameterValue, trustedDeviceDao).getPassword();
+						if (password != null && password.getUser() != null) {
+							return password.getUser().getId();
+						}
+					}
+					return null;
 				case USER_PERMISSION_PROFILE_IN_TO_USER_ID:
 					return parameterValue == null ? null : ((UserPermissionProfileInVO) parameterValue).getUserId();
 				case USER_PERMISSION_PROFILE_IN_TO_ORIGINAL_USER_ID:

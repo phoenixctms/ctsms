@@ -618,6 +618,7 @@ public interface ServiceExceptionCodes {
 	public final static String OLD_PASSWORD_WRONG = "old_password_wrong";
 	public final static String AUTHENTICATION_TYPE_NOT_LOCAL = "authentication_type_not_local";
 	public static final String INVALID_USER_PERMISSION_PROFILE_ID = "invalid_user_permission_profile_id";
+	public static final String INVALID_TRUSTED_DEVICE_ID = "invalid_trusted_device_id";
 	public static final String USER_PERMISSION_PROFILE_ALREADY_EXISTS = "user_permission_profile_already_exists";
 	public static final String INCONSISTENT_GROUP_PERMISSION_PROFILES = "inconsistent_group_permission_profiles";
 	public static final String CANNOT_DECRYPT_FILE = "cannot_decrypt_file";

@@ -312,6 +312,9 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 				requestContext.addCallbackParam(JSValues.AJAX_ROOT_ENTITY_CREATED.toString(), out != null);
 				WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_PASSWORD_TAB_TITLE_BASE64, JSValues.AJAX_PASSWORD_COUNT,
 						MessageCodes.PASSWORD_TAB_TITLE, MessageCodes.PASSWORD_TAB_TITLE_WITH_COUNT, tabCountMap.get(JSValues.AJAX_PASSWORD_COUNT.toString()));
+				WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_TRUSTED_DEVICE_TAB_TITLE_BASE64, JSValues.AJAX_TRUSTED_DEVICE_COUNT,
+						MessageCodes.TRUSTED_DEVICES_TAB_TITLE, MessageCodes.TRUSTED_DEVICES_TAB_TITLE_WITH_COUNT,
+						tabCountMap.get(JSValues.AJAX_TRUSTED_DEVICE_COUNT.toString()));
 				WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_USER_PERMISSION_PROFILE_TAB_TITLE_BASE64,
 						JSValues.AJAX_USER_PERMISSION_PROFILE_COUNT, MessageCodes.USER_PERMISSION_PROFILES_TAB_TITLE, MessageCodes.USER_PERMISSION_PROFILES_TAB_TITLE_WITH_COUNT,
 						tabCountMap.get(JSValues.AJAX_USER_PERMISSION_PROFILE_COUNT.toString()));
@@ -697,6 +700,20 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 		count = null;
 		if (out != null) {
 			try {
+				Collection<org.phoenixctms.ctsms.vo.TrustedDeviceOutVO> trustedDevices = WebUtil.getServiceLocator().getUserService()
+						.getTrustedDevices(WebUtil.getAuthentication(), in.getId());
+				count = trustedDevices == null ? null : new Long(trustedDevices.size());
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+			} catch (AuthenticationException e) {
+				WebUtil.publishException(e);
+			}
+		}
+		tabCountMap.put(JSValues.AJAX_TRUSTED_DEVICE_COUNT.toString(), count);
+		tabTitleMap.put(JSValues.AJAX_TRUSTED_DEVICE_COUNT.toString(),
+				WebUtil.getTabTitleString(MessageCodes.TRUSTED_DEVICES_TAB_TITLE, MessageCodes.TRUSTED_DEVICES_TAB_TITLE_WITH_COUNT, count));
+		count = null;
+		if (out != null) {
+			try {
 				Collection<UserPermissionProfileOutVO> userPermissionProfilesOut = WebUtil.getServiceLocator().getUserService()
 						.getPermissionProfiles(WebUtil.getAuthentication(), in.getId(), null, null, true);
 				count = userPermissionProfilesOut == null ? null : new Long(userPermissionProfilesOut.size());
@@ -833,7 +850,7 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 	}
 
 	public boolean isTabEmphasized(String tab) {
-		return WebUtil.isTabCountEmphasized(tabCountMap.get(tab));
+		return WebUtil.isTabCountEmphasized(tabCountMap.get(tab), JSValues.AJAX_TRUSTED_DEVICE_COUNT.toString().equals(tab));
 	}
 
 	@Override

@@ -692,6 +692,8 @@ public interface MessageCodes {
 	public final static String USER_TREE_MAX_LEVELS_LABEL = "user_tree_max_levels_label";
 	public final static String PASSWORD_TAB_TITLE = "password_tab_title";
 	public final static String PASSWORD_TAB_TITLE_WITH_COUNT = "password_tab_title_with_count";
+	public final static String TRUSTED_DEVICES_TAB_TITLE = "trusted_devices_tab_title";
+	public final static String TRUSTED_DEVICES_TAB_TITLE_WITH_COUNT = "trusted_devices_tab_title_with_count";
 	public final static String USER_PERMISSION_PROFILES_TAB_TITLE = "user_permission_profiles_tab_title";
 	public final static String USER_ACTIVITY_TAB_LABEL = "user_activity_tab_label";
 	public final static String USER_PERMISSION_PROFILES_TAB_TITLE_WITH_COUNT = "user_permission_profiles_tab_title_with_count";

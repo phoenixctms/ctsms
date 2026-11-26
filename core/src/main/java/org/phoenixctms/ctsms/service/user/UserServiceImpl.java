@@ -913,4 +913,60 @@ public class UserServiceImpl
 		device.setPassword(null);
 		trustedDeviceDao.remove(device);
 	}
+
+	@Override
+	protected Collection<org.phoenixctms.ctsms.vo.TrustedDeviceOutVO> handleGetTrustedDevices(AuthenticationVO auth, Long userId) throws Exception {
+		User user = CheckIDUtil.checkUserId(userId, this.getUserDao());
+		Password password = this.getPasswordDao().findLastPassword(user.getId());
+		ArrayList<org.phoenixctms.ctsms.vo.TrustedDeviceOutVO> result = new ArrayList<org.phoenixctms.ctsms.vo.TrustedDeviceOutVO>();
+		if (password != null) {
+			TrustedDeviceDao trustedDeviceDao = this.getTrustedDeviceDao();
+			Iterator<TrustedDevice> it = trustedDeviceDao.findByPassword(password.getId()).iterator();
+			while (it.hasNext()) {
+				result.add(trustedDeviceDao.toTrustedDeviceOutVO(it.next()));
+			}
+		}
+		return result;
+	}
+
+	@Override
+	protected org.phoenixctms.ctsms.vo.TrustedDeviceOutVO handleDeleteTrustedDevice(AuthenticationVO auth, Long deviceId) throws Exception {
+		TrustedDeviceUtil.resetRemovedCurrent();
+		TrustedDeviceDao trustedDeviceDao = this.getTrustedDeviceDao();
+		TrustedDevice device = CheckIDUtil.checkTrustedDeviceId(deviceId, trustedDeviceDao);
+		return dropTrustedDevice(device, trustedDeviceDao, new Timestamp(System.currentTimeMillis()), auth.getDeviceToken());
+	}
+
+	@Override
+	protected Collection<org.phoenixctms.ctsms.vo.TrustedDeviceOutVO> handleDeleteTrustedDevices(AuthenticationVO auth, Long userId) throws Exception {
+		TrustedDeviceUtil.resetRemovedCurrent();
+		User user = CheckIDUtil.checkUserId(userId, this.getUserDao());
+		TrustedDeviceDao trustedDeviceDao = this.getTrustedDeviceDao();
+		Timestamp now = new Timestamp(System.currentTimeMillis());
+		ArrayList<org.phoenixctms.ctsms.vo.TrustedDeviceOutVO> result = new ArrayList<org.phoenixctms.ctsms.vo.TrustedDeviceOutVO>();
+		Password password = this.getPasswordDao().findLastPassword(user.getId());
+		HashSet<Long> seen = new HashSet<Long>();
+		while (password != null && password.getId() != null && seen.add(password.getId())) {
+			Iterator<TrustedDevice> it = new ArrayList<TrustedDevice>(trustedDeviceDao.findByPassword(password.getId())).iterator();
+			while (it.hasNext()) {
+				result.add(dropTrustedDevice(it.next(), trustedDeviceDao, now, auth.getDeviceToken()));
+			}
+			password = password.getPreviousPassword();
+		}
+		return result;
+	}
+
+	private org.phoenixctms.ctsms.vo.TrustedDeviceOutVO dropTrustedDevice(TrustedDevice device, TrustedDeviceDao trustedDeviceDao, Timestamp now, String deviceToken)
+			throws Exception {
+		org.phoenixctms.ctsms.vo.TrustedDeviceOutVO result = trustedDeviceDao.toTrustedDeviceOutVO(device);
+		Password password = device.getPassword();
+		User user = password == null ? null : password.getUser();
+		PasswordOutVO passwordVO = password == null ? null : this.getPasswordDao().toPasswordOutVO(password);
+		TrustedDeviceUtil.noteIfCurrent(device, deviceToken);
+		if (user != null && passwordVO != null) {
+			ServiceUtil.logTrustedDeviceRemoved(user, passwordVO, device, now, CoreUtil.getUser(), this.getJournalEntryDao());
+		}
+		removeTrustedDevice(device, trustedDeviceDao);
+		return result;
+	}
 }

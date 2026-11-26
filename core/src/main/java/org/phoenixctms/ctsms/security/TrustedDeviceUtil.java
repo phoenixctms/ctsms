@@ -75,6 +75,28 @@ public final class TrustedDeviceUtil {
 	}
 
 	/**
+	 * Set while a drop removes the browser the call authenticated with. The web tier reads and clears it so that
+	 * browser's cookie is expired. The token itself is not put on the value object.
+	 */
+	private static final ThreadLocal<Boolean> REMOVED_CURRENT = new ThreadLocal<Boolean>();
+
+	public static void resetRemovedCurrent() {
+		REMOVED_CURRENT.set(Boolean.FALSE);
+	}
+
+	public static void noteIfCurrent(TrustedDevice device, String token) {
+		if (hasToken(token) && device != null && hashToken(token).equals(device.getDeviceToken())) {
+			REMOVED_CURRENT.set(Boolean.TRUE);
+		}
+	}
+
+	public static boolean consumeRemovedCurrent() {
+		Boolean removed = REMOVED_CURRENT.get();
+		REMOVED_CURRENT.remove();
+		return Boolean.TRUE.equals(removed);
+	}
+
+	/**
 	 * Host and user agent as stored (CHARACTER VARYING(1024)), null stays null.
 	 */
 	public static String clipColumnValue(String value) {
