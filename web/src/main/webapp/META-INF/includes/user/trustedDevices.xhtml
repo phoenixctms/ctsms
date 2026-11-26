@@ -15,65 +15,77 @@
 				oncomplete="handleUpdateUserTabTitles(xhr, status, args)"
 				update=":tabView:trusteddevices_form:trusteddevices_list :tabView:trusteddevices_form:trusteddevices_toolbar" />
 			<h:panelGrid columns="1" cellpadding="0" styleClass="ctsms-content-panelgrid">
-				<p:dataTable styleClass="ctsms-datatable" var="device"
-					value="#{trustedDeviceBean.devices}" id="trusteddevices_list"
-					rowKey="#{device.id}" selectionMode="single"
-					selection="#{trustedDeviceBean.selected}"
-					emptyMessage="#{labels.datatable_empty_message}">
-					<p:ajax event="rowSelect" process="@this" update=":tabView:trusteddevices_form:trusteddevices_toolbar" />
-					<p:ajax event="rowUnselect" process="@this" update=":tabView:trusteddevices_form:trusteddevices_toolbar" />
-					<f:facet name="header">
+			<p:dataTable styleClass="ctsms-datatable" var="device"
+				value="#{trustedDeviceBean.devices}" id="trusteddevices_list"
+				rowKey="#{device.id}" selectionMode="single"
+				selection="#{trustedDeviceBean.selected}"
+				sortBy="#{device.lastUsed}" sortOrder="descending"
+				emptyMessage="#{labels.datatable_empty_message}">
+				<p:ajax event="rowSelect" process="@this" update=":tabView:trusteddevices_form:trusteddevices_toolbar" />
+				<p:ajax event="rowUnselect" process="@this" update=":tabView:trusteddevices_form:trusteddevices_toolbar" />
+				<f:facet name="header">
+					<h:panelGrid columns="3" cellpadding="0"
+						columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
 						<h:outputText value="#{trustedDeviceBean.devices.size()} #{userlabels.trusted_device_list_header}" />
-					</f:facet>
-					<p:column>
+						<ui:include src="../shared/ajaxStatus.xhtml" />
+						<p:commandButton process="@this"
+							actionListener="#{trustedDeviceBean.refresh}"
+							title="#{labels.update_datatable_button_title}"
+							icon="ui-icon-refresh" styleClass="ctsms-list-header-button"
+							ajax="true"
+							oncomplete="handleUpdateUserTabTitles(xhr, status, args)"
+							update=":tabView:trusteddevices_form:trusteddevices_list :tabView:trusteddevices_form:trusteddevices_toolbar" />
+					</h:panelGrid>
+				</f:facet>
+				<p:column sortBy="#{device.userAgent}">
 						<f:facet name="header">
 							<h:outputText value="#{userlabels.trusted_device_user_agent_column}" />
 						</f:facet>
-						<h:outputText value="#{device.userAgent}" />
+						<h:outputText value="#{applicationScopeBean.clipStringLeading(device.userAgent,128)}" title="#{device.userAgent}" />
 					</p:column>
-					<p:column>
-						<f:facet name="header">
-							<h:outputText value="#{userlabels.trusted_device_created_column}" />
-						</f:facet>
+				<p:column sortBy="#{device.created}">
+					<f:facet name="header">
+						<h:outputText value="#{userlabels.trusted_device_created_column}" />
+					</f:facet>
 						<h:outputText value="#{device.created}">
 							<f:converter converterId="ctsms.DateTime" />
 							<f:attribute name="timeZone"
 								value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 						</h:outputText>
 					</p:column>
-					<p:column>
-						<f:facet name="header">
-							<h:outputText value="#{userlabels.trusted_device_created_host_column}" />
-						</f:facet>
+				<p:column sortBy="#{device.createdHost}">
+					<f:facet name="header">
+						<h:outputText value="#{userlabels.trusted_device_created_host_column}" />
+					</f:facet>
 						<h:outputText value="#{device.createdHost}" />
 					</p:column>
-					<p:column>
-						<f:facet name="header">
-							<h:outputText value="#{userlabels.trusted_device_last_used_column}" />
-						</f:facet>
+				<p:column sortBy="#{device.lastUsed}">
+					<f:facet name="header">
+						<h:outputText value="#{userlabels.trusted_device_last_used_column}" />
+					</f:facet>
 						<h:outputText value="#{device.lastUsed}">
 							<f:converter converterId="ctsms.DateTime" />
 							<f:attribute name="timeZone"
 								value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 						</h:outputText>
 					</p:column>
-					<p:column>
-						<f:facet name="header">
-							<h:outputText value="#{userlabels.trusted_device_last_used_host_column}" />
-						</f:facet>
+				<p:column sortBy="#{device.lastUsedHost}">
+					<f:facet name="header">
+						<h:outputText value="#{userlabels.trusted_device_last_used_host_column}" />
+					</f:facet>
 						<h:outputText value="#{device.lastUsedHost}" />
 					</p:column>
-					<p:column>
-						<f:facet name="header">
-							<h:outputText value="#{userlabels.trusted_device_expired_column}" />
-						</f:facet>
+				<p:column sortBy="#{device.expired}">
+					<f:facet name="header">
+						<h:outputText value="#{userlabels.trusted_device_expired_column}" />
+					</f:facet>
 						<ui:include src="../shared/listBooleanIcon.xhtml">
 							<ui:param name="value" value="#{device.expired}" />
 						</ui:include>
 					</p:column>
 				</p:dataTable>
 				<p:toolbar id="trusteddevices_toolbar">
-					<p:toolbarGroup>
+					<p:toolbarGroup align="right">
 						<p:commandButton value="#{userlabels.trusted_device_drop_button}"
 							icon="ui-icon ui-icon-trash" type="button"
 							disabled="#{!trustedDeviceBean.removable}"
@@ -83,6 +95,7 @@
 							disabled="#{!trustedDeviceBean.dropAllEnabled}"
 							onclick="trustedDeviceDropAllConfirmation.show()" />
 					</p:toolbarGroup>
+					<p:separator />
 					<p:toolbarGroup align="right">
 						<ui:include src="../shared/toolbarAjaxStatus.xhtml" />
 					</p:toolbarGroup>

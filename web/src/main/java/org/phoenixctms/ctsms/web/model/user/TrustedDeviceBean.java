@@ -2,6 +2,9 @@ package org.phoenixctms.ctsms.web.model.user;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -121,6 +124,21 @@ public class TrustedDeviceBean extends ManagedBeanBase {
 		return userId != null && !devices.isEmpty();
 	}
 
+	public void refresh() {
+		Long selectedId = selected == null ? null : selected.getId();
+		loadDevices();
+		selected = null;
+		if (selectedId != null) {
+			for (int i = 0; i < devices.size(); i++) {
+				if (selectedId.equals(devices.get(i).getId())) {
+					selected = devices.get(i);
+					break;
+				}
+			}
+		}
+		appendRequestContextCallbackArgs(false);
+	}
+
 	public void setSelected(TrustedDeviceOutVO selected) {
 		this.selected = selected;
 	}
@@ -134,6 +152,21 @@ public class TrustedDeviceBean extends ManagedBeanBase {
 		}
 	}
 
+	private static int compareLastUsedDescending(TrustedDeviceOutVO left, TrustedDeviceOutVO right) {
+		Date leftUsed = left == null ? null : left.getLastUsed();
+		Date rightUsed = right == null ? null : right.getLastUsed();
+		if (leftUsed == null && rightUsed == null) {
+			return 0;
+		}
+		if (leftUsed == null) {
+			return 1;
+		}
+		if (rightUsed == null) {
+			return -1;
+		}
+		return rightUsed.compareTo(leftUsed);
+	}
+
 	private void loadDevices() {
 		devices.clear();
 		if (userId == null) {
@@ -143,6 +176,13 @@ public class TrustedDeviceBean extends ManagedBeanBase {
 			Collection<TrustedDeviceOutVO> loaded = WebUtil.getServiceLocator().getUserService().getTrustedDevices(WebUtil.getAuthentication(), userId);
 			if (loaded != null) {
 				devices.addAll(loaded);
+				Collections.sort(devices, new Comparator<TrustedDeviceOutVO>() {
+
+					@Override
+					public int compare(TrustedDeviceOutVO left, TrustedDeviceOutVO right) {
+						return compareLastUsedDescending(left, right);
+					}
+				});
 			}
 		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
