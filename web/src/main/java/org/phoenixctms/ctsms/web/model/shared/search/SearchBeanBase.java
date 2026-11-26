@@ -1593,7 +1593,8 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		boolean validated = !CommonUtil.isEmptyString(run.getLastValidText()) && run.getLastValidCriterions() != null;
 		String result = validated ? run.getLastValidText() : stripQueryTextFence(run.getAnswer());
 		if (CommonUtil.isEmptyString(result)) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, Labels.getStringLocalized("search_query_text_llm_empty"));
+			Messages.addMessage(FacesMessage.SEVERITY_ERROR,
+					Labels.getStringLocalized(queryTextRunTruncated(run) ? "search_query_text_llm_truncated" : "search_query_text_llm_empty"));
 			return;
 		}
 		Integer maxCriterions = Integer.valueOf(Settings.getInt(SettingCodes.MAX_CRITERIONS, Bundle.SETTINGS, DefaultSettings.MAX_CRITERIONS));
@@ -2030,6 +2031,21 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 			joined.append(token.trim());
 		}
 		return joined.toString();
+	}
+
+	// the round log marks finish LENGTH when the model stopped mid-answer
+	private static boolean queryTextRunTruncated(QueryTextRun run) {
+		if (run == null) {
+			return false;
+		}
+		Iterator<String> it = run.getSteps().iterator();
+		while (it.hasNext()) {
+			String step = it.next();
+			if (step != null && step.indexOf("finish LENGTH") >= 0) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private static String stripQueryTextFence(String text) {
