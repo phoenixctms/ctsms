@@ -346,7 +346,60 @@
 							styleClass="ctsms-content-panelgrid">
 							<div id="intermediateSetsChartCanvas"
 								class="ctsms-intermediatesets-chart"></div>
-
+							<h:panelGroup
+								rendered="#{not empty searchBean.intermediateSetTotal}">
+								<p:dataTable styleClass="ctsms-intermediatesets-steps-table"
+									value="#{searchBean.intermediateSetStepRows}" var="step"
+									rendered="#{not empty searchBean.intermediateSetStepRows}"
+									rowStyleClass="#{empty step.warning ? '' : 'ctsms-intermediatesets-steps-table-warning'}">
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="#{labels.search_intermediate_set_steps_number_column}" />
+										</f:facet>
+										<h:outputText value="#{step.number}" />
+									</p:column>
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="#{labels.search_intermediate_set_steps_step_column}" />
+										</f:facet>
+										<h:outputText value="#{step.title}" title="#{step.expression}" />
+									</p:column>
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="#{labels.search_intermediate_set_steps_a_column}" />
+										</f:facet>
+										<h:outputText value="#{step.a}: #{step.aCount}" />
+									</p:column>
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="#{labels.search_intermediate_set_steps_b_column}" />
+										</f:facet>
+										<h:outputText value="#{step.b}: #{step.bCount}" />
+									</p:column>
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="#{labels.search_intermediate_set_steps_intersection_column}" />
+										</f:facet>
+										<h:outputText value="#{step.intersectionCount}" />
+									</p:column>
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="#{labels.search_intermediate_set_steps_result_column}" />
+										</f:facet>
+										<h:outputText value="#{step.count}" />
+									</p:column>
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="#{labels.search_intermediate_set_steps_note_column}" />
+										</f:facet>
+										<h:outputText value="#{step.note}" />
+										<h:outputText value="#{empty step.note ? '' : ' '}" />
+										<h:outputText value="#{step.warning}"
+											styleClass="ctsms-intermediatesets-step-warning" />
+									</p:column>
+								</p:dataTable>
+								<h:outputText value="#{searchBean.intermediateSetTotal}" />
+							</h:panelGroup>
 						</h:panelGrid>
 					</p:panel>
 				</p:tab>

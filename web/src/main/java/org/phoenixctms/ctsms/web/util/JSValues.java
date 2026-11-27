@@ -85,6 +85,7 @@ public enum JSValues {
 	AJAX_CRITERION_ROW_COLORS_BASE64("criterionRowColorsBase64"),
 	AJAX_CRITERION_TIE_MAP_BASE64("criterionTieMapBase64"),
 	AJAX_INTERMEDIATE_SETS_BASE64("intermediateSetsBase64"),
+	AJAX_INTERMEDIATE_SET_STEPS_BASE64("intermediateSetStepsBase64"),
 	AJAX_CRITERIA_RESULT_ITEM_LABEL_BASE64("criteriaResultItemLabelBase64"),
 	LIST_INITIAL_POSITION(""),
 	AJAX_DIALOG_TITLE_BASE64("dialogTitleBase64"),
