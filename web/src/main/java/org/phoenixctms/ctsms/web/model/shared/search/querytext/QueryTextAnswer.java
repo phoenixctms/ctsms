@@ -1,5 +1,7 @@
 package org.phoenixctms.ctsms.web.model.shared.search.querytext;
 
+import java.util.regex.Pattern;
+
 import org.phoenixctms.ctsms.util.CommonUtil;
 
 /**
@@ -9,6 +11,7 @@ public final class QueryTextAnswer {
 
 	private static final String[] NOTE_MARKERS = { "Note:", "Hinweis:" };
 	private static final String QUERY_SYMBOLS = "∧∨∩∪∖";
+	private static final Pattern QUERY_COMPARISON = Pattern.compile("\\S\\s+(=|<>|!=|<=|>=|<|>)\\s+\\S");
 
 	private final String query;
 	private final String note;
@@ -46,16 +49,18 @@ public final class QueryTextAnswer {
 		String query = text.substring(0, noteAt).trim();
 		String rest = text.substring(noteAt + marker.length()).trim();
 		if (query.length() == 0) {
-			// the note came first: a query after a blank line, or right after the note line if it looks like one;
-			// otherwise the further lines continue the note, so a note-only answer stays note-only
-			int blank = rest.indexOf("\n\n");
-			int lineEnd = rest.indexOf('\n');
-			if (blank >= 0) {
-				query = rest.substring(blank).trim();
-				rest = rest.substring(0, blank);
-			} else if (lineEnd >= 0 && looksLikeQuery(rest.substring(lineEnd + 1).trim())) {
-				query = rest.substring(lineEnd + 1).trim();
-				rest = rest.substring(0, lineEnd);
+			// the note came first: the query starts at the first later line that looks like one, with or without a blank line before it;
+			// the lines before continue the note, so a note-only answer, also one of several paragraphs, stays note-only
+			int lineStart = rest.indexOf('\n') + 1;
+			while (lineStart > 0 && lineStart < rest.length()) {
+				int lineEnd = rest.indexOf('\n', lineStart);
+				String line = (lineEnd < 0 ? rest.substring(lineStart) : rest.substring(lineStart, lineEnd)).trim();
+				if (looksLikeQuery(line)) {
+					query = rest.substring(lineStart).trim();
+					rest = rest.substring(0, lineStart);
+					break;
+				}
+				lineStart = lineEnd + 1;
 			}
 		}
 		String note = rest.replaceAll("\\s+", " ").trim();
@@ -71,13 +76,14 @@ public final class QueryTextAnswer {
 		return false;
 	}
 
-	// a query has a tie symbol, or starts with a parenthesis, a JSON array or a bracketed criterion
+	// a query line has a tie symbol, a comparison between spaces such as On proband list of trial = StudyA, a facet placeholder,
+	// or starts with a parenthesis, a JSON array, a bracketed criterion or a comment
 	private static boolean looksLikeQuery(String text) {
 		if (CommonUtil.isEmptyString(text)) {
 			return false;
 		}
 		char first = text.charAt(0);
-		if (first == '(' || first == '[' || first == '<') {
+		if (first == '(' || first == '[' || first == '<' || first == '{' || first == '#' || text.startsWith("//")) {
 			return true;
 		}
 		for (int i = 0; i < QUERY_SYMBOLS.length(); i++) {
@@ -85,7 +91,7 @@ public final class QueryTextAnswer {
 				return true;
 			}
 		}
-		return false;
+		return QUERY_COMPARISON.matcher(text).find();
 	}
 
 	/**
