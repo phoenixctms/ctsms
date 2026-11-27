@@ -8,6 +8,7 @@ import org.phoenixctms.ctsms.util.CommonUtil;
 public final class QueryTextAnswer {
 
 	private static final String[] NOTE_MARKERS = { "Note:", "Hinweis:" };
+	private static final String QUERY_SYMBOLS = "∧∨∩∪∖";
 
 	private final String query;
 	private final String note;
@@ -45,15 +46,37 @@ public final class QueryTextAnswer {
 		String query = text.substring(0, noteAt).trim();
 		String rest = text.substring(noteAt + marker.length()).trim();
 		if (query.length() == 0) {
-			// the note came first: it is one line, the query follows it
+			// the note came first: a query after a blank line, or right after the note line if it looks like one;
+			// otherwise the further lines continue the note, so a note-only answer stays note-only
+			int blank = rest.indexOf("\n\n");
 			int lineEnd = rest.indexOf('\n');
-			if (lineEnd >= 0) {
+			if (blank >= 0) {
+				query = rest.substring(blank).trim();
+				rest = rest.substring(0, blank);
+			} else if (lineEnd >= 0 && looksLikeQuery(rest.substring(lineEnd + 1).trim())) {
 				query = rest.substring(lineEnd + 1).trim();
 				rest = rest.substring(0, lineEnd);
 			}
 		}
 		String note = rest.replaceAll("\\s+", " ").trim();
 		return new QueryTextAnswer(query, CommonUtil.isEmptyString(note) ? null : note);
+	}
+
+	// a query has a tie symbol, or starts with a parenthesis, a JSON array or a bracketed criterion
+	private static boolean looksLikeQuery(String text) {
+		if (CommonUtil.isEmptyString(text)) {
+			return false;
+		}
+		char first = text.charAt(0);
+		if (first == '(' || first == '[' || first == '<') {
+			return true;
+		}
+		for (int i = 0; i < QUERY_SYMBOLS.length(); i++) {
+			if (text.indexOf(QUERY_SYMBOLS.charAt(i)) >= 0) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
