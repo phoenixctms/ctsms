@@ -60,16 +60,28 @@
 							paginatorPosition="#{dataTablesPaginatorPositionDefault}"
 							pageLinks="#{dataTablesPageLinksDefault}"
 							paginatorAlwaysVisible="#{dataTablesPaginatorAlwaysVisibleDefault}">
-							<p:column headerText="#{inputfieldlabels.input_field_l10n_missing_key_bundle_column}">
+							<p:column headerText="#{inputfieldlabels.input_field_l10n_missing_key_bundle_column}"
+								sortBy="#{inputFieldL10nBean.getBundleLabel(missingKey.bundle)}"
+								filterBy="#{inputFieldL10nBean.getBundleLabel(missingKey.bundle)}"
+								filterMatchMode="contains">
 								<h:outputText value="#{inputFieldL10nBean.getBundleLabel(missingKey.bundle)}" />
 							</p:column>
-							<p:column headerText="#{inputfieldlabels.input_field_l10n_missing_key_target_column}">
+							<p:column headerText="#{inputfieldlabels.input_field_l10n_missing_key_target_column}"
+								sortBy="#{missingKey.target.name}"
+								filterBy="#{missingKey.target.name}"
+								filterMatchMode="contains">
 								<h:outputText value="#{missingKey.target.name}" />
 							</p:column>
-							<p:column headerText="#{inputfieldlabels.input_field_l10n_missing_key_usage_column}">
+							<p:column headerText="#{inputfieldlabels.input_field_l10n_missing_key_usage_column}"
+								sortBy="#{missingKey.usage}"
+								filterBy="#{missingKey.usage}"
+								filterMatchMode="contains">
 								<h:outputText value="#{missingKey.usage}" />
 							</p:column>
-							<p:column headerText="#{inputfieldlabels.input_field_l10n_missing_key_key_column}">
+							<p:column headerText="#{inputfieldlabels.input_field_l10n_missing_key_key_column}"
+								sortBy="#{missingKey.l10nKey}"
+								filterBy="#{missingKey.l10nKey}"
+								filterMatchMode="contains">
 								<h:outputText value="#{missingKey.l10nKey}" />
 							</p:column>
 							<p:column style="width:32px;">
