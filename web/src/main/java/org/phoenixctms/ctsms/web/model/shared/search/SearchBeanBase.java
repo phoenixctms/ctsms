@@ -2,9 +2,11 @@ package org.phoenixctms.ctsms.web.model.shared.search;
 
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -1709,6 +1711,10 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		prompt = prompt.replace("{root}", queryTextRootName());
 		prompt = prompt.replace("{article}", json ? "a" : "an");
 		prompt = prompt.replace("{comment}", json ? "//" : "#");
+		// the model does not know the date, which an age needs
+		SimpleDateFormat todayFormat = new SimpleDateFormat("yyyy-MM-dd");
+		todayFormat.setTimeZone(WebUtil.getTimeZone());
+		prompt = prompt.replace("{today}", todayFormat.format(new Date()));
 		prompt = prompt.replace("{commentHint}",
 				Labels.getStringLocalized(json ? "search_query_text_prompt_comment_json" : "search_query_text_prompt_comment_expression"));
 		prompt = prompt.replace("{ties}", indentQueryTextLines(queryTextTieSection(json)));
