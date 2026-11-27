@@ -25,18 +25,7 @@
 				<p:ajax event="rowSelect" process="@this" update=":tabView:trusteddevices_form:trusteddevices_toolbar" />
 				<p:ajax event="rowUnselect" process="@this" update=":tabView:trusteddevices_form:trusteddevices_toolbar" />
 				<f:facet name="header">
-					<h:panelGrid columns="3" cellpadding="0"
-						columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
-						<h:outputText value="#{trustedDeviceBean.devices.size()} #{userlabels.trusted_device_list_header}" />
-						<ui:include src="../shared/ajaxStatus.xhtml" />
-						<p:commandButton process="@this"
-							actionListener="#{trustedDeviceBean.refresh}"
-							title="#{labels.update_datatable_button_title}"
-							icon="ui-icon-refresh" styleClass="ctsms-list-header-button"
-							ajax="true"
-							oncomplete="handleUpdateUserTabTitles(xhr, status, args)"
-							update=":tabView:trusteddevices_form:trusteddevices_list :tabView:trusteddevices_form:trusteddevices_toolbar" />
-					</h:panelGrid>
+					<h:outputText value="#{trustedDeviceBean.devices.size()} #{userlabels.trusted_device_list_header}" />
 				</f:facet>
 				<p:column sortBy="#{device.userAgent}">
 						<f:facet name="header">
@@ -95,6 +84,12 @@
 							icon="ui-icon ui-icon-trash" type="button"
 							disabled="#{!trustedDeviceBean.dropAllEnabled}"
 							onclick="trustedDeviceDropAllConfirmation.show()" />
+						<p:commandButton process="@this"
+							value="#{labels.load_button_label}"
+							actionListener="#{trustedDeviceBean.refresh}"
+							oncomplete="handleUpdateUserTabTitles(xhr, status, args)"
+							icon="ui-icon-refresh" ajax="true"
+							update=":tabView:trusteddevices_form:trusteddevices_list :tabView:trusteddevices_form:trusteddevices_toolbar" />
 					</p:toolbarGroup>
 					<p:separator />
 					<p:toolbarGroup align="right">
