@@ -18,6 +18,7 @@ import dev.langchain4j.agent.tool.ToolExecutionRequest;
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.message.ToolExecutionResultMessage;
+import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.chat.listener.ChatModelErrorContext;
 import dev.langchain4j.model.chat.listener.ChatModelListener;
@@ -43,6 +44,8 @@ public final class QueryTextAgent {
 	private static final int STEP_TEXT_LENGTH = 300;
 	private static final String START_ATTRIBUTE = "start";
 	private static final String THREAD_NAME = "query-text-agent";
+	// the tool rounds of one run with their results, well above max tool calls times the calls per round
+	private static final int MAX_MEMORY_MESSAGES = 500;
 
 	/**
 	 * Reports each model round to the run and the log: its duration, tokens, reasoning size, tool calls and the tool results it was sent with.
@@ -198,13 +201,15 @@ public final class QueryTextAgent {
 	/**
 	 * Starts the agent in a background thread. The outcome lands in the run, which the view polls.
 	 */
-	public static void start(String instructions, String request, QueryTextTools tools, QueryTextRun run) {
+	public static void start(String instructions, String request, String continueRequest, QueryTextTools tools, QueryTextRun run) {
 		int maxToolCalls = Settings.getInt(SettingCodes.QUERY_TEXT_LLM_MAX_TOOL_CALLS, Bundle.SETTINGS, DefaultSettings.QUERY_TEXT_LLM_MAX_TOOL_CALLS);
 		if (maxToolCalls <= 0) {
 			maxToolCalls = DefaultSettings.QUERY_TEXT_LLM_MAX_TOOL_CALLS;
 		}
 		QueryTextAssistant assistant = AiServices.builder(QueryTextAssistant.class)
 				.chatModel(createChatModel(run))
+				// one assistant per run: the memory keeps the tool results for a follow-up request
+				.chatMemory(MessageWindowChatMemory.withMaxMessages(MAX_MEMORY_MESSAGES))
 				.tools(tools)
 				.systemMessageProvider(memoryId -> instructions)
 				.maxSequentialToolsInvocations(maxToolCalls)
@@ -216,6 +221,12 @@ public final class QueryTextAgent {
 			try {
 				String answer = assistant.generate(request);
 				QueryTextAnswer parsed = QueryTextAnswer.parse(answer);
+				if (isBlank(answer) && tools.getLastValidText() == null && !run.isTruncated() && run.isRunning() && !isBlank(continueRequest)) {
+					// reasoning models sometimes end with their thinking and no answer; ask once to go on with the lookups done so far
+					run.addStep("   empty answer, asking the model to continue");
+					answer = assistant.generate(continueRequest);
+					parsed = QueryTextAnswer.parse(answer);
+				}
 				if (!CommonUtil.isEmptyString(parsed.getNote())) {
 					run.addStep("   note: " + parsed.getNote());
 				}
