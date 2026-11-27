@@ -336,16 +336,16 @@ public class InputFieldL10nBean extends ManagedBeanBase {
 	}
 
 	/**
-	 * After the missing keys were reloaded with the table's filters kept (save, reload), moves the table back
-	 * to its last page if the list became shorter than the shown page's row offset. While a filter is set, the
-	 * number of matching rows is unknown here, so it goes back to the first page.
+	 * After the missing keys were reloaded (save, reload), moves the table back to its last page if the list
+	 * became shorter than the shown page's row offset. The re-rendered table lists all keys without applying
+	 * the filters again, so set filters are cleared (first page) rather than left in the filter inputs.
 	 */
 	private void keepMissingKeysPageInRange() {
 		DataTable dataTable = (DataTable) WebUtil.findComponentById(MISSING_KEYS_TABLE_ID);
 		if (dataTable != null) {
 			int count = missingKeys != null ? missingKeys.size() : 0;
 			if (isFiltered(dataTable)) {
-				dataTable.setFirst(0);
+				dataTable.clearFilters();
 			} else if (dataTable.getFirst() >= count) {
 				int rows = dataTable.getRows();
 				dataTable.setFirst(rows > 0 && count > 0 ? ((count - 1) / rows) * rows : 0);
