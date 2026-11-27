@@ -227,6 +227,9 @@ public final class QueryTextAgent {
 					answer = assistant.generate(continueRequest);
 					parsed = QueryTextAnswer.parse(answer);
 				}
+				// an answer that was not validated may still name the facet groups by their placeholders
+				answer = tools.expandFacets(answer);
+				parsed = QueryTextAnswer.parse(answer);
 				if (!CommonUtil.isEmptyString(parsed.getNote())) {
 					run.addStep("   note: " + parsed.getNote());
 				}
