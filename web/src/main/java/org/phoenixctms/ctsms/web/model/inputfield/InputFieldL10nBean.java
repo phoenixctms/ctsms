@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -18,6 +19,7 @@ import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.vo.InputFieldL10nMissingKeyVO;
 import org.phoenixctms.ctsms.vo.InputFieldL10nTextInVO;
 import org.phoenixctms.ctsms.vo.InputFieldL10nTextOutVO;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
 import org.phoenixctms.ctsms.web.util.JSValues;
@@ -85,6 +87,7 @@ public class InputFieldL10nBean extends ManagedBeanBase {
 	}
 
 	private final static String ROOT_LOCALE = "";
+	private final static String MISSING_KEYS_TABLE_ID = "l10nmissingkeys";
 	private final static String ROOT_LANGUAGE = Locale.ENGLISH.getLanguage();
 	private Long inputFieldId;
 	private String locale;
@@ -113,6 +116,7 @@ public class InputFieldL10nBean extends ManagedBeanBase {
 	@Override
 	protected String changeAction(Long id) {
 		inputFieldId = id;
+		DataTable.clearFilters(MISSING_KEYS_TABLE_ID);
 		loadTexts();
 		return CHANGE_OUTCOME;
 	}
@@ -124,6 +128,9 @@ public class InputFieldL10nBean extends ManagedBeanBase {
 
 	@Override
 	public String loadAction(Long id) {
+		if (id == null ? inputFieldId != null : !id.equals(inputFieldId)) {
+			DataTable.clearFilters(MISSING_KEYS_TABLE_ID);
+		}
 		inputFieldId = id;
 		loadTexts();
 		return LOAD_OUTCOME;
@@ -133,6 +140,7 @@ public class InputFieldL10nBean extends ManagedBeanBase {
 	 * Reloads the texts of the selected locale (locale dropdown).
 	 */
 	public void changeLocale() {
+		DataTable.clearFilters(MISSING_KEYS_TABLE_ID);
 		loadTexts();
 		appendRequestContextCallbackArgs(true);
 	}
@@ -322,8 +330,41 @@ public class InputFieldL10nBean extends ManagedBeanBase {
 		if (editor != null) {
 			loadText(editor);
 			loadMissingKeys();
+			keepMissingKeysPageInRange();
 		}
 		appendRequestContextCallbackArgs(editor != null);
+	}
+
+	/**
+	 * After the missing keys were reloaded with the table's filters kept (save, reload), moves the table back
+	 * to its last page if the list became shorter than the shown page's row offset. While a filter is set, the
+	 * number of matching rows is unknown here, so it goes back to the first page.
+	 */
+	private void keepMissingKeysPageInRange() {
+		DataTable dataTable = (DataTable) WebUtil.findComponentById(MISSING_KEYS_TABLE_ID);
+		if (dataTable != null) {
+			int count = missingKeys != null ? missingKeys.size() : 0;
+			if (isFiltered(dataTable)) {
+				dataTable.setFirst(0);
+			} else if (dataTable.getFirst() >= count) {
+				int rows = dataTable.getRows();
+				dataTable.setFirst(rows > 0 && count > 0 ? ((count - 1) / rows) * rows : 0);
+			}
+		}
+	}
+
+	private static boolean isFiltered(DataTable dataTable) {
+		Map<String, String> filters = dataTable.getFilters();
+		if (filters != null) {
+			Iterator<String> it = filters.values().iterator();
+			while (it.hasNext()) {
+				String filter = it.next();
+				if (filter != null && filter.trim().length() > 0) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	private void loadMissingKeys() {
@@ -365,6 +406,7 @@ public class InputFieldL10nBean extends ManagedBeanBase {
 				addOperationSuccessMessage(MessageCodes.INPUT_FIELD_L10N_TEXT_UNCHANGED);
 			}
 			loadMissingKeys();
+			keepMissingKeysPageInRange();
 			return UPDATE_OUTCOME;
 		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
