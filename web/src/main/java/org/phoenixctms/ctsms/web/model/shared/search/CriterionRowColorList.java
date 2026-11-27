@@ -13,6 +13,8 @@ public class CriterionRowColorList extends CriterionListBase<String> {
 	private static final String ROWS_UNCHECKED_STYLECLASS = "ctsms-search-criterion-rows-unchecked-color";
 	private static final String ROW_SELECT_COLOR_STYLECLASS_PREFIX = "ctsms-search-criterion-row-select-color-";
 	private static final String ROW_SET_OPERATION_STYLECLASS = "ctsms-search-criterion-row-set-operation";
+	// the number of ctsms-search-criterion-row-select-color-<n> classes in search.css, which repeat for more result sets
+	private static final int ROW_SELECT_COLOR_COUNT = 17;
 	private HashMap<Long, CriterionInstantVO> instantCriterionsMap;
 	private CriteriaInstantVO instantCriteria;
 	private boolean parsed;
@@ -33,7 +35,7 @@ public class CriterionRowColorList extends CriterionListBase<String> {
 				Integer selectIndex = instantCriterion.getSelectStatementIndex();
 				Integer selectCount = instantCriteria.getSelectStatementCount();
 				if (selectIndex != null) {
-					return ROW_SELECT_COLOR_STYLECLASS_PREFIX + selectIndex.toString();
+					return ROW_SELECT_COLOR_STYLECLASS_PREFIX + Integer.toString(selectIndex.intValue() % ROW_SELECT_COLOR_COUNT);
 				} else if (selectCount != null && selectCount > 0) {
 					return ROW_SET_OPERATION_STYLECLASS;
 				}
