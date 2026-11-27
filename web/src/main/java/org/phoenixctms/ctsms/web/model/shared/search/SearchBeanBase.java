@@ -1521,7 +1521,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		try {
 			// the prompt needs the faces context, so it is built here and not in the worker thread.
 			// the worker gets its own copy of the session auth, as the session bean hands out copies only
-			QueryTextAgent.start(buildQueryTextPrompt(true), queryText, new QueryTextTools(WebUtil.getAuthentication(), getDBModule(), maxCriterions,
+			QueryTextAgent.start(buildQueryTextPrompt(true), queryText, Labels.getStringLocalized("search_query_text_agent_continue"), new QueryTextTools(WebUtil.getAuthentication(), getDBModule(), maxCriterions,
 					propertyVOsMap == null ? null : new ArrayList<CriterionPropertyVO>(propertyVOsMap.values())), run);
 		} catch (Exception e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, Labels.getMessageLocalized("search_query_text_llm_failed",
