@@ -269,7 +269,7 @@ public class QueryTextTools {
 
 	@Tool(name = SEARCH_INPUT_FIELDS, value = "Search input fields whose name, title or selectable option text contains the given text. "
 			+ "Returns only fields that are stored by an inquiry, eCRF field or proband list attribute. Each match is the line id | name | title | type, "
-			+ "then one indented line per collection that stores the field, such as: <field property> = <field name> ∧ <value property> ..., then the selectable options as value (option text): a selection value criterion compares the value. "
+			+ "then one indented line per collection that stores the field, such as: <field property> = <field name> ∧ <value property> ..., then the selectable options as \"value\" (option text): a selection value criterion compares the value, written without the quotes. "
 			+ "Each indented line is one branch: copy its two properties, then complete the value criterion with an operator and a value. "
 			+ "Combine the branches of every fitting field and collection with ∪. "
 			+ "Search again with other terms, such as an abbreviation or the full name in another language, to find all fitting fields.")
@@ -386,7 +386,7 @@ public class QueryTextTools {
 	@Tool(name = SEARCH_PROPERTY_VALUES, value = "Search the values of a property marked with " + SEARCH_PROPERTY_VALUES + " under Properties. "
 			+ "Use this for catalog values and for answers already entered in the text or selection value properties of inquiries, eCRF fields or proband list attributes. "
 			+ "Pass the full property name as listed, including the collection in parentheses. "
-			+ "A selection value property lists only options of selection fields, then the fields offering a matching option, as field: value (option text). "
+			+ "A selection value property lists only options of selection fields, then the fields offering a matching option, as field: \"value\" (option text). "
 			+ "A text value property lists the stored texts, then the fields storing a matching text and the autocomplete fields suggesting it; compare all of them with their text value. "
 			+ "Returns one line per value: the name for the expression format, or id | name for values that JSON gives by id.")
 	public String searchPropertyValues(@P(name = "property", value = "the property as listed under Properties") String property,
@@ -418,7 +418,7 @@ public class QueryTextTools {
 			}
 			// the hits do not name their field
 			if (selection) {
-				appendHints(result, "fields offering a matching option (field: value (option text)):", options == null ? null : options.selectionHints);
+				appendHints(result, "fields offering a matching option (field: \"value\" (option text)):", options == null ? null : options.selectionHints);
 			} else if (collection != null) {
 				appendHints(result, "fields storing a matching text:", textValueFields(collection, valuePart));
 				appendHints(result, "autocomplete fields suggesting the text (compare their text value):", options == null ? null : options.autocompleteHints);
@@ -612,13 +612,15 @@ public class QueryTextTools {
 		appendLine(result, "  options: " + options);
 	}
 
-	// the value a selection value criterion compares, with the option text when it says more, e.g. 1 (Diabetes Typ I)
+	// the value a selection value criterion compares, quoted as values can hold parentheses themselves,
+	// with the option text when it says more, e.g. "1" (Diabetes Typ I) or "Ypsomed (Omnipod)"
 	private static String optionText(InputFieldSelectionSetValueOutVO value) {
+		String quoted = "\"" + (value.getValue() == null ? "" : value.getValue()) + "\"";
 		String name = value.getName();
 		if (CommonUtil.isEmptyString(name) || name.trim().equalsIgnoreCase(value.getValue() == null ? "" : value.getValue().trim())) {
-			return value.getValue();
+			return quoted;
 		}
-		return value.getValue() + " (" + name.trim() + ")";
+		return quoted + " (" + name.trim() + ")";
 	}
 
 	private static String fieldName(InputFieldOutVO field) {
