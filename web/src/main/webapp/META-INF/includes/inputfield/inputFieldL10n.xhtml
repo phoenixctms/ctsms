@@ -60,6 +60,9 @@
 							paginatorPosition="#{dataTablesPaginatorPositionDefault}"
 							pageLinks="#{dataTablesPageLinksDefault}"
 							paginatorAlwaysVisible="#{dataTablesPaginatorAlwaysVisibleDefault}">
+							<p:ajax event="page" oncomplete="sizeInputFieldL10nEditors()" />
+							<p:ajax event="sort" oncomplete="sizeInputFieldL10nEditors()" />
+							<p:ajax event="filter" oncomplete="sizeInputFieldL10nEditors()" />
 							<p:column headerText="#{inputfieldlabels.input_field_l10n_missing_key_bundle_column}"
 								sortBy="#{inputFieldL10nBean.getBundleLabel(missingKey.bundle)}"
 								filterBy="#{inputFieldL10nBean.getBundleLabel(missingKey.bundle)}"

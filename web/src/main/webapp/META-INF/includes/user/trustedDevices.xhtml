@@ -15,7 +15,7 @@
 				oncomplete="handleUpdateUserTabTitles(xhr, status, args)"
 				update=":tabView:trusteddevices_form:trusteddevices_list :tabView:trusteddevices_form:trusteddevices_toolbar" />
 			<h:panelGrid columns="1" cellpadding="0" styleClass="ctsms-content-panelgrid">
-			<h:outputLabel styleClass="ctsms-trusted-device-description" value="#{userlabels.trusted_device_description}" />
+			<h:outputText styleClass="ctsms-trusted-device-description" value="#{userlabels.trusted_device_description}" />
 			<p:dataTable styleClass="ctsms-datatable" var="device"
 				value="#{trustedDeviceBean.devices}" id="trusteddevices_list"
 				rowKey="#{device.id}" selectionMode="single"
@@ -75,6 +75,15 @@
 					</p:column>
 				</p:dataTable>
 				<p:toolbar id="trusteddevices_toolbar">
+					<p:toolbarGroup align="left">
+						<p:commandButton process="@this"
+							value="#{labels.load_button_label}"
+							actionListener="#{trustedDeviceBean.refresh}"
+							oncomplete="handleUpdateUserTabTitles(xhr, status, args)"
+							icon="ui-icon-refresh" ajax="true"
+							update=":tabView:trusteddevices_form:trusteddevices_list :tabView:trusteddevices_form:trusteddevices_toolbar" />
+					</p:toolbarGroup>
+					<p:separator />
 					<p:toolbarGroup align="right">
 						<p:commandButton value="#{userlabels.trusted_device_drop_button}"
 							icon="ui-icon ui-icon-trash" type="button"
@@ -84,12 +93,6 @@
 							icon="ui-icon ui-icon-trash" type="button"
 							disabled="#{!trustedDeviceBean.dropAllEnabled}"
 							onclick="trustedDeviceDropAllConfirmation.show()" />
-						<p:commandButton process="@this"
-							value="#{labels.load_button_label}"
-							actionListener="#{trustedDeviceBean.refresh}"
-							oncomplete="handleUpdateUserTabTitles(xhr, status, args)"
-							icon="ui-icon-refresh" ajax="true"
-							update=":tabView:trusteddevices_form:trusteddevices_list :tabView:trusteddevices_form:trusteddevices_toolbar" />
 					</p:toolbarGroup>
 					<p:separator />
 					<p:toolbarGroup align="right">
