@@ -61,6 +61,24 @@ function setQueryTextBusy(busy) {
 	}
 }
 
+// opening the tab loads the builder's query into the editor, which re-renders the editor panel: the editor is read-only until then,
+// so nothing typed in the meantime gets replaced. The re-rendered editor is editable again
+function startLoadQueryText() {
+	if (typeof queryTextEditor !== "undefined" && queryTextEditor && queryTextEditor.instance) {
+		queryTextEditor.instance.setOption("readOnly", "nocursor");
+		jQuery(queryTextEditor.instance.getWrapperElement()).addClass("ctsms-query-text-loading");
+	}
+	loadQueryText();
+}
+
+// also after a failed request, which leaves the old editor in place
+function endLoadQueryText() {
+	if (typeof queryTextEditor !== "undefined" && queryTextEditor && queryTextEditor.instance) {
+		queryTextEditor.instance.setOption("readOnly", false);
+		jQuery(queryTextEditor.instance.getWrapperElement()).removeClass("ctsms-query-text-loading");
+	}
+}
+
 function bindQueryTextActionButtons() {
 	if (typeof queryTextEditor === "undefined" || !queryTextEditor || !queryTextEditor.instance) {
 		return;
@@ -795,7 +813,7 @@ function handleSearchTabChange(index) {
 		break;
 
 	case 1:
-		loadQueryText();
+		startLoadQueryText();
 		break;
 
 	case 2:
