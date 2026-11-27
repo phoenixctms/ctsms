@@ -1161,7 +1161,7 @@ final class CriterionText {
 		OtherModuleProperty other = matchOtherModuleProperty(text, offset, catalog);
 		if (other != null) {
 			String moduleName = L10nUtil.getDBModuleName(Locales.USER, other.module.name());
-			return L10nUtil.initServiceException(ServiceExceptionCodes.CRITERION_TEXT_PROPERTY_WRONG_MODULE, other.name, moduleName);
+			return L10nUtil.initServiceException(ServiceExceptionCodes.CRITERION_TEXT_PROPERTY_WRONG_MODULE, other.name, moduleName, snippet(text, offset));
 		}
 		return invalid(text, offset);
 	}
@@ -1170,32 +1170,28 @@ final class CriterionText {
 		if (catalog == null || catalog.parser == null) {
 			return null;
 		}
+		// the parser caches the properties of all modules, so this costs no query per module
+		HashMap<Long, CriterionProperty> properties = catalog.parser.getPropertyMap();
+		if (properties == null) {
+			return null;
+		}
 		List<NamedId> names = new ArrayList<NamedId>();
 		HashMap<Long, DBModule> propertyModules = new HashMap<Long, DBModule>();
-		DBModule[] modules = DBModule.values();
-		for (int m = 0; m < modules.length; m++) {
-			DBModule module = modules[m];
-			if (module == null || module.equals(catalog.module)) {
+		Iterator<CriterionProperty> propertyIt = properties.values().iterator();
+		while (propertyIt.hasNext()) {
+			CriterionProperty property = propertyIt.next();
+			if (property == null || property.getId() == null || property.getModule() == null || property.getModule().equals(catalog.module)) {
 				continue;
 			}
-			HashMap<Long, CriterionProperty> properties = catalog.parser.getPropertyMap(module);
-			if (properties == null) {
-				continue;
-			}
-			Iterator<CriterionProperty> propertyIt = properties.values().iterator();
-			while (propertyIt.hasNext()) {
-				CriterionProperty property = propertyIt.next();
-				if (property == null || property.getId() == null) {
-					continue;
-				}
-				propertyModules.put(property.getId(), module);
-				addName(names, property.getProperty(), property.getId());
-				addName(names, L10nUtil.getCriterionPropertyName(Locales.USER, property.getNameL10nKey()), property.getId());
-			}
+			propertyModules.put(property.getId(), property.getModule());
+			addName(names, property.getProperty(), property.getId());
+			addName(names, L10nUtil.getCriterionPropertyName(Locales.USER, property.getNameL10nKey()), property.getId());
 		}
 		sortByLength(names);
 		NamedId match = matchLongest(text, offset, names);
-		if (match == null) {
+		// a typo can start with a short generic name such as Name, so the whole property token has to match:
+		// an operator or the end of the line has to follow
+		if (match == null || !isPropertyTokenEnd(text, offset + match.name.length(), catalog)) {
 			return null;
 		}
 		DBModule module = propertyModules.get(match.id);
@@ -1203,6 +1199,17 @@ final class CriterionText {
 			return null;
 		}
 		return new OtherModuleProperty(match.name, module);
+	}
+
+	private static boolean isPropertyTokenEnd(String text, int end, Catalog catalog) {
+		int i = end;
+		while (i < text.length() && (text.charAt(i) == ' ' || text.charAt(i) == '\t')) {
+			i++;
+		}
+		if (i >= text.length() || text.charAt(i) == '\n' || text.charAt(i) == '\r') {
+			return true;
+		}
+		return matchLongest(text, i, catalog.restrictionNames) != null;
 	}
 
 	private static CriterionTie tieOf(CriterionInstantVO criterion, HashMap<Long, CriterionTie> ties) {
