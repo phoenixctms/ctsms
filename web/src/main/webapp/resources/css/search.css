@@ -271,6 +271,11 @@ table.ctsms-criterion-position tr:nth-child(2) {
 .ctsms-query-text-panel .ctsms-query-text-error-line {
 	background-color: #FF8F8F;
 }
+/* read-only while the tab loads the builder's query into the editor, see startLoadQueryText() */
+.ctsms-query-text-panel .ctsms-query-text-loading {
+	opacity: 0.5;
+	cursor: wait;
+}
 .ctsms-query-text-panel textarea.ctsms-query-text-editor {
 	display: none;
 }

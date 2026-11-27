@@ -35,7 +35,7 @@
 			process="@this,:search_form:tabView:criteria_input"
 			actionListener="#{searchBean.loadQueryText}"
 			update=":search_form:tabView:query_text_panel"
-			oncomplete="refreshQueryTextEditor()" />
+			oncomplete="endLoadQueryText();refreshQueryTextEditor()" />
 		<!-- a remoteCommand that search.js calls again after each completed poll, not a p:poll:
 			its setInterval keeps queueing polls while one is still running, and re-creating an
 			existing poll widget fails in this PrimeFaces version (no refresh()) -->
