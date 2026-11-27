@@ -2,8 +2,6 @@ package org.phoenixctms.ctsms.web.model.shared.search.querytext;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -45,6 +43,7 @@ public class QueryTextTools {
 	private static final int PAGE_SIZE = 100;
 	// each listed input field costs three usage count queries
 	private static final int MAX_INPUT_FIELDS = 30;
+	private static final int MAX_COLLECTION_NAMES = 20;
 	private static final int MAX_SELECTION_VALUES = 50;
 	private static final String NO_MATCHES = "no matches";
 	private final AuthenticationVO auth;
@@ -122,13 +121,8 @@ public class QueryTextTools {
 			this.tagCount = tagCount;
 		}
 
-		private boolean include() {
+		private boolean used() {
 			return inquiryCount > 0 || ecrfCount > 0 || tagCount > 0;
-		}
-
-		private String format() {
-			return "inquiryCount=" + inquiryCount + " ecrfCount=" + ecrfCount + " tagCount=" + tagCount
-					+ (include() ? " - INCLUDE" : " - unused, skip");
 		}
 	}
 
@@ -140,6 +134,46 @@ public class QueryTextTools {
 		PSFVO tagPsf = createCountPsf();
 		long tags = rowCount(WebUtil.getServiceLocator().getInputFieldService().getProbandListEntryTagList(auth, fieldId, tagPsf), tagPsf);
 		return new InputFieldUsage(inquiries, ecrfFields, tags);
+	}
+
+	/**
+	 * Lists the criterion left-hand sides that actually store this field (expression names), so the agent does not guess collections.
+	 */
+	private void appendCollectionBindings(StringBuilder result, InputFieldOutVO field, InputFieldUsage usage)
+			throws AuthenticationException, AuthorisationException, ServiceException {
+		if (usage.inquiryCount > 0) {
+			appendLine(result, "  Inquiry = " + field.getName());
+		}
+		if (usage.ecrfCount > 0) {
+			PSFVO psf = new PSFVO();
+			psf.setFirst(0);
+			psf.setPageSize(MAX_COLLECTION_NAMES);
+			Collection<ECRFFieldOutVO> ecrfFields = WebUtil.getServiceLocator().getInputFieldService().getEcrfFieldList(auth, field.getId(), psf);
+			LinkedHashMap<String, Boolean> names = new LinkedHashMap<String, Boolean>();
+			if (ecrfFields != null) {
+				Iterator<ECRFFieldOutVO> it = ecrfFields.iterator();
+				while (it.hasNext()) {
+					ECRFFieldOutVO ecrfField = it.next();
+					if (ecrfField != null && !CommonUtil.isEmptyString(ecrfField.getUniqueName())) {
+						names.put(ecrfField.getUniqueName(), Boolean.TRUE);
+					}
+				}
+			}
+			if (names.isEmpty()) {
+				appendLine(result, "  eCRF field = " + field.getName());
+			} else {
+				Iterator<String> nameIt = names.keySet().iterator();
+				while (nameIt.hasNext()) {
+					appendLine(result, "  eCRF field = " + nameIt.next());
+				}
+				if (usage.ecrfCount > names.size()) {
+					appendLine(result, "  eCRF field: " + (usage.ecrfCount - names.size()) + " more");
+				}
+			}
+		}
+		if (usage.tagCount > 0) {
+			appendLine(result, "  Proband list attribute = " + field.getName());
+		}
 	}
 
 	private static String errorText(Exception e) {
@@ -164,9 +198,10 @@ public class QueryTextTools {
 		}
 	}
 
-	@Tool(name = SEARCH_INPUT_FIELDS, value = "Search input fields whose name, title or selectable option text contains the given text. Returns one line per field: "
-			+ "id | name | title | type | inquiryCount=... ecrfCount=... tagCount=... - INCLUDE or unused, skip, with INCLUDE fields listed first, then selectable option texts. "
-			+ "INCLUDE means at least one inquiry, eCRF field or proband list attribute uses the field - bind those collections. Skip unused fields. "
+	@Tool(name = SEARCH_INPUT_FIELDS, value = "Search input fields whose name, title or selectable option text contains the given text. "
+			+ "Returns only fields that are used as an inquiry, eCRF field or proband list attribute. Each match is: "
+			+ "id | name | title | type, then one indented line per collection that stores it (Inquiry = name, eCRF field = uniqueName, Proband list attribute = name), then selectable option texts. "
+			+ "Use those indented lines as criterion left-hand sides; combine alternatives from different collections with ∪. "
 			+ "Search again with other terms, such as an abbreviation or the full name in another language, to find all fitting fields. "
 			+ "For a free-text answer already entered in an inquiry, eCRF field or proband list attribute, also use " + SEARCH_PROPERTY_VALUES
 			+ " on the Text value and Selection input - value properties of those collections.")
@@ -183,25 +218,19 @@ public class QueryTextTools {
 			for (InputFieldOutVO field : ordered) {
 				usages.put(field.getId(), inputFieldUsage(field.getId()));
 			}
-			Collections.sort(ordered, new Comparator<InputFieldOutVO>() {
-				@Override
-				public int compare(InputFieldOutVO a, InputFieldOutVO b) {
-					boolean aInclude = usages.get(a.getId()).include();
-					boolean bInclude = usages.get(b.getId()).include();
-					if (aInclude == bInclude) {
-						return 0;
-					}
-					return aInclude ? -1 : 1;
-				}
-			});
 			StringBuilder result = new StringBuilder();
 			int count = 0;
 			for (InputFieldOutVO field : ordered) {
+				InputFieldUsage usage = usages.get(field.getId());
+				if (!usage.used()) {
+					continue;
+				}
 				if (count++ >= MAX_INPUT_FIELDS) {
 					appendLine(result, "more than " + MAX_INPUT_FIELDS + " fields match, search again with a more specific text");
 					break;
 				}
-				appendLine(result, field.getId() + " | " + field.getName() + " | " + field.getTitle() + " | " + fieldType(field) + " | " + usages.get(field.getId()).format());
+				appendLine(result, field.getId() + " | " + field.getName() + " | " + field.getTitle() + " | " + fieldType(field));
+				appendCollectionBindings(result, field, usage);
 				appendSelectionValues(result, field);
 			}
 			return result.length() > 0 ? result.toString() : NO_MATCHES;
