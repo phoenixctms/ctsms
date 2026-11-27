@@ -62,6 +62,15 @@ public final class QueryTextAnswer {
 		return new QueryTextAnswer(query, CommonUtil.isEmptyString(note) ? null : note);
 	}
 
+	private static boolean startsWithNoteMarker(String text) {
+		for (int m = 0; m < NOTE_MARKERS.length; m++) {
+			if (text.regionMatches(true, 0, NOTE_MARKERS[m], 0, NOTE_MARKERS[m].length())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	// a query has a tie symbol, or starts with a parenthesis, a JSON array or a bracketed criterion
 	private static boolean looksLikeQuery(String text) {
 		if (CommonUtil.isEmptyString(text)) {
@@ -129,8 +138,8 @@ public final class QueryTextAnswer {
 			}
 			String after = trimmed.substring(end + 3).trim();
 			trimmed = block.trim();
-			// keep a trailing Note / Hinweis that the model put after the fence
-			if (!CommonUtil.isEmptyString(after)) {
+			// keep a trailing Note / Hinweis that the model put after the fence, but no other prose, which would end up in the query
+			if (!CommonUtil.isEmptyString(after) && startsWithNoteMarker(after)) {
 				trimmed = trimmed + "\n" + after;
 			}
 		}
