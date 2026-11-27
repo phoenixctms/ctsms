@@ -98,6 +98,8 @@ public final class QueryTextAgent {
 		public void onResponse(ChatModelResponseContext context) {
 			ChatResponse response = context.chatResponse();
 			AiMessage message = response.aiMessage();
+			// each round overwrites it, so it ends with the finish reason of the round that gave the answer
+			run.setTruncated(response.finishReason() == FinishReason.LENGTH);
 			StringBuilder line = new StringBuilder();
 			line.append('#').append(++round).append(' ').append(elapsed(context.attributes()));
 			line.append(", thinking ").append(message.thinking() == null ? 0 : message.thinking().length()).append(" chars");
