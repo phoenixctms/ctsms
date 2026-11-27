@@ -2,6 +2,7 @@ package org.phoenixctms.ctsms.web.model.shared.search.querytext;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -45,6 +46,8 @@ public class QueryTextTools {
 	private static final int MAX_CHECKED_INPUT_FIELDS = 100;
 	private static final int MAX_SELECTION_VALUES = 50;
 	private static final int MAX_OPTION_MATCHES = 500;
+	private static final String TEXT_VALUE_SUFFIX = "stringValue";
+	private static final String SELECTION_VALUE_SUFFIX = "selectionValues.value";
 	private static final String NO_MATCHES = "no matches";
 	private final AuthenticationVO auth;
 	private final DBModule module;
@@ -343,7 +346,8 @@ public class QueryTextTools {
 	@Tool(name = SEARCH_PROPERTY_VALUES, value = "Search the values of a property marked with " + SEARCH_PROPERTY_VALUES + " under Properties. "
 			+ "Use this for catalog values and for answers already entered in the text or selection value properties of inquiries, eCRF fields or proband list attributes. "
 			+ "Pass the full property name as listed, including the collection in parentheses. "
-			+ "For a text or selection value property, the field hints name the fields that offer a matching option, as field: option. "
+			+ "A selection value property lists only options of selection fields and then the fields offering them, as field: option. "
+			+ "A text value property lists the stored texts and then the autocomplete fields suggesting the text, as field: suggestion; compare those fields with their text value. "
 			+ "Returns one line per value: the name for the expression format, or id | name for values that JSON gives by id.")
 	public String searchPropertyValues(@P(name = "property", value = "the property as listed under Properties") String property,
 			@P(name = "valuePart", value = "part of the value, case-insensitive") String valuePart) {
@@ -352,55 +356,110 @@ public class QueryTextTools {
 			return "error: no property " + property + " with values to look up";
 		}
 		try {
-			boolean ids = QueryTextValues.isEntityLookup(propertyVO);
+			FieldCollection collection = valueCollection(propertyVO);
+			boolean selection = collection != null && propertyVO.getProperty().endsWith(SELECTION_VALUE_SUFFIX);
+			OptionMatches options = collection != null ? matchOptions(collection, valuePart) : null;
 			StringBuilder result = new StringBuilder();
+			boolean ids = QueryTextValues.isEntityLookup(propertyVO);
 			Iterator<QueryTextValues.Value> it = QueryTextValues.lookup(auth, propertyVO, valuePart).iterator();
 			while (it.hasNext()) {
 				QueryTextValues.Value value = it.next();
-				appendLine(result, ids ? value.getKey() + " | " + value.getName() : value.getName());
+				// the plain selection values also hold the learned suggestions of autocomplete fields, which are never selected
+				if (!selection || !options.autocompleteOnly(value.getName())) {
+					appendLine(result, ids ? value.getKey() + " | " + value.getName() : value.getName());
+				}
 			}
-			// plain Text / Selection - value hits do not name the field; add Selection input (entity) uniqueNames that do
-			appendSelectionFieldHints(result, propertyVO, valuePart);
+			if (options != null) {
+				// the hits do not name the field: options of selection fields for a selection value, suggestions of autocomplete fields for a text value
+				StringBuilder hints = selection ? options.selectionHints : options.autocompleteHints;
+				if (hints.length() > 0) {
+					appendLine(result, selection ? "fields offering a matching option:" : "autocomplete fields suggesting this text (compare their text value):");
+					result.append('\n').append(hints);
+				}
+			}
 			return result.length() > 0 ? result.toString() : NO_MATCHES;
 		} catch (AuthenticationException | AuthorisationException | ServiceException | IllegalArgumentException e) {
 			return errorText(e);
 		}
 	}
 
-	private void appendSelectionFieldHints(StringBuilder result, CriterionPropertyVO propertyVO, String valuePart)
-			throws AuthenticationException, AuthorisationException, ServiceException {
-		if (propertyVO == null || QueryTextValues.isEntityLookup(propertyVO) || CommonUtil.isEmptyString(valuePart)) {
-			return;
+	// the collection of a text or selection value property
+	private static FieldCollection valueCollection(CriterionPropertyVO propertyVO) {
+		if (propertyVO == null || propertyVO.getProperty() == null) {
+			return null;
 		}
 		String path = propertyVO.getProperty();
-		if (path == null) {
-			return;
-		}
-		String entityPropertyPath = null;
-		if (path.indexOf("inquiryValues.value.stringValue") >= 0 || path.indexOf("inquiryValues.value.selectionValues.value") >= 0) {
-			entityPropertyPath = "proband.inquiryValues.value.selectionValues.id";
-		} else if (path.indexOf("tagValues.value.stringValue") >= 0 || path.indexOf("tagValues.value.selectionValues.value") >= 0) {
-			entityPropertyPath = "proband.trialParticipations.tagValues.value.selectionValues.id";
-		} else if (path.indexOf("ecrfValues.value.stringValue") >= 0 || path.indexOf("ecrfValues.value.selectionValues.value") >= 0) {
-			entityPropertyPath = "proband.trialParticipations.ecrfValues.value.selectionValues.id";
-		}
-		if (entityPropertyPath == null) {
-			return;
-		}
-		CriterionPropertyVO entityProperty = findProperty(entityPropertyPath);
-		if (entityProperty == null || !QueryTextValues.isLookup(entityProperty)) {
-			return;
-		}
-		Iterator<QueryTextValues.Value> it = QueryTextValues.lookup(auth, entityProperty, valuePart).iterator();
-		boolean header = false;
-		while (it.hasNext()) {
-			QueryTextValues.Value value = it.next();
-			if (!header) {
-				appendLine(result, "field hints (" + entityProperty.getName() + "):");
-				header = true;
+		FieldCollection[] collections = FieldCollection.values();
+		for (int i = 0; i < collections.length; i++) {
+			String prefix = collections[i].valuePrefix;
+			if (path.equals(prefix + TEXT_VALUE_SUFFIX) || path.equals(prefix + SELECTION_VALUE_SUFFIX)) {
+				return collections[i];
 			}
-			appendLine(result, "  " + value.getName());
 		}
+		return null;
+	}
+
+	/**
+	 * The selection set values whose name contains a text, split by the type of their field.
+	 */
+	private static final class OptionMatches {
+
+		private final HashSet<String> selectionValues = new HashSet<String>();
+		private final HashSet<String> autocompleteValues = new HashSet<String>();
+		private final StringBuilder selectionHints = new StringBuilder();
+		private final StringBuilder autocompleteHints = new StringBuilder();
+
+		// a learned suggestion has the same name and value, so the name search finds every one of them
+		private boolean autocompleteOnly(String value) {
+			return autocompleteValues.contains(value) && !selectionValues.contains(value);
+		}
+	}
+
+	/**
+	 * Finds the selection set values containing the text, of the fields the collection stores: the options of selection fields, to compare
+	 * with the selection value property, and the suggestions of autocomplete fields, whose answers are text values.
+	 */
+	private OptionMatches matchOptions(FieldCollection collection, String valuePart)
+			throws AuthenticationException, AuthorisationException, ServiceException {
+		OptionMatches matches = new OptionMatches();
+		if (CommonUtil.isEmptyString(valuePart)) {
+			return matches;
+		}
+		Collection<InputFieldSelectionSetValueOutVO> values = WebUtil.getServiceLocator().getToolsService().completeInputFieldSelectionSetValue(auth, valuePart.trim(), null,
+				Integer.valueOf(MAX_OPTION_MATCHES));
+		if (values == null) {
+			return matches;
+		}
+		HashMap<Long, Boolean> stored = new HashMap<Long, Boolean>();
+		int selectionHints = 0;
+		int autocompleteHints = 0;
+		Iterator<InputFieldSelectionSetValueOutVO> it = values.iterator();
+		while (it.hasNext()) {
+			InputFieldSelectionSetValueOutVO value = it.next();
+			if (value == null || value.getField() == null || CommonUtil.isEmptyString(value.getValue())) {
+				continue;
+			}
+			boolean autocomplete = InputFieldType.AUTOCOMPLETE.name().equals(fieldType(value.getField()));
+			(autocomplete ? matches.autocompleteValues : matches.selectionValues).add(value.getValue());
+			Boolean isStored = stored.get(value.getField().getId());
+			if (isStored == null) {
+				// one count query per field, so a short text matching many fields does not check them all
+				isStored = stored.size() < MAX_CHECKED_INPUT_FIELDS && usageCount(collection, value.getField().getId()) > 0;
+				stored.put(value.getField().getId(), isStored);
+			}
+			if (!isStored) {
+				continue;
+			}
+			String hint = "  " + value.getField().getName() + ": " + value.getValue();
+			if (autocomplete && autocompleteHints < MAX_SELECTION_VALUES) {
+				appendLine(matches.autocompleteHints, hint);
+				autocompleteHints++;
+			} else if (!autocomplete && selectionHints < MAX_SELECTION_VALUES) {
+				appendLine(matches.selectionHints, hint);
+				selectionHints++;
+			}
+		}
+		return matches;
 	}
 
 	// by the name the expression format lists, or the property JSON lists
