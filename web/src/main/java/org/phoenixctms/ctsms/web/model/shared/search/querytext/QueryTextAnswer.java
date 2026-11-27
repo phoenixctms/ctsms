@@ -43,7 +43,16 @@ public final class QueryTextAnswer {
 			return new QueryTextAnswer(text.trim(), null);
 		}
 		String query = text.substring(0, noteAt).trim();
-		String note = text.substring(noteAt + marker.length()).trim().replaceAll("\\s+", " ").trim();
+		String rest = text.substring(noteAt + marker.length()).trim();
+		if (query.length() == 0) {
+			// the note came first: it is one line, the query follows it
+			int lineEnd = rest.indexOf('\n');
+			if (lineEnd >= 0) {
+				query = rest.substring(lineEnd + 1).trim();
+				rest = rest.substring(0, lineEnd);
+			}
+		}
+		String note = rest.replaceAll("\\s+", " ").trim();
 		return new QueryTextAnswer(query, CommonUtil.isEmptyString(note) ? null : note);
 	}
 

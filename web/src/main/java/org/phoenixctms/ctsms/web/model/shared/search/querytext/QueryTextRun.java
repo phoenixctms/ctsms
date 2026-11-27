@@ -27,6 +27,7 @@ public class QueryTextRun {
 	private volatile Collection<CriterionInVO> lastValidCriterions;
 	private volatile String error;
 	private volatile boolean applied;
+	private volatile boolean truncated;
 	private volatile Thread thread;
 
 	public QueryTextRun(String naturalLanguageRequest) {
@@ -118,6 +119,17 @@ public class QueryTextRun {
 
 	public boolean isRunning() {
 		return status == Status.RUNNING;
+	}
+
+	/**
+	 * Whether the last model round, the one giving the answer, stopped at the output token limit.
+	 */
+	public boolean isTruncated() {
+		return truncated;
+	}
+
+	void setTruncated(boolean truncated) {
+		this.truncated = truncated;
 	}
 
 	/**

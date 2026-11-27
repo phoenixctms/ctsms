@@ -1593,12 +1593,13 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		// it was parsed by the agent already, which can take long when values are looked up by name
 		QueryTextAnswer answer = QueryTextAnswer.parse(run.getAnswer());
 		String note = !CommonUtil.isEmptyString(run.getNote()) ? run.getNote() : answer.getNote();
-		// a final empty query (note-only / nothing resolved) must not revive an intermediate parseQuery result
-		boolean emptyFinal = CommonUtil.isEmptyString(answer.getQuery());
-		boolean validated = !emptyFinal && !CommonUtil.isEmptyString(run.getLastValidText()) && run.getLastValidCriterions() != null;
+		// only a complete answer that is just a note (nothing resolved) drops the last accepted text,
+		// an empty or cut off answer after a successful parseQuery still keeps it
+		boolean noteOnly = CommonUtil.isEmptyString(answer.getQuery()) && !CommonUtil.isEmptyString(answer.getNote()) && !run.isTruncated();
+		boolean validated = !noteOnly && !CommonUtil.isEmptyString(run.getLastValidText()) && run.getLastValidCriterions() != null;
 		String result = validated ? run.getLastValidText() : answer.getQuery();
 		if (CommonUtil.isEmptyString(result)) {
-			if (queryTextRunTruncated(run)) {
+			if (run.isTruncated()) {
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, Labels.getStringLocalized("search_query_text_llm_truncated"));
 			} else if (!CommonUtil.isEmptyString(note)) {
 				Messages.addMessage(FacesMessage.SEVERITY_WARN, note);
@@ -2052,18 +2053,4 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		return joined.toString();
 	}
 
-	// the round log marks finish LENGTH when the model stopped mid-answer
-	private static boolean queryTextRunTruncated(QueryTextRun run) {
-		if (run == null) {
-			return false;
-		}
-		Iterator<String> it = run.getSteps().iterator();
-		while (it.hasNext()) {
-			String step = it.next();
-			if (step != null && step.indexOf("finish LENGTH") >= 0) {
-				return true;
-			}
-		}
-		return false;
-	}
 }
