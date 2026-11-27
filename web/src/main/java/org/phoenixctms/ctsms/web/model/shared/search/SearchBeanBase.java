@@ -1522,7 +1522,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 			// the prompt needs the faces context, so it is built here and not in the worker thread.
 			// the worker gets its own copy of the session auth, as the session bean hands out copies only
 			QueryTextAgent.start(buildQueryTextPrompt(true), queryText, Labels.getStringLocalized("search_query_text_agent_continue"), new QueryTextTools(WebUtil.getAuthentication(), getDBModule(), maxCriterions,
-					propertyVOsMap == null ? null : new ArrayList<CriterionPropertyVO>(propertyVOsMap.values())), run);
+					propertyVOsMap == null ? null : new ArrayList<CriterionPropertyVO>(propertyVOsMap.values()), QUERY_TEXT_FORMAT_JSON.equals(queryTextFormat)), run);
 		} catch (Exception e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, Labels.getMessageLocalized("search_query_text_llm_failed",
 					e.getMessage() != null ? e.getMessage() : e.getClass().getName()));
@@ -1688,7 +1688,24 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 			}
 		}
 		boolean json = QUERY_TEXT_FORMAT_JSON.equals(queryTextFormat);
-		String prompt = template.replace("{format}", json ? "json" : "expression");
+		// collecting facets across inquiries, eCRF fields and proband list attributes only fits modules that can bind them,
+		// and goes first as it holds placeholders itself
+		String facets = "";
+		if (findQueryTextProperty(QUERY_TEXT_INQUIRY_PROPERTY) != null || findQueryTextProperty(QUERY_TEXT_TAG_PROPERTY) != null
+				|| findQueryTextProperty(QUERY_TEXT_ECRF_FIELD_PROPERTY) != null) {
+			facets = Labels.getStringLocalized(agent ? "search_query_text_agent_prompt_facets" : "search_query_text_prompt_facets");
+			if (!CommonUtil.isEmptyString(facets)) {
+				// a properties value loses its leading blanks, so the first line gets the indent of the composition lines back
+				if (!facets.startsWith(" ")) {
+					facets = "  " + facets;
+				}
+				if (!facets.endsWith("\n")) {
+					facets += "\n";
+				}
+			}
+		}
+		String prompt = template.replace("{facets}", facets == null ? "" : facets);
+		prompt = prompt.replace("{format}", json ? "json" : "expression");
 		prompt = prompt.replace("{root}", queryTextRootName());
 		prompt = prompt.replace("{article}", json ? "a" : "an");
 		prompt = prompt.replace("{comment}", json ? "//" : "#");
@@ -1702,6 +1719,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 			String apiBase = queryTextApiBase();
 			prompt = prompt.replace("{fieldLists}", indentQueryTextLines(queryTextFieldListSection(json, apiBase)));
 			prompt = prompt.replace("{parseUrl}", queryTextParseUrl(apiBase));
+			prompt = prompt.replace("{facetUrl}", queryTextFacetUrl(apiBase));
 			prompt = prompt.replace("{jwt}", queryTextJwt());
 			prompt = prompt.replace("{currentQuery}", "{{CTSMS_CURRENT_QUERY}}");
 		}
@@ -1818,6 +1836,14 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 			return "";
 		}
 		return apiBase + "/search/" + module + "/criteriontext";
+	}
+
+	private String queryTextFacetUrl(String apiBase) {
+		String module = queryTextModulePath(getDBModule());
+		if (CommonUtil.isEmptyString(apiBase) || CommonUtil.isEmptyString(module)) {
+			return "";
+		}
+		return apiBase + "/search/" + module + "/facet";
 	}
 
 	private static String queryTextModulePath(DBModule module) {

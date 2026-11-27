@@ -2,6 +2,7 @@ package org.phoenixctms.ctsms.web.jersey.resource.shared;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -29,6 +30,7 @@ import org.phoenixctms.ctsms.vo.CourseOutVO;
 import org.phoenixctms.ctsms.vo.CriteriaOutVO;
 import org.phoenixctms.ctsms.vo.CriterionInVO;
 import org.phoenixctms.ctsms.vo.CriterionOutVO;
+import org.phoenixctms.ctsms.vo.CriterionPropertyVO;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.phoenixctms.ctsms.vo.IntermediateSetSummaryVO;
 import org.phoenixctms.ctsms.vo.InventoryOutVO;
@@ -42,6 +44,7 @@ import org.phoenixctms.ctsms.web.jersey.resource.Page;
 import org.phoenixctms.ctsms.web.jersey.resource.ResourceUtils;
 import org.phoenixctms.ctsms.web.jersey.wrapper.CriterionInVOWrapper;
 import org.phoenixctms.ctsms.web.jersey.wrapper.NoShortcutSerializationWrapper;
+import org.phoenixctms.ctsms.web.model.shared.search.querytext.QueryTextTools;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.SettingCodes;
 import org.phoenixctms.ctsms.web.util.Settings;
@@ -344,6 +347,22 @@ public final class SearchResource {
 		}
 		return WebUtil.getServiceLocator().getSearchService().parseCriterionText(auth, dbModule, text == null ? "" : text, true,
 				Integer.valueOf(Settings.getInt(SettingCodes.MAX_CRITERIONS, Bundle.SETTINGS, DefaultSettings.MAX_CRITERIONS)));
+	}
+
+	@GET
+	@Produces({ MediaType.TEXT_PLAIN + ";charset=UTF-8" })
+	@Path("{module}/facet")
+	public String collectFacet(@PathParam("module") String module, @QueryParam("name") String name, @QueryParam("term") List<String> terms,
+			@QueryParam("json") boolean json)
+			throws AuthenticationException, AuthorisationException, ServiceException {
+		DBModule dbModule = queryTextModule(module);
+		if (dbModule == null) {
+			throw new NotFoundException();
+		}
+		// the same collection the query agent of the UI calls, in the property names of the user's locale
+		Collection<CriterionPropertyVO> properties = WebUtil.getServiceLocator().getSelectionSetService().getCriterionProperties(auth, dbModule);
+		return new QueryTextTools(auth, dbModule, Integer.valueOf(Settings.getInt(SettingCodes.MAX_CRITERIONS, Bundle.SETTINGS, DefaultSettings.MAX_CRITERIONS)), properties, json)
+				.collectFacetText(name, terms);
 	}
 
 	private static DBModule queryTextModule(String module) {

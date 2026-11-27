@@ -1,11 +1,18 @@
 package org.phoenixctms.ctsms.web.model.shared.search.querytext;
 
+import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.phoenixctms.ctsms.enumeration.CriterionRestriction;
 import org.phoenixctms.ctsms.enumeration.DBModule;
@@ -27,6 +34,12 @@ import org.phoenixctms.ctsms.vo.ProbandListEntryTagOutVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
+
 import dev.langchain4j.agent.tool.P;
 import dev.langchain4j.agent.tool.Tool;
 
@@ -41,6 +54,7 @@ public class QueryTextTools {
 	public static final String SEARCH_TRIAL_PROBAND_LIST_ATTRIBUTES = "searchTrialProbandListAttributes";
 	public static final String SEARCH_TRIAL_ECRF_FIELDS = "searchTrialEcrfFields";
 	public static final String SEARCH_PROPERTY_VALUES = "searchPropertyValues";
+	public static final String COLLECT_FACET = "collectFacet";
 	public static final String PARSE_QUERY = "parseQuery";
 	private static final int PAGE_SIZE = 100;
 	private static final int MAX_INPUT_FIELDS = 30;
@@ -51,15 +65,31 @@ public class QueryTextTools {
 	private static final int TEXT_VALUE_PAGES = 5;
 	private static final String TEXT_VALUE_SUFFIX = "stringValue";
 	private static final String SELECTION_VALUE_SUFFIX = "selectionValues.value";
+	private static final String BOOLEAN_VALUE_SUFFIX = "booleanValue";
+	private static final int MAX_FACET_TERMS = 20;
+	private static final int MIN_FACET_TERM_LENGTH = 2;
+	// the usage count queries of one facet
+	private static final int MAX_FACET_USAGE_COUNTS = 600;
+	// a last word up to this length must end where the term ends
+	private static final int SHORT_WORD_LENGTH = 3;
+	// a first word up to this length must start where the term starts
+	private static final int SHORT_CODE_LENGTH = 4;
+	private static final Pattern FACET_PLACEHOLDER = Pattern.compile("\\{\\s*(F\\d+)((?:\\s*-\\s*B\\d+)*)\\s*\\}", Pattern.CASE_INSENSITIVE);
+	private static final Pattern BRANCH_EXCLUSION = Pattern.compile("-\\s*(B\\d+)", Pattern.CASE_INSENSITIVE);
 	private static final String NO_MATCHES = "no matches";
+	private static final String NO_FIELD_COLLECTIONS = "error: this search has no inquiries, eCRF fields or proband list attributes to collect from";
 	private final AuthenticationVO auth;
 	private final DBModule module;
 	private final Integer maxCriterions;
 	private final Collection<CriterionPropertyVO> properties;
+	private final boolean json;
+	private final ArrayList<Facet> facets = new ArrayList<Facet>();
+	private int facetCount;
 	private String lastValidText;
 	private Collection<CriterionInVO> lastValidCriterions;
 
-	public QueryTextTools(AuthenticationVO auth, DBModule module, Integer maxCriterions, Collection<CriterionPropertyVO> properties) {
+	public QueryTextTools(AuthenticationVO auth, DBModule module, Integer maxCriterions, Collection<CriterionPropertyVO> properties, boolean json) {
+		this.json = json;
 		this.auth = auth;
 		this.module = module;
 		this.maxCriterions = maxCriterions;
@@ -441,10 +471,18 @@ public class QueryTextTools {
 	 */
 	private StringBuilder textValueFields(FieldCollection collection, String valuePart) throws AuthenticationException {
 		StringBuilder fields = new StringBuilder();
-		if (CommonUtil.isEmptyString(valuePart)) {
-			return fields;
+		Iterator<InputFieldOutVO> it = textValueFieldMap(collection, valuePart).values().iterator();
+		while (it.hasNext()) {
+			appendLine(fields, "  " + it.next().getName());
 		}
-		LinkedHashMap<Long, String> names = new LinkedHashMap<Long, String>();
+		return fields;
+	}
+
+	private LinkedHashMap<Long, InputFieldOutVO> textValueFieldMap(FieldCollection collection, String valuePart) throws AuthenticationException {
+		LinkedHashMap<Long, InputFieldOutVO> names = new LinkedHashMap<Long, InputFieldOutVO>();
+		if (CommonUtil.isEmptyString(valuePart)) {
+			return names;
+		}
 		try {
 			// one row per matching value, so page through the rows to reach distinct fields
 			for (int page = 0; page < TEXT_VALUE_PAGES && names.size() < MAX_INPUT_FIELDS; page++) {
@@ -458,7 +496,7 @@ public class QueryTextTools {
 				while (it.hasNext()) {
 					InputFieldOutVO field = collectionField(it.next());
 					if (field != null && !names.containsKey(field.getId())) {
-						names.put(field.getId(), field.getName());
+						names.put(field.getId(), field);
 					}
 				}
 				if (items.size() < PAGE_SIZE) {
@@ -468,11 +506,7 @@ public class QueryTextTools {
 		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 			// the hints are optional
 		}
-		Iterator<String> it = names.values().iterator();
-		while (it.hasNext()) {
-			appendLine(fields, "  " + it.next());
-		}
-		return fields;
+		return names;
 	}
 
 	// the collection of a text or selection value property
@@ -570,13 +604,670 @@ public class QueryTextTools {
 		return null;
 	}
 
-	@Tool(name = PARSE_QUERY, value = "Parse a query. Returns ok and the number of criteria, or the parse error to fix.")
+	/**
+	 * A branch of a facet: one input field in one collection, with every value of it that matches a term of the facet.
+	 */
+	private static final class FacetBranch {
+
+		private final FieldCollection collection;
+		private final InputFieldOutVO field;
+		// option value -> option text, as listed
+		private final LinkedHashMap<String, String> options = new LinkedHashMap<String, String>();
+		private final LinkedHashSet<String> patterns = new LinkedHashSet<String>();
+		private boolean checked;
+		private String label;
+		private String text;
+		private String error;
+
+		private FacetBranch(FieldCollection collection, InputFieldOutVO field) {
+			this.collection = collection;
+			this.field = field;
+		}
+	}
+
+	/**
+	 * The branches collected for one facet of a request, combined with ∪.
+	 */
+	private static final class Facet {
+
+		private final String name;
+		private final ArrayList<FacetBranch> branches = new ArrayList<FacetBranch>();
+		private final LinkedHashMap<Long, InputFieldOutVO> namedFields = new LinkedHashMap<Long, InputFieldOutVO>();
+		private final HashMap<String, Boolean> used = new HashMap<String, Boolean>();
+		private final LinkedHashMap<String, FacetBranch> branchMap = new LinkedHashMap<String, FacetBranch>();
+		private String label;
+		private String text;
+		private int terms;
+		private boolean incomplete;
+		// the branches a placeholder of the query leaves out
+		private final HashSet<String> excluded = new HashSet<String>();
+
+		private Facet(String name) {
+			this.name = name;
+		}
+	}
+
+	@Tool(name = COLLECT_FACET, value = "Collect every inquiry, eCRF field and proband list attribute that stores the answer of one facet, such as a condition or a device, "
+			+ "by every given spelling: the matching options of selection fields, the stored texts of text fields and checkbox fields named like a term. "
+			+ "Returns one line per branch, the fields named like a term that it could not compare, and the group: all branches combined with ∪, ready to copy into the query.")
+	public String collectFacet(@P(name = "facet", value = "a short name of the facet, such as type 1 diabetes") String facet,
+			@P(name = "terms", value = "every spelling of the requested answer: the English and German name, abbreviations, codes, Arabic and Roman numerals, brand, product and manufacturer names") List<String> terms) {
+		try {
+			if (!hasFieldCollections()) {
+				return NO_FIELD_COLLECTIONS;
+			}
+			Facet result = buildFacet(facet, terms);
+			// a facet collected again replaces the earlier one
+			Iterator<Facet> it = facets.iterator();
+			while (it.hasNext()) {
+				Facet earlier = it.next();
+				if (earlier.name.equalsIgnoreCase(result.name)) {
+					result.label = earlier.label;
+					it.remove();
+				}
+			}
+			if (result.label == null) {
+				result.label = "F" + (++facetCount);
+			}
+			if (result.text != null) {
+				facets.add(result);
+			}
+			return describeFacet(result, true);
+		} catch (AuthenticationException | AuthorisationException | ServiceException | IllegalArgumentException e) {
+			return errorText(e);
+		}
+	}
+
+	/**
+	 * The same collection for the REST API, which keeps no facets between calls.
+	 */
+	public String collectFacetText(String facet, List<String> terms) throws AuthenticationException, AuthorisationException, ServiceException {
+		if (!hasFieldCollections()) {
+			return NO_FIELD_COLLECTIONS;
+		}
+		Facet result = buildFacet(facet, terms);
+		result.label = "F";
+		return describeFacet(result, false);
+	}
+
+	// only the proband search binds inquiries, eCRF fields and proband list attributes
+	private boolean hasFieldCollections() {
+		FieldCollection[] collections = FieldCollection.values();
+		for (int i = 0; i < collections.length; i++) {
+			if (findProperty(collections[i].fieldProperty) != null) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private Facet buildFacet(String name, List<String> terms) throws AuthenticationException, AuthorisationException, ServiceException {
+		Facet facet = new Facet(CommonUtil.isEmptyString(name) ? "facet" : name.trim());
+		LinkedHashMap<String, String> spellings = new LinkedHashMap<String, String>();
+		if (terms != null) {
+			Iterator<String> it = terms.iterator();
+			while (it.hasNext()) {
+				String term = it.next();
+				// a single character matches nearly everything
+				if (term != null && term.trim().length() >= MIN_FACET_TERM_LENGTH && term.indexOf('\n') < 0) {
+					String key = term.trim().toLowerCase(Locale.ROOT);
+					if (!spellings.containsKey(key) && spellings.size() < MAX_FACET_TERMS) {
+						spellings.put(key, term.trim());
+					}
+				}
+			}
+		}
+		Iterator<String> it = spellings.values().iterator();
+		while (it.hasNext()) {
+			String term = it.next();
+			collectOptions(facet, term);
+			collectTexts(facet, term);
+			collectNamedFields(facet, term);
+		}
+		facet.branches.addAll(facet.branchMap.values());
+		Iterator<FacetBranch> pruneIt = facet.branches.iterator();
+		while (pruneIt.hasNext()) {
+			prunePatterns(pruneIt.next().patterns);
+		}
+		StringBuilder group = new StringBuilder();
+		int count = 0;
+		Iterator<FacetBranch> branchIt = facet.branches.iterator();
+		while (branchIt.hasNext()) {
+			FacetBranch branch = branchIt.next();
+			branch.label = "B" + (++count);
+			String text = branchText(branch);
+			try {
+				// a branch that does not parse alone, e.g. a field name that is not unique, would break the whole group
+				WebUtil.getServiceLocator().getSearchService().parseCriterionText(auth, module, text, true, null);
+				branch.text = text;
+				group.append(group.length() == 0 ? "(\n" : "\n∪\n").append(text);
+			} catch (ServiceException | IllegalArgumentException e) {
+				branch.error = e.getMessage();
+			}
+		}
+		if (group.length() > 0) {
+			group.append("\n)");
+			Collection<CriterionInVO> parsed = WebUtil.getServiceLocator().getSearchService().parseCriterionText(auth, module, group.toString(), true, null);
+			facet.terms = parsed == null ? 0 : parsed.size();
+			// JSON gives the field by id, while the editor print of an expression adds position numbers that do not fit into another query
+			facet.text = json ? formatCriterions(parsed) : null;
+			if (CommonUtil.isEmptyString(facet.text)) {
+				facet.text = group.toString();
+			}
+		}
+		return facet;
+	}
+
+	// prints parsed criterions the way the editor shows them, in the format of the prompt
+	private String formatCriterions(Collection<CriterionInVO> parsed) throws AuthenticationException, AuthorisationException, ServiceException {
+		return formatCriterions(parsed, json);
+	}
+
+	private String formatCriterions(Collection<CriterionInVO> parsed, boolean asJson) throws AuthenticationException, AuthorisationException, ServiceException {
+		if (parsed == null || parsed.isEmpty()) {
+			return null;
+		}
+		ArrayList<CriterionInVO> criterions = new ArrayList<CriterionInVO>(parsed);
+		for (int i = 0; i < criterions.size(); i++) {
+			criterions.get(i).setPosition(CommonUtil.LIST_INITIAL_POSITION + i);
+		}
+		return WebUtil.getServiceLocator().getSearchService().formatCriterionText(auth, module, new HashSet<CriterionInVO>(criterions), asJson);
+	}
+
+	private FacetBranch facetBranch(Facet facet, FieldCollection collection, InputFieldOutVO field) {
+		String key = collection.name() + ":" + field.getId();
+		FacetBranch branch = facet.branchMap.get(key);
+		if (branch == null) {
+			branch = new FacetBranch(collection, field);
+			facet.branchMap.put(key, branch);
+		}
+		return branch;
+	}
+
+	// whether the collection stores the field, counted once per field and collection
+	private boolean isStored(Facet facet, FieldCollection collection, InputFieldOutVO field) throws AuthenticationException, AuthorisationException, ServiceException {
+		String key = collection.name() + ":" + field.getId();
+		Boolean stored = facet.used.get(key);
+		if (stored == null) {
+			if (facet.used.size() >= MAX_FACET_USAGE_COUNTS) {
+				facet.incomplete = true;
+				return false;
+			}
+			stored = usageCount(collection, field.getId()) > 0;
+			facet.used.put(key, stored);
+		}
+		return stored;
+	}
+
+	// the options of selection fields whose text or value names the term
+	private void collectOptions(Facet facet, String term) throws AuthenticationException, AuthorisationException, ServiceException {
+		Collection<InputFieldSelectionSetValueOutVO> values = WebUtil.getServiceLocator().getToolsService().completeInputFieldSelectionSetValue(auth, term, null,
+				Integer.valueOf(MAX_OPTION_MATCHES));
+		if (values == null) {
+			return;
+		}
+		if (values.size() >= MAX_OPTION_MATCHES) {
+			facet.incomplete = true;
+		}
+		Iterator<InputFieldSelectionSetValueOutVO> it = values.iterator();
+		while (it.hasNext()) {
+			InputFieldSelectionSetValueOutVO value = it.next();
+			// an autocomplete answer is stored as text, which collectTexts finds
+			if (value == null || value.getField() == null || CommonUtil.isEmptyString(value.getValue()) || value.getValue().indexOf('\n') >= 0
+					|| InputFieldType.AUTOCOMPLETE.name().equals(fieldType(value.getField()))) {
+				continue;
+			}
+			// the name search also finds "Typ II" for "Typ I"
+			if (!matchesTerm(value.getName(), term) && !matchesTerm(value.getValue(), term)) {
+				continue;
+			}
+			FieldCollection[] collections = FieldCollection.values();
+			for (int i = 0; i < collections.length; i++) {
+				if (findProperty(collections[i].fieldProperty) != null && findProperty(collections[i].valuePrefix + SELECTION_VALUE_SUFFIX) != null
+						&& isStored(facet, collections[i], value.getField())) {
+					facetBranch(facet, collections[i], value.getField()).options.put(value.getValue(), optionText(value));
+				}
+			}
+		}
+	}
+
+	// the text fields storing the term
+	private void collectTexts(Facet facet, String term) throws AuthenticationException, AuthorisationException, ServiceException {
+		FieldCollection[] collections = FieldCollection.values();
+		for (int i = 0; i < collections.length; i++) {
+			CriterionPropertyVO textProperty = findProperty(collections[i].valuePrefix + TEXT_VALUE_SUFFIX);
+			if (findProperty(collections[i].fieldProperty) == null || textProperty == null) {
+				continue;
+			}
+			List<String> patterns = likePatterns(textProperty, term);
+			if (patterns.isEmpty()) {
+				continue;
+			}
+			Iterator<InputFieldOutVO> it = textValueFieldMap(collections[i], term).values().iterator();
+			while (it.hasNext()) {
+				facetBranch(facet, collections[i], it.next()).patterns.addAll(patterns);
+			}
+		}
+	}
+
+	/**
+	 * The like patterns that find the term in the stored texts of a text value property. Just %term% when every stored text
+	 * containing it holds the term as a word, otherwise one pattern per way the word is written, so "Typ I" does not match "Typ II".
+	 */
+	private List<String> likePatterns(CriterionPropertyVO textProperty, String term) throws AuthenticationException, AuthorisationException, ServiceException {
+		LinkedHashSet<String> patterns = new LinkedHashSet<String>();
+		boolean partial = false;
+		// like is not case-sensitive, so "Libre" and "libre" are the same pattern
+		HashSet<String> seen = new HashSet<String>();
+		String lowerTerm = term.toLowerCase(Locale.ROOT);
+		Iterator<QueryTextValues.Value> it = QueryTextValues.lookup(auth, textProperty, term).iterator();
+		while (it.hasNext()) {
+			String text = it.next().getName();
+			String lower = text.toLowerCase(Locale.ROOT);
+			if (lower.length() != text.length()) {
+				continue;
+			}
+			int index = lower.indexOf(lowerTerm);
+			while (index >= 0) {
+				int end = index + term.length();
+				if (isTermStart(text, index, term) && isTermEnd(text, end, term)) {
+					String pattern = wordPattern(text, index, end);
+					if (pattern != null && seen.add(pattern.toLowerCase(Locale.ROOT))) {
+						patterns.add(pattern);
+					}
+				} else {
+					partial = true;
+				}
+				index = lower.indexOf(lowerTerm, index + 1);
+			}
+		}
+		ArrayList<String> result = new ArrayList<String>();
+		if (!patterns.isEmpty()) {
+			if (partial) {
+				result.addAll(patterns);
+			} else {
+				result.add("%" + term + "%");
+			}
+		}
+		return result;
+	}
+
+	// %ypso% already matches every text that %ypsomed% or % ypsopump % match, so these only cost query terms
+	private static void prunePatterns(LinkedHashSet<String> patterns) {
+		ArrayList<String> stems = new ArrayList<String>();
+		Iterator<String> it = patterns.iterator();
+		while (it.hasNext()) {
+			String pattern = it.next();
+			if (pattern.length() > 2 && pattern.startsWith("%") && pattern.endsWith("%") && pattern.indexOf('%', 1) == pattern.length() - 1) {
+				stems.add(pattern.substring(1, pattern.length() - 1).toLowerCase(Locale.ROOT));
+			}
+		}
+		it = patterns.iterator();
+		while (it.hasNext()) {
+			String pattern = it.next();
+			String literal = pattern.replace("%", "").toLowerCase(Locale.ROOT);
+			for (int i = 0; i < stems.size(); i++) {
+				String stem = stems.get(i);
+				if (literal.contains(stem) && !literal.equals(stem)) {
+					it.remove();
+					break;
+				}
+			}
+		}
+	}
+
+	// the term with the character before and after it, which a like cannot express as a word boundary otherwise
+	private static String wordPattern(String text, int index, int end) {
+		StringBuilder pattern = new StringBuilder();
+		if (index > 0) {
+			char before = text.charAt(index - 1);
+			if (!isPatternChar(before)) {
+				return null;
+			}
+			pattern.append('%').append(before);
+		}
+		pattern.append(text, index, end);
+		if (end < text.length()) {
+			char after = text.charAt(end);
+			if (!isPatternChar(after)) {
+				return null;
+			}
+			pattern.append(after).append('%');
+		}
+		return pattern.toString();
+	}
+
+	// a character a pattern can hold literally on one line
+	private static boolean isPatternChar(char c) {
+		return c >= ' ' && c != '%' && c != '_';
+	}
+
+	// a short first word or code must start a word, so "IDDM" does not match "NIDDM"; a longer brand like "Libre" also matches "FreestyleLibre"
+	private static boolean isTermStart(String text, int index, String term) {
+		if (index == 0 || !Character.isLetterOrDigit(text.charAt(index - 1))) {
+			return true;
+		}
+		String trimmed = term.trim();
+		int space = trimmed.indexOf(' ');
+		String firstWord = space < 0 ? trimmed : trimmed.substring(0, space);
+		return firstWord.length() > SHORT_CODE_LENGTH;
+	}
+
+	// a short last word or a number must end there, so "Typ 1" does not match "Typ 10"; a longer stem like "Ypso" may go on
+	private static boolean isTermEnd(String text, int end, String term) {
+		if (end >= text.length() || !Character.isLetterOrDigit(text.charAt(end))) {
+			return true;
+		}
+		String trimmed = term.trim();
+		String lastWord = trimmed.substring(trimmed.lastIndexOf(' ') + 1);
+		return lastWord.length() > SHORT_WORD_LENGTH && !Character.isDigit(lastWord.charAt(lastWord.length() - 1));
+	}
+
+	private static boolean matchesTerm(String text, String term) {
+		if (CommonUtil.isEmptyString(text) || CommonUtil.isEmptyString(term)) {
+			return false;
+		}
+		String lower = text.toLowerCase(Locale.ROOT);
+		String lowerTerm = term.trim().toLowerCase(Locale.ROOT);
+		if (lower.length() != text.length()) {
+			return lower.contains(lowerTerm);
+		}
+		int index = lower.indexOf(lowerTerm);
+		while (index >= 0) {
+			if (isTermStart(text, index, term) && isTermEnd(text, index + lowerTerm.length(), term)) {
+				return true;
+			}
+			index = lower.indexOf(lowerTerm, index + 1);
+		}
+		return false;
+	}
+
+	// checkbox fields named like the term are a branch with true, other fields named like it are listed to check
+	private void collectNamedFields(Facet facet, String term) throws AuthenticationException, AuthorisationException, ServiceException {
+		LinkedHashMap<Long, InputFieldOutVO> fields = new LinkedHashMap<Long, InputFieldOutVO>();
+		addInputFields(fields, WebUtil.getServiceLocator().getInputFieldService().getInputFieldList(auth, null, createPsf("nameL10nKey", term)));
+		addInputFields(fields, WebUtil.getServiceLocator().getInputFieldService().getInputFieldList(auth, null, createPsf("titleL10nKey", term)));
+		Iterator<InputFieldOutVO> it = fields.values().iterator();
+		while (it.hasNext()) {
+			InputFieldOutVO field = it.next();
+			if (!matchesTerm(field.getName(), term) && !matchesTerm(field.getTitle(), term)) {
+				continue;
+			}
+			boolean checkbox = InputFieldType.CHECKBOX.name().equals(fieldType(field));
+			FieldCollection[] collections = FieldCollection.values();
+			for (int i = 0; i < collections.length; i++) {
+				if (findProperty(collections[i].fieldProperty) == null || !isStored(facet, collections[i], field)) {
+					continue;
+				}
+				if (checkbox && findProperty(collections[i].valuePrefix + BOOLEAN_VALUE_SUFFIX) != null) {
+					facetBranch(facet, collections[i], field).checked = true;
+				} else if (!facet.namedFields.containsKey(field.getId()) && facet.namedFields.size() < MAX_INPUT_FIELDS) {
+					facet.namedFields.put(field.getId(), field);
+				}
+			}
+		}
+	}
+
+	// field property = field name ∧ the value criteria, several of them combined with ∨ in parentheses
+	private String branchText(FacetBranch branch) {
+		ArrayList<String> values = new ArrayList<String>();
+		String prefix = branch.collection.valuePrefix;
+		if (branch.checked) {
+			values.add(findProperty(prefix + BOOLEAN_VALUE_SUFFIX).getName() + " = true");
+		}
+		if (!branch.options.isEmpty()) {
+			String property = findProperty(prefix + SELECTION_VALUE_SUFFIX).getName();
+			Iterator<String> it = branch.options.keySet().iterator();
+			while (it.hasNext()) {
+				values.add(property + " = " + it.next());
+			}
+		}
+		if (!branch.patterns.isEmpty()) {
+			CriterionPropertyVO textProperty = findProperty(prefix + TEXT_VALUE_SUFFIX);
+			String ilike = restrictionName(textProperty, CriterionRestriction.ILIKE);
+			Iterator<String> it = branch.patterns.iterator();
+			while (it.hasNext()) {
+				values.add(textProperty.getName() + " " + ilike + " " + it.next());
+			}
+		}
+		StringBuilder text = new StringBuilder();
+		text.append(findProperty(branch.collection.fieldProperty).getName()).append(" = ").append(branch.field.getName()).append("\n∧\n");
+		if (values.size() > 1) {
+			text.append("(\n");
+		}
+		for (int i = 0; i < values.size(); i++) {
+			if (i > 0) {
+				text.append("\n∨\n");
+			}
+			text.append(values.get(i));
+		}
+		if (values.size() > 1) {
+			text.append("\n)");
+		}
+		return text.toString();
+	}
+
+	private String describeFacet(Facet facet, boolean placeholder) {
+		StringBuilder result = new StringBuilder();
+		int valid = 0;
+		Iterator<FacetBranch> it = facet.branches.iterator();
+		while (it.hasNext()) {
+			if (it.next().text != null) {
+				valid++;
+			}
+		}
+		appendLine(result, "facet " + facet.label + " " + facet.name + ": " + valid + " branches, " + facet.terms + " query terms"
+				+ (maxCriterions != null ? " (a query takes up to " + maxCriterions + ")" : ""));
+		it = facet.branches.iterator();
+		while (it.hasNext()) {
+			FacetBranch branch = it.next();
+			StringBuilder line = new StringBuilder("  ");
+			line.append(branch.label).append(' ').append(findProperty(branch.collection.fieldProperty).getName()).append(" = ").append(branch.field.getName());
+			if (!CommonUtil.isEmptyString(branch.field.getTitle()) && !branch.field.getTitle().equals(branch.field.getName())) {
+				line.append(" (").append(branch.field.getTitle()).append(')');
+			}
+			line.append(':');
+			if (branch.checked) {
+				line.append(" checked");
+			}
+			if (!branch.options.isEmpty()) {
+				line.append(" options ");
+				Iterator<String> optionIt = branch.options.values().iterator();
+				while (optionIt.hasNext()) {
+					line.append(optionIt.next());
+					if (optionIt.hasNext()) {
+						line.append(", ");
+					}
+				}
+			}
+			if (!branch.patterns.isEmpty()) {
+				line.append(" texts like ");
+				Iterator<String> patternIt = branch.patterns.iterator();
+				while (patternIt.hasNext()) {
+					line.append(patternIt.next());
+					if (patternIt.hasNext()) {
+						line.append(", ");
+					}
+				}
+			}
+			if (branch.error != null) {
+				line.append(" left out, does not parse: ").append(branch.error);
+			}
+			appendLine(result, line.toString());
+		}
+		if (!facet.namedFields.isEmpty()) {
+			appendLine(result, "fields named like a term, not compared (add a branch if one stores the answer):");
+			Iterator<InputFieldOutVO> fieldIt = facet.namedFields.values().iterator();
+			while (fieldIt.hasNext()) {
+				InputFieldOutVO field = fieldIt.next();
+				appendLine(result, "  " + field.getName() + " | " + field.getTitle() + " | " + fieldType(field));
+			}
+		}
+		if (facet.incomplete) {
+			appendLine(result, "a term matched too many values, so the collection may be incomplete: use longer terms");
+		}
+		if (facet.text == null) {
+			appendLine(result, NO_MATCHES);
+		} else if (placeholder && json) {
+			// the model writes the placeholder instead of retyping every branch, which is slow and loses branches
+			appendLine(result, "write \"{" + facet.label + "}\" as a string element of the JSON array for the group of all branches, or \"{" + facet.label
+					+ " -B2 -B5}\" to leave out branches that do not mean the requested answer and say so in the Note, such as [\"{F1}\", {\"tie\": \"INTERSECT\"}, \"{F2 -B4}\"]."
+					+ " parseQuery and the answer expand it, and the array order counts, so give no positions.");
+		} else if (placeholder) {
+			appendLine(result, "write {" + facet.label + "} in the query for the group of all branches, or {" + facet.label
+					+ " -B2 -B5} to leave out branches that do not mean the requested answer and say so in the Note. parseQuery and the answer expand it.");
+		} else {
+			appendLine(result, "group " + facet.label + ", copy it into the query as a whole; leave out a branch only if it does not mean the requested answer, and say so in the Note:");
+			appendLine(result, facet.text);
+		}
+		return result.toString();
+	}
+
+	// the collected branches the query does not bind, by field property and field
+	private String missingBranches(Collection<CriterionInVO> criterions) {
+		StringBuilder missing = new StringBuilder();
+		Iterator<Facet> facetIt = facets.iterator();
+		while (facetIt.hasNext()) {
+			Facet facet = facetIt.next();
+			Iterator<FacetBranch> it = facet.branches.iterator();
+			while (it.hasNext()) {
+				FacetBranch branch = it.next();
+				if (branch.text != null && !facet.excluded.contains(branch.label) && !bindsField(criterions, findProperty(branch.collection.fieldProperty), branch.field)) {
+					appendLine(missing, "  " + facet.label + " " + branch.label + " " + findProperty(branch.collection.fieldProperty).getName() + " = " + branch.field.getName());
+				}
+			}
+		}
+		return missing.toString();
+	}
+
+	private static boolean bindsField(Collection<CriterionInVO> criterions, CriterionPropertyVO fieldProperty, InputFieldOutVO field) {
+		if (criterions == null || fieldProperty == null) {
+			return false;
+		}
+		Iterator<CriterionInVO> it = criterions.iterator();
+		while (it.hasNext()) {
+			CriterionInVO criterion = it.next();
+			if (criterion.getPropertyId() != null && fieldProperty.getId() == criterion.getPropertyId().longValue() && Long.valueOf(field.getId()).equals(criterion.getLongValue())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Replaces each {F1} or {F1 -B2 -B5} in the text by the group of that collected facet, without the named branches.
+	 * In JSON, a placeholder is a string element of the array.
+	 */
+	public String expandFacets(String text) {
+		if (text == null || facets.isEmpty() || text.indexOf('{') < 0) {
+			return text;
+		}
+		if (json) {
+			return expandJsonFacets(text);
+		}
+		Matcher matcher = FACET_PLACEHOLDER.matcher(text);
+		StringBuffer expanded = new StringBuffer();
+		while (matcher.find()) {
+			Facet facet = findFacet(matcher.group(1));
+			String group = facet == null ? null : groupText(facet, matcher.group(2));
+			matcher.appendReplacement(expanded, Matcher.quoteReplacement(group != null ? group : matcher.group()));
+		}
+		matcher.appendTail(expanded);
+		return expanded.toString();
+	}
+
+	private Facet findFacet(String label) {
+		Iterator<Facet> it = facets.iterator();
+		while (it.hasNext()) {
+			Facet facet = it.next();
+			if (facet.label.equalsIgnoreCase(label)) {
+				return facet;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Puts the criteria of each group in place of its placeholder element. The positions are dropped, so the parser takes the array order,
+	 * as the groups bring their own numbering. Returns the text unchanged if it is no JSON array or holds no placeholder.
+	 */
+	private String expandJsonFacets(String text) {
+		try {
+			JsonReader reader = new JsonReader(new StringReader(text));
+			// the editor's leading comment lines
+			reader.setLenient(true);
+			JsonElement root = JsonParser.parseReader(reader);
+			if (root == null || !root.isJsonArray()) {
+				return text;
+			}
+			JsonArray expanded = new JsonArray();
+			boolean placeholders = false;
+			Iterator<JsonElement> it = root.getAsJsonArray().iterator();
+			while (it.hasNext()) {
+				JsonElement element = it.next();
+				Matcher matcher = element != null && element.isJsonPrimitive() && element.getAsJsonPrimitive().isString()
+						? FACET_PLACEHOLDER.matcher(element.getAsString().trim())
+						: null;
+				Facet facet = matcher != null && matcher.matches() ? findFacet(matcher.group(1)) : null;
+				String group = facet == null ? null : groupText(facet, matcher.group(2));
+				String groupJson = group == null ? null
+						: formatCriterions(WebUtil.getServiceLocator().getSearchService().parseCriterionText(auth, module, group, false, null), true);
+				if (CommonUtil.isEmptyString(groupJson)) {
+					expanded.add(element);
+				} else {
+					expanded.addAll(JsonParser.parseString(groupJson).getAsJsonArray());
+					placeholders = true;
+				}
+			}
+			if (!placeholders) {
+				return text;
+			}
+			Iterator<JsonElement> objectIt = expanded.iterator();
+			while (objectIt.hasNext()) {
+				JsonElement element = objectIt.next();
+				if (element != null && element.isJsonObject()) {
+					element.getAsJsonObject().remove("position");
+				}
+			}
+			return new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create().toJson(expanded);
+		} catch (Exception e) {
+			// not JSON the expansion understands: the parser reports what is wrong
+			return text;
+		}
+	}
+
+	// the group without the branches named like -B2 -B5, null if none is left
+	private static String groupText(Facet facet, String exclusions) {
+		facet.excluded.clear();
+		Matcher matcher = BRANCH_EXCLUSION.matcher(exclusions == null ? "" : exclusions);
+		while (matcher.find()) {
+			facet.excluded.add(matcher.group(1).toUpperCase(Locale.ROOT));
+		}
+		StringBuilder group = new StringBuilder();
+		Iterator<FacetBranch> it = facet.branches.iterator();
+		while (it.hasNext()) {
+			FacetBranch branch = it.next();
+			if (branch.text != null && !facet.excluded.contains(branch.label)) {
+				group.append(group.length() == 0 ? "(\n" : "\n∪\n").append(branch.text);
+			}
+		}
+		return group.length() == 0 ? null : group.append("\n)").toString();
+	}
+
+	@Tool(name = PARSE_QUERY, value = "Parse a query. Returns ok and the number of criteria, or the parse error to fix. "
+			+ "After ok, it lists the branches of collected facets that the query does not contain.")
 	public String parseQuery(@P(name = "text", value = "the complete query text") String text) {
 		try {
-			Collection<CriterionInVO> criterions = WebUtil.getServiceLocator().getSearchService().parseCriterionText(auth, module, text == null ? "" : text, true, maxCriterions);
-			lastValidText = text;
+			String expanded = expandFacets(text == null ? "" : text);
+			Collection<CriterionInVO> criterions = WebUtil.getServiceLocator().getSearchService().parseCriterionText(auth, module, expanded, true, maxCriterions);
+			lastValidText = expanded;
 			lastValidCriterions = criterions;
-			return "ok: " + (criterions == null ? 0 : criterions.size()) + " criteria";
+			String result = "ok: " + (criterions == null ? 0 : criterions.size()) + " criteria";
+			String missing = missingBranches(criterions);
+			if (missing.length() > 0) {
+				result += "\nthese collected branches are not in the query: add them, or name each in the Note with why it does not mean the requested answer:\n" + missing;
+			}
+			return result;
 		} catch (AuthenticationException | AuthorisationException | ServiceException | IllegalArgumentException e) {
 			return errorText(e);
 		}
