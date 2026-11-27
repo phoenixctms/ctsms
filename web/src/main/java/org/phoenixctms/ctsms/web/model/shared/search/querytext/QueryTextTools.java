@@ -843,11 +843,48 @@ public class QueryTextTools {
 			if (patterns.isEmpty()) {
 				continue;
 			}
+			// the fields are found by the term anywhere in a text, such as E10 in the ATC code V03AE10, so when the term is not a word
+			// in every text, each pattern is checked against the texts of the field
+			boolean anywhere = patterns.size() == 1 && patterns.get(0).equalsIgnoreCase("%" + term + "%");
 			Iterator<InputFieldOutVO> it = textValueFieldMap(collections[i], term).values().iterator();
 			while (it.hasNext()) {
-				facetBranch(facet, collections[i], it.next()).patterns.addAll(patterns);
+				InputFieldOutVO field = it.next();
+				List<String> fieldPatterns = anywhere ? patterns : storedPatterns(facet, collections[i], field, patterns);
+				if (!fieldPatterns.isEmpty()) {
+					facetBranch(facet, collections[i], field).patterns.addAll(fieldPatterns);
+				}
 			}
 		}
+	}
+
+	/**
+	 * The patterns whose text, without the wildcards, the field stores somewhere, with one count query each.
+	 */
+	private List<String> storedPatterns(Facet facet, FieldCollection collection, InputFieldOutVO field, List<String> patterns) throws AuthenticationException {
+		ArrayList<String> stored = new ArrayList<String>();
+		Iterator<String> it = patterns.iterator();
+		while (it.hasNext()) {
+			String pattern = it.next();
+			if (facet.used.size() >= MAX_FACET_USAGE_COUNTS) {
+				// too many queries: keep the pattern unchecked, it still matches only the term as a word
+				facet.incomplete = true;
+				stored.add(pattern);
+				continue;
+			}
+			PSFVO psf = createCountPsf();
+			Map<String, String> filters = new HashMap<String, String>();
+			filters.put(collection.textValueFilter, pattern.replace("%", ""));
+			psf.setFilters(filters);
+			try {
+				facet.used.put("pattern:" + collection.name() + ":" + field.getId() + ":" + pattern, Boolean.TRUE);
+				if (rowCount(listCollection(collection, field.getId(), psf), psf) > 0) {
+					stored.add(pattern);
+				}
+			} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
+				stored.add(pattern);
+			}
+		}
+		return stored;
 	}
 
 	/**
