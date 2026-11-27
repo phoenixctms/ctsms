@@ -454,6 +454,10 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		return criterionIndexes;
 	}
 
+	public String getCriterionRowColorStyles() {
+		return CriterionRowColorList.getStyles();
+	}
+
 	public List<String> getCriterionRowColor() {
 		return new CriterionRowColorList(criterionsIn, instantCriteria, instantCriterionsMap, parsed);
 	}
