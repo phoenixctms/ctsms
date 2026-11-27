@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.phoenixctms.ctsms.enumeration.CriterionRestriction;
 import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
@@ -16,6 +17,7 @@ import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.vo.CriterionInVO;
 import org.phoenixctms.ctsms.vo.CriterionPropertyVO;
+import org.phoenixctms.ctsms.vo.CriterionRestrictionVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
@@ -164,6 +166,21 @@ public class QueryTextTools {
 		return null;
 	}
 
+	// the operator name of the user's locale, if the property allows the restriction
+	private static String restrictionName(CriterionPropertyVO propertyVO, CriterionRestriction restriction) {
+		if (propertyVO.getValidRestrictions() == null) {
+			return null;
+		}
+		Iterator<CriterionRestrictionVO> it = propertyVO.getValidRestrictions().iterator();
+		while (it.hasNext()) {
+			CriterionRestrictionVO restrictionVO = it.next();
+			if (restrictionVO != null && restriction.equals(restrictionVO.getRestriction()) && !CommonUtil.isEmptyString(restrictionVO.getName())) {
+				return restrictionVO.getName();
+			}
+		}
+		return null;
+	}
+
 	// the value property that holds an answer of this field type
 	private static String valuePropertySuffix(InputFieldOutVO field) {
 		if (field == null || field.getFieldType() == null || field.getFieldType().getType() == null) {
@@ -218,7 +235,10 @@ public class QueryTextTools {
 			line.append(fieldProperty.getName()).append(" = ").append(field.getName());
 			CriterionPropertyVO valueProperty = valueSuffix == null ? null : findProperty(collection.valuePrefix + valueSuffix);
 			if (valueProperty != null) {
-				line.append(" ∧ ").append(valueProperty.getName()).append(" ...");
+				line.append(" ∧ ").append(valueProperty.getName());
+				// a plain like is case-sensitive and misses spellings, so text lines name the operator to use
+				String ilike = TEXT_VALUE_SUFFIX.equals(valueSuffix) ? restrictionName(valueProperty, CriterionRestriction.ILIKE) : null;
+				line.append(ilike != null ? " " + ilike + " %...%" : " ...");
 			}
 			appendLine(result, line.toString());
 		}
