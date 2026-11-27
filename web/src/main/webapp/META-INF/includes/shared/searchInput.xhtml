@@ -58,6 +58,13 @@
 		<script type="text/javascript">
 		//<![CDATA[
 		searchQueryTextTabVisible = #{sessionScopeBean.experimentalUser};
+		// the colors of the result sets, one grade per result set a query of max_criterions can have. A style element here would take a row of the panel grid
+		if (!document.getElementById("ctsms-criterion-row-colors")) {
+			var criterionRowColors = document.createElement("style");
+			criterionRowColors.id = "ctsms-criterion-row-colors";
+			criterionRowColors.appendChild(document.createTextNode("#{searchBean.criterionRowColorStyles}"));
+			document.head.appendChild(criterionRowColors);
+		}
 		//]]>
 		</script>
 		<h:panelGrid columns="2" cellpadding="0"
