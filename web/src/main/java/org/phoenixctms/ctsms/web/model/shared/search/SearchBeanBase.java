@@ -1843,7 +1843,8 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		if (CommonUtil.isEmptyString(apiBase) || CommonUtil.isEmptyString(module)) {
 			return "";
 		}
-		return apiBase + "/search/" + module + "/facet";
+		// ends with the query string, which already selects the format of the prompt, so an LLM does not ask for JSON groups in an expression query
+		return apiBase + "/search/" + module + "/facet" + (QUERY_TEXT_FORMAT_JSON.equals(queryTextFormat) ? "?json=true&" : "?");
 	}
 
 	private static String queryTextModulePath(DBModule module) {

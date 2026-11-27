@@ -1,8 +1,10 @@
 package org.phoenixctms.ctsms.web.jersey.resource.shared;
 
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -363,6 +365,20 @@ public final class SearchResource {
 		Collection<CriterionPropertyVO> properties = WebUtil.getServiceLocator().getSelectionSetService().getCriterionProperties(auth, dbModule);
 		return new QueryTextTools(auth, dbModule, Integer.valueOf(Settings.getInt(SettingCodes.MAX_CRITERIONS, Bundle.SETTINGS, DefaultSettings.MAX_CRITERIONS)), properties, json)
 				.collectFacetText(name, terms);
+	}
+
+	/**
+	 * The same text for a client that only accepts JSON, as {"text": ...}, instead of failing with 406.
+	 */
+	@GET
+	@Produces({ MediaType.APPLICATION_JSON })
+	@Path("{module}/facet")
+	public Map<String, String> collectFacetJson(@PathParam("module") String module, @QueryParam("name") String name, @QueryParam("term") List<String> terms,
+			@QueryParam("json") boolean json)
+			throws AuthenticationException, AuthorisationException, ServiceException {
+		Map<String, String> result = new LinkedHashMap<String, String>();
+		result.put("text", collectFacet(module, name, terms, json));
+		return result;
 	}
 
 	private static DBModule queryTextModule(String module) {
