@@ -21,6 +21,14 @@ public class CriterionRowColorList extends CriterionListBase<String> {
 	private static final int[] ROW_SELECT_COLOR_FROM = { 0xBC, 0xF2, 0xBB };
 	private static final int[] ROW_SELECT_COLOR_TO = { 0x07, 0x42, 0x05 };
 	private static final int ROW_SELECT_COLOR_SECTIONS = 16;
+	private static final String INTERMEDIATE_SET_BLANK_STYLECLASS = "ctsms-search-intermediateset-blank-color";
+	private static final String INTERMEDIATE_SET_HIGHLIGHT_STYLECLASS = "ctsms-search-intermediateset-highlight-circle-stroke-color";
+	private static final String INTERMEDIATE_SET_HIGHLIGHT_DARK_STYLECLASS = "ctsms-search-intermediateset-highlight-circle-stroke-dark-color";
+	private static final String INTERMEDIATE_SET_TINT_STYLECLASS_PREFIX = "ctsms-search-intermediateset-intermediate-color-";
+	// from misty rose, the color of set operation rows, to a darker rose
+	private static final int[] INTERMEDIATE_SET_COLOR_FROM = { 0xFF, 0xE4, 0xE1 };
+	private static final int[] INTERMEDIATE_SET_COLOR_TO = { 0xEC, 0xA0, 0x98 };
+	private static final int INTERMEDIATE_SET_TINTS = 8;
 	private HashMap<Long, CriterionInstantVO> instantCriterionsMap;
 	private CriteriaInstantVO instantCriteria;
 	private boolean parsed;
@@ -77,23 +85,41 @@ public class CriterionRowColorList extends CriterionListBase<String> {
 	}
 
 	/**
-	 * The style classes of all grades, which searchInput.xhtml adds to the page. The intermediate sets chart reads the colors from them, too.
+	 * The style classes of all grades, which searchInput.xhtml adds to the page. The intermediate sets chart reads the colors from them, too,
+	 * and from the chart classes derived from the same gradient: the blank chart has the first grade, the hover stroke the middle grade,
+	 * or the first grade on a dark circle.
 	 */
 	public static String getStyles() {
 		int gradeStep = getGradeStep();
 		int last = ROW_SELECT_COLOR_SECTIONS * gradeStep;
 		StringBuilder styles = new StringBuilder();
 		for (int grade = 0; grade <= last; grade++) {
-			styles.append('.').append(ROW_SELECT_COLOR_STYLECLASS_PREFIX).append(grade).append("{background-color:#");
-			for (int i = 0; i < ROW_SELECT_COLOR_FROM.length; i++) {
-				// rounded down like the former colors, which are the grades at every gradeStep
-				int value = ROW_SELECT_COLOR_FROM[i] + Math.floorDiv((ROW_SELECT_COLOR_TO[i] - ROW_SELECT_COLOR_FROM[i]) * grade, last);
-				styles.append(String.format("%02X", value));
-			}
-			// on one line and without quotes, as the page puts it into a script string
-			styles.append("} ");
+			appendStyle(styles, ROW_SELECT_COLOR_STYLECLASS_PREFIX + grade, gradeColor(ROW_SELECT_COLOR_FROM, ROW_SELECT_COLOR_TO, grade, last));
+		}
+		appendStyle(styles, INTERMEDIATE_SET_BLANK_STYLECLASS, gradeColor(ROW_SELECT_COLOR_FROM, ROW_SELECT_COLOR_TO, 0, last));
+		appendStyle(styles, INTERMEDIATE_SET_HIGHLIGHT_STYLECLASS, gradeColor(ROW_SELECT_COLOR_FROM, ROW_SELECT_COLOR_TO, last / 2, last));
+		appendStyle(styles, INTERMEDIATE_SET_HIGHLIGHT_DARK_STYLECLASS, gradeColor(ROW_SELECT_COLOR_FROM, ROW_SELECT_COLOR_TO, 0, last));
+		// the sets combined by an earlier step: tints of misty rose, in an order that sets neighbouring steps apart
+		for (int tint = 0; tint < INTERMEDIATE_SET_TINTS; tint++) {
+			int grade = (tint % 2 == 0 ? tint / 2 : (INTERMEDIATE_SET_TINTS + tint) / 2);
+			appendStyle(styles, INTERMEDIATE_SET_TINT_STYLECLASS_PREFIX + tint, gradeColor(INTERMEDIATE_SET_COLOR_FROM, INTERMEDIATE_SET_COLOR_TO, grade, INTERMEDIATE_SET_TINTS - 1));
 		}
 		return styles.toString();
+	}
+
+	private static String gradeColor(int[] from, int[] to, int grade, int last) {
+		StringBuilder color = new StringBuilder("#");
+		for (int i = 0; i < from.length; i++) {
+			// rounded down like the former colors, which are the grades at every gradeStep
+			int value = from[i] + (last == 0 ? 0 : Math.floorDiv((to[i] - from[i]) * grade, last));
+			color.append(String.format("%02X", value));
+		}
+		return color.toString();
+	}
+
+	private static void appendStyle(StringBuilder styles, String styleClass, String color) {
+		// on one line and without quotes, as the page puts it into a script string
+		styles.append('.').append(styleClass).append("{background-color:").append(color).append("} ");
 	}
 
 	private CriterionInstantVO getInstantCriterion(CriterionInVO criterionVO) {

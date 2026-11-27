@@ -187,6 +187,8 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 	private int selectionItemsNameClipMaxLength;
 	private String[] criterionIndexes;
 	private String deferredDeleteReason;
+	private ArrayList<HashMap<String, Object>> intermediateSetStepRows;
+	private String intermediateSetTotal;
 	private static final String QUERY_TEXT_FORMAT_EXPRESSION = "EXPRESSION";
 	private static final String QUERY_TEXT_FORMAT_JSON = "JSON";
 	private static final String QUERY_TEXT_EDITOR_CLIENT_ID = "search_form:tabView:query_text";
@@ -1236,6 +1238,8 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		instantCriteria = null;
 		parsed = true;
 		Collection<IntermediateSetDetailVO> intermediateSets = null;
+		intermediateSetStepRows = null;
+		intermediateSetTotal = null;
 		boolean operationSuccess = false;
 		try {
 			IntermediateSetSummaryVO intermediateSetSummary = WebUtil.getServiceLocator().getSearchService().getIntermediateSets(WebUtil.getAuthentication(), getDBModule(),
@@ -1243,6 +1247,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 			operationSuccess = true;
 			instantCriteria = intermediateSetSummary.getParsed();
 			intermediateSets = intermediateSetSummary.getSets();
+			updateIntermediateSetSteps(new IntermediateSetSteps(intermediateSetSummary, tieVOsMap));
 		} catch (ServiceException e) {
 			if (e.getData() != null) {
 				Messages.addCriterionMessages(e.getData(), FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -1264,7 +1269,89 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 			requestContext.addCallbackParam(JSValues.AJAX_CRITERION_TIE_MAP_BASE64.toString(), JsUtil.encodeBase64(JsUtil.voToJson(tieVOsMap), false));
 			requestContext.addCallbackParam(JSValues.AJAX_CRITERION_ROW_COLORS_BASE64.toString(), JsUtil.encodeBase64(JsUtil.voToJson(getCriterionRowColor()), false));
 			requestContext.addCallbackParam(JSValues.AJAX_INTERMEDIATE_SETS_BASE64.toString(), JsUtil.encodeBase64(JsUtil.voToJson(intermediateSets), false));
+			requestContext.addCallbackParam(JSValues.AJAX_INTERMEDIATE_SET_STEPS_BASE64.toString(),
+					JsUtil.encodeBase64(JsUtil.voToJson(intermediateSetStepRows), false));
 		}
+	}
+
+	/**
+	 * The rows of the step table under the chart. The chart gets the same rows, to title each step diagram and print its warnings.
+	 */
+	private void updateIntermediateSetSteps(IntermediateSetSteps steps) {
+		String stepReference = Labels.getStringLocalized("search_intermediate_set_step_reference");
+		intermediateSetStepRows = new ArrayList<HashMap<String, Object>>(steps.getSteps().size());
+		Iterator<IntermediateSetSteps.Step> it = steps.getSteps().iterator();
+		while (it.hasNext()) {
+			IntermediateSetSteps.Step step = it.next();
+			HashMap<String, Object> row = new HashMap<String, Object>();
+			row.put("index", step.getIndex());
+			row.put("number", step.getNumber());
+			row.put("title", step.getShortExpression(stepReference));
+			row.put("expression", step.getExpression());
+			row.put("a", IntermediateSetSteps.operandName(step.getA(), stepReference));
+			row.put("b", IntermediateSetSteps.operandName(step.getB(), stepReference));
+			row.put("tie", step.getTie() == null ? null : step.getTie().name());
+			row.put("aCount", step.getACount());
+			row.put("bCount", step.getBCount());
+			row.put("intersectionCount", step.getIntersectionCount());
+			row.put("count", step.getCount());
+			row.put("note", intermediateSetStepNote(step, stepReference));
+			ArrayList<String> warnings = new ArrayList<String>(step.getWarnings().size());
+			Iterator<IntermediateSetSteps.StepWarning> warningIt = step.getWarnings().iterator();
+			while (warningIt.hasNext()) {
+				warnings.add(intermediateSetWarning(warningIt.next(), stepReference));
+			}
+			row.put("warnings", warnings);
+			row.put("warning", warnings.isEmpty() ? null : String.join(", ", warnings));
+			intermediateSetStepRows.add(row);
+		}
+		if (!CommonUtil.isEmptyString(steps.getExpression())) {
+			intermediateSetTotal = Labels.getMessageLocalized("search_intermediate_set_steps_total", steps.getExpression(), steps.getCount(), getResultItemLabel());
+		} else {
+			intermediateSetTotal = Labels.getMessageLocalized("search_intermediate_set_steps_total_all", steps.getCount(), getResultItemLabel());
+		}
+	}
+
+	private static String intermediateSetStepNote(IntermediateSetSteps.Step step, String stepReference) {
+		if (step.getTie() != null) {
+			switch (step.getTie()) {
+				case UNION:
+					return Labels.getMessageLocalized("search_intermediate_set_union_note", IntermediateSetSteps.operandName(step.getA(), stepReference),
+							step.getACount() - step.getIntersectionCount(), IntermediateSetSteps.operandName(step.getB(), stepReference),
+							step.getBCount() - step.getIntersectionCount());
+				case EXCEPT:
+					return Labels.getMessageLocalized("search_intermediate_set_except_note", step.getIntersectionCount());
+				default:
+					break;
+			}
+		}
+		return null;
+	}
+
+	private static String intermediateSetWarning(IntermediateSetSteps.StepWarning warning, String stepReference) {
+		String operand = IntermediateSetSteps.operandName(warning.getOperand(), stepReference);
+		switch (warning.getWarning()) {
+			case EMPTY_OPERAND:
+				return Labels.getMessageLocalized("search_intermediate_set_warning_empty_operand", operand);
+			case EMPTY_RESULT:
+				return Labels.getStringLocalized("search_intermediate_set_warning_empty_result");
+			case ADDS_NOTHING:
+				return Labels.getMessageLocalized("search_intermediate_set_warning_adds_nothing", operand);
+			case REMOVES_NOTHING:
+				return Labels.getMessageLocalized("search_intermediate_set_warning_removes_nothing", operand);
+			case REMOVES_ALL:
+				return Labels.getMessageLocalized("search_intermediate_set_warning_removes_all", operand);
+			default:
+				return warning.getWarning().name();
+		}
+	}
+
+	public List<HashMap<String, Object>> getIntermediateSetStepRows() {
+		return intermediateSetStepRows;
+	}
+
+	public String getIntermediateSetTotal() {
+		return intermediateSetTotal;
 	}
 
 	public void applyQueryText() {

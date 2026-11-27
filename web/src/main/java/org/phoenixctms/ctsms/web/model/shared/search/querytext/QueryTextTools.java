@@ -23,15 +23,19 @@ import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.vo.CriterionInVO;
+import org.phoenixctms.ctsms.vo.CriterionInstantVO;
 import org.phoenixctms.ctsms.vo.CriterionPropertyVO;
 import org.phoenixctms.ctsms.vo.CriterionRestrictionVO;
+import org.phoenixctms.ctsms.vo.CriterionTieVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
 import org.phoenixctms.ctsms.vo.InquiryOutVO;
+import org.phoenixctms.ctsms.vo.IntermediateSetSummaryVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagOutVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
+import org.phoenixctms.ctsms.web.model.shared.search.IntermediateSetSteps;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
 import com.google.gson.GsonBuilder;
@@ -56,7 +60,13 @@ public class QueryTextTools {
 	public static final String SEARCH_PROPERTY_VALUES = "searchPropertyValues";
 	public static final String COLLECT_FACET = "collectFacet";
 	public static final String PARSE_QUERY = "parseQuery";
+	public static final String CHECK_SETS = "checkSets";
 	private static final int PAGE_SIZE = 100;
+	// the lines of the result sets and of the set steps checkSets lists
+	private static final int MAX_SET_LINES = 60;
+	private static final int MAX_STEP_LINES = 60;
+	private static final int MAX_SET_EXPRESSION_LENGTH = 160;
+	private static final String STEP_REFERENCE = "step {0}";
 	private static final int MAX_INPUT_FIELDS = 30;
 	// each checked input field costs up to three usage count queries
 	private static final int MAX_CHECKED_INPUT_FIELDS = 100;
@@ -87,6 +97,7 @@ public class QueryTextTools {
 	private int facetCount;
 	private String lastValidText;
 	private Collection<CriterionInVO> lastValidCriterions;
+	private HashMap<Long, CriterionTieVO> ties;
 
 	public QueryTextTools(AuthenticationVO auth, DBModule module, Integer maxCriterions, Collection<CriterionPropertyVO> properties, boolean json) {
 		this.json = json;
@@ -1308,6 +1319,165 @@ public class QueryTextTools {
 		} catch (AuthenticationException | AuthorisationException | ServiceException | IllegalArgumentException e) {
 			return errorText(e);
 		}
+	}
+
+	@Tool(name = CHECK_SETS, value = "Count the records of a query the way the Intermediate Sets tab does: each result set (A, B, ...) and each ∪, ∩ or ∖ step "
+			+ "in evaluation order, with warnings for empty sets, an empty ∩, a ∪ branch that adds nothing or a ∖ that removes nothing. "
+			+ "Call it after parseQuery returned ok.")
+	public String checkSets(@P(name = "text", value = "the complete query text") String text) {
+		try {
+			String expanded = expandFacets(text == null ? "" : text);
+			Collection<CriterionInVO> criterions = WebUtil.getServiceLocator().getSearchService().parseCriterionText(auth, module, expanded, true, maxCriterions);
+			// the parsed criterions come in query order but without positions, which the set analysis sorts by
+			if (criterions != null) {
+				long position = CommonUtil.LIST_INITIAL_POSITION;
+				Iterator<CriterionInVO> positionIt = criterions.iterator();
+				while (positionIt.hasNext()) {
+					positionIt.next().setPosition(position++);
+				}
+			}
+			IntermediateSetSummaryVO summary = WebUtil.getServiceLocator().getSearchService().getIntermediateSets(auth, module,
+					new LinkedHashSet<CriterionInVO>(criterions == null ? new ArrayList<CriterionInVO>() : criterions), null);
+			IntermediateSetSteps steps = new IntermediateSetSteps(summary, getTies());
+			StringBuilder result = new StringBuilder();
+			appendLine(result, "ok: " + (criterions == null ? 0 : criterions.size()) + " criteria, " + steps.getSteps().size() + " set steps, result " + steps.getCount()
+					+ " records");
+			appendLine(result, "sets:");
+			int lines = 0;
+			Iterator<IntermediateSetSteps.ResultSet> setIt = steps.getSets().iterator();
+			while (setIt.hasNext() && lines < MAX_SET_LINES) {
+				IntermediateSetSteps.ResultSet set = setIt.next();
+				StringBuilder line = new StringBuilder("  ").append(set.getLabel()).append(": ").append(set.getCount());
+				String branches = facetBranches(set.getCriterions());
+				if (branches.length() > 0) {
+					line.append(" (").append(branches).append(')');
+				}
+				line.append(' ').append(abbreviateExpression(set.getExpression()));
+				appendLine(result, line.toString());
+				lines++;
+			}
+			if (steps.getSets().size() > lines) {
+				appendLine(result, "  ... " + (steps.getSets().size() - lines) + " more");
+			}
+			if (!steps.getSteps().isEmpty()) {
+				appendLine(result, "steps:");
+				lines = 0;
+				Iterator<IntermediateSetSteps.Step> stepIt = steps.getSteps().iterator();
+				while (stepIt.hasNext() && lines < MAX_STEP_LINES) {
+					appendLine(result, "  " + stepText(stepIt.next()));
+					lines++;
+				}
+				if (steps.getSteps().size() > lines) {
+					appendLine(result, "  ... " + (steps.getSteps().size() - lines) + " more");
+				}
+			}
+			return result.toString();
+		} catch (AuthenticationException | AuthorisationException | ServiceException | IllegalArgumentException e) {
+			return errorText(e);
+		}
+	}
+
+	private HashMap<Long, CriterionTieVO> getTies() throws AuthenticationException, AuthorisationException, ServiceException {
+		if (ties == null) {
+			HashMap<Long, CriterionTieVO> map = new HashMap<Long, CriterionTieVO>();
+			Collection<CriterionTieVO> tieVOs = WebUtil.getServiceLocator().getSelectionSetService().getAllCriterionTies(auth);
+			if (tieVOs != null) {
+				Iterator<CriterionTieVO> it = tieVOs.iterator();
+				while (it.hasNext()) {
+					CriterionTieVO tieVO = it.next();
+					map.put(tieVO.getId(), tieVO);
+				}
+			}
+			ties = map;
+		}
+		return ties;
+	}
+
+	// such as 3. step 2 ∖ D: 41 ∖ 0 = 41, warning: D removes nothing
+	private static String stepText(IntermediateSetSteps.Step step) {
+		String tie = step.getTieName();
+		StringBuilder line = new StringBuilder();
+		line.append(step.getNumber()).append(". ").append(step.getShortExpression(STEP_REFERENCE)).append(": ").append(step.getACount()).append(' ').append(tie).append(' ')
+				.append(step.getBCount()).append(" = ").append(step.getCount());
+		if (step.getTie() != null) {
+			switch (step.getTie()) {
+				case UNION:
+					line.append(" (only ").append(IntermediateSetSteps.operandName(step.getA(), STEP_REFERENCE)).append(' ').append(step.getACount() - step.getIntersectionCount())
+							.append(", both ").append(step.getIntersectionCount()).append(", only ").append(IntermediateSetSteps.operandName(step.getB(), STEP_REFERENCE)).append(' ')
+							.append(step.getBCount() - step.getIntersectionCount()).append(')');
+					break;
+				case EXCEPT:
+					line.append(" (removed ").append(step.getIntersectionCount()).append(')');
+					break;
+				default:
+					break;
+			}
+		}
+		Iterator<IntermediateSetSteps.StepWarning> it = step.getWarnings().iterator();
+		while (it.hasNext()) {
+			line.append(", warning: ").append(warningText(it.next()));
+		}
+		return line.toString();
+	}
+
+	private static String warningText(IntermediateSetSteps.StepWarning warning) {
+		String operand = IntermediateSetSteps.operandName(warning.getOperand(), STEP_REFERENCE);
+		switch (warning.getWarning()) {
+			case EMPTY_OPERAND:
+				return operand + " is empty";
+			case EMPTY_RESULT:
+				return "the result is empty";
+			case ADDS_NOTHING:
+				return operand + " adds nothing";
+			case REMOVES_NOTHING:
+				return operand + " removes nothing";
+			case REMOVES_ALL:
+				return operand + " removes everything";
+			default:
+				return warning.getWarning().name();
+		}
+	}
+
+	// the collected facet branches a result set binds, such as F1 B2, F1 B3
+	private String facetBranches(Collection<CriterionInstantVO> criterions) {
+		StringBuilder result = new StringBuilder();
+		Iterator<Facet> facetIt = facets.iterator();
+		while (facetIt.hasNext()) {
+			Facet facet = facetIt.next();
+			Iterator<FacetBranch> it = facet.branches.iterator();
+			while (it.hasNext()) {
+				FacetBranch branch = it.next();
+				if (branch.text != null && bindsInstantField(criterions, findProperty(branch.collection.fieldProperty), branch.field)) {
+					if (result.length() > 0) {
+						result.append(", ");
+					}
+					result.append(facet.label).append(' ').append(branch.label);
+				}
+			}
+		}
+		return result.toString();
+	}
+
+	private static boolean bindsInstantField(Collection<CriterionInstantVO> criterions, CriterionPropertyVO fieldProperty, InputFieldOutVO field) {
+		if (criterions == null || fieldProperty == null) {
+			return false;
+		}
+		Iterator<CriterionInstantVO> it = criterions.iterator();
+		while (it.hasNext()) {
+			CriterionInstantVO criterion = it.next();
+			if (criterion.getPropertyId() != null && fieldProperty.getId() == criterion.getPropertyId().longValue() && Long.valueOf(field.getId()).equals(criterion.getLongValue())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private static String abbreviateExpression(String expression) {
+		if (expression == null) {
+			return "";
+		}
+		String line = expression.replaceAll("\\s+", " ").trim();
+		return line.length() > MAX_SET_EXPRESSION_LENGTH ? line.substring(0, MAX_SET_EXPRESSION_LENGTH) + " ..." : line;
 	}
 
 	private static void appendLine(StringBuilder result, String line) {
