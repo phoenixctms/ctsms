@@ -1,14 +1,13 @@
 package org.phoenixctms.ctsms.web.model.shared.search.querytext;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.phoenixctms.ctsms.enumeration.DBModule;
+import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
@@ -41,10 +40,11 @@ public class QueryTextTools {
 	public static final String SEARCH_PROPERTY_VALUES = "searchPropertyValues";
 	public static final String PARSE_QUERY = "parseQuery";
 	private static final int PAGE_SIZE = 100;
-	// each listed input field costs three usage count queries
 	private static final int MAX_INPUT_FIELDS = 30;
-	private static final int MAX_COLLECTION_NAMES = 20;
+	// each checked input field costs up to three usage count queries
+	private static final int MAX_CHECKED_INPUT_FIELDS = 100;
 	private static final int MAX_SELECTION_VALUES = 50;
+	private static final int MAX_OPTION_MATCHES = 500;
 	private static final String NO_MATCHES = "no matches";
 	private final AuthenticationVO auth;
 	private final DBModule module;
@@ -110,70 +110,96 @@ public class QueryTextTools {
 		}
 	}
 
-	private static final class InputFieldUsage {
-		private final long inquiryCount;
-		private final long ecrfCount;
-		private final long tagCount;
+	/**
+	 * A collection that stores input field values: the criterion property binding the input field (its value is the field name)
+	 * and the property path prefix of its value properties.
+	 */
+	private enum FieldCollection {
 
-		private InputFieldUsage(long inquiryCount, long ecrfCount, long tagCount) {
-			this.inquiryCount = inquiryCount;
-			this.ecrfCount = ecrfCount;
-			this.tagCount = tagCount;
-		}
+		INQUIRY("proband.inquiryValues.inquiry.field.id", "proband.inquiryValues.value."),
+		ECRF_FIELD("proband.trialParticipations.ecrfValues.ecrfField.field.id", "proband.trialParticipations.ecrfValues.value."),
+		PROBAND_LIST_ATTRIBUTE("proband.trialParticipations.tagValues.tag.field.id", "proband.trialParticipations.tagValues.value.");
 
-		private boolean used() {
-			return inquiryCount > 0 || ecrfCount > 0 || tagCount > 0;
+		private final String fieldProperty;
+		private final String valuePrefix;
+
+		private FieldCollection(String fieldProperty, String valuePrefix) {
+			this.fieldProperty = fieldProperty;
+			this.valuePrefix = valuePrefix;
 		}
 	}
 
-	private InputFieldUsage inputFieldUsage(long fieldId) throws AuthenticationException, AuthorisationException, ServiceException {
-		PSFVO inquiryPsf = createCountPsf();
-		long inquiries = rowCount(WebUtil.getServiceLocator().getInputFieldService().getInquiryList(auth, fieldId, inquiryPsf), inquiryPsf);
-		PSFVO ecrfFieldPsf = createCountPsf();
-		long ecrfFields = rowCount(WebUtil.getServiceLocator().getInputFieldService().getEcrfFieldList(auth, fieldId, ecrfFieldPsf), ecrfFieldPsf);
-		PSFVO tagPsf = createCountPsf();
-		long tags = rowCount(WebUtil.getServiceLocator().getInputFieldService().getProbandListEntryTagList(auth, fieldId, tagPsf), tagPsf);
-		return new InputFieldUsage(inquiries, ecrfFields, tags);
+	private long usageCount(FieldCollection collection, long fieldId) throws AuthenticationException, AuthorisationException, ServiceException {
+		PSFVO psf = createCountPsf();
+		switch (collection) {
+			case INQUIRY:
+				return rowCount(WebUtil.getServiceLocator().getInputFieldService().getInquiryList(auth, fieldId, psf), psf);
+			case ECRF_FIELD:
+				return rowCount(WebUtil.getServiceLocator().getInputFieldService().getEcrfFieldList(auth, fieldId, psf), psf);
+			default:
+				return rowCount(WebUtil.getServiceLocator().getInputFieldService().getProbandListEntryTagList(auth, fieldId, psf), psf);
+		}
+	}
+
+	// the value property that holds an answer of this field type
+	private static String valuePropertySuffix(InputFieldOutVO field) {
+		if (field == null || field.getFieldType() == null || field.getFieldType().getType() == null) {
+			return null;
+		}
+		switch (field.getFieldType().getType()) {
+			case SINGLE_LINE_TEXT:
+			case MULTI_LINE_TEXT:
+			case AUTOCOMPLETE:
+				// an autocomplete answer is stored as text, its suggestions are no selected items
+				return "stringValue";
+			case CHECKBOX:
+				return "booleanValue";
+			case INTEGER:
+				return "longValue";
+			case FLOAT:
+				return "floatValue";
+			case DATE:
+				return "dateValue";
+			case TIMESTAMP:
+				return "timestampValue";
+			case TIME:
+				return "timeValue";
+			case FILE:
+				return "fileValue.id";
+			default:
+				return "selectionValues.value";
+		}
 	}
 
 	/**
-	 * Lists the criterion left-hand sides that actually store this field (expression names), so the agent does not guess collections.
+	 * Lists the criterion left-hand sides of the collections that store this field, in the property names of the user's locale, together with the value
+	 * property to compare, so the agent neither guesses collections nor value properties. Returns false if no collection of this search module stores the field.
 	 */
-	private void appendCollectionBindings(StringBuilder result, InputFieldOutVO field, InputFieldUsage usage)
+	private boolean appendCollectionBindings(StringBuilder result, InputFieldOutVO field)
 			throws AuthenticationException, AuthorisationException, ServiceException {
-		if (usage.inquiryCount > 0) {
-			appendLine(result, "  Inquiry = " + field.getName());
-		}
-		if (usage.ecrfCount > 0) {
-			PSFVO psf = new PSFVO();
-			psf.setFirst(0);
-			psf.setPageSize(MAX_COLLECTION_NAMES);
-			Collection<ECRFFieldOutVO> ecrfFields = WebUtil.getServiceLocator().getInputFieldService().getEcrfFieldList(auth, field.getId(), psf);
-			LinkedHashMap<String, Boolean> names = new LinkedHashMap<String, Boolean>();
-			if (ecrfFields != null) {
-				Iterator<ECRFFieldOutVO> it = ecrfFields.iterator();
-				while (it.hasNext()) {
-					ECRFFieldOutVO ecrfField = it.next();
-					if (ecrfField != null && !CommonUtil.isEmptyString(ecrfField.getUniqueName())) {
-						names.put(ecrfField.getUniqueName(), Boolean.TRUE);
-					}
-				}
+		boolean used = false;
+		String valueSuffix = valuePropertySuffix(field);
+		FieldCollection[] collections = FieldCollection.values();
+		for (int i = 0; i < collections.length; i++) {
+			FieldCollection collection = collections[i];
+			CriterionPropertyVO fieldProperty = findProperty(collection.fieldProperty);
+			// only count the collections the properties of this search module can bind
+			if (fieldProperty == null || usageCount(collection, field.getId()) == 0) {
+				continue;
 			}
-			if (names.isEmpty()) {
-				appendLine(result, "  eCRF field = " + field.getName());
-			} else {
-				Iterator<String> nameIt = names.keySet().iterator();
-				while (nameIt.hasNext()) {
-					appendLine(result, "  eCRF field = " + nameIt.next());
-				}
-				if (usage.ecrfCount > names.size()) {
-					appendLine(result, "  eCRF field: " + (usage.ecrfCount - names.size()) + " more");
-				}
+			if (!used) {
+				appendLine(result, field.getId() + " | " + field.getName() + " | " + field.getTitle() + " | " + fieldType(field));
+				used = true;
 			}
+			StringBuilder line = new StringBuilder("  ");
+			line.append(fieldProperty.getName()).append(" = ").append(field.getName());
+			CriterionPropertyVO valueProperty = valueSuffix == null ? null : findProperty(collection.valuePrefix + valueSuffix);
+			if (valueProperty != null) {
+				line.append(" ∧ ").append(valueProperty.getName()).append(" ...");
+			}
+			appendLine(result, line.toString());
 		}
-		if (usage.tagCount > 0) {
-			appendLine(result, "  Proband list attribute = " + field.getName());
-		}
+		return used;
 	}
 
 	private static String errorText(Exception e) {
@@ -199,12 +225,11 @@ public class QueryTextTools {
 	}
 
 	@Tool(name = SEARCH_INPUT_FIELDS, value = "Search input fields whose name, title or selectable option text contains the given text. "
-			+ "Returns only fields that are used as an inquiry, eCRF field or proband list attribute. Each match is: "
-			+ "id | name | title | type, then one indented line per collection that stores it (Inquiry = name, eCRF field = uniqueName, Proband list attribute = name), then selectable option texts. "
-			+ "Use those indented lines as criterion left-hand sides; combine alternatives from different collections with ∪. "
-			+ "Search again with other terms, such as an abbreviation or the full name in another language, to find all fitting fields. "
-			+ "For a free-text answer already entered in an inquiry, eCRF field or proband list attribute, also use " + SEARCH_PROPERTY_VALUES
-			+ " on the Text value and Selection input - value properties of those collections.")
+			+ "Returns only fields that are stored by an inquiry, eCRF field or proband list attribute. Each match is the line id | name | title | type, "
+			+ "then one indented line per collection that stores the field, such as: <field property> = <field name> ∧ <value property> ..., then the selectable option texts. "
+			+ "Each indented line is one branch: copy its two properties, then complete the value criterion with an operator and a value. "
+			+ "Combine the branches of every fitting field and collection with ∪. "
+			+ "Search again with other terms, such as an abbreviation or the full name in another language, to find all fitting fields.")
 	public String searchInputFields(@P(name = "namePart", value = "part of the input field name, title or option text, case-insensitive") String namePart) {
 		try {
 			// fields name the same measure differently, so the title is searched too;
@@ -213,25 +238,22 @@ public class QueryTextTools {
 			addInputFields(fields, WebUtil.getServiceLocator().getInputFieldService().getInputFieldList(auth, null, createPsf("nameL10nKey", namePart)));
 			addInputFields(fields, WebUtil.getServiceLocator().getInputFieldService().getInputFieldList(auth, null, createPsf("titleL10nKey", namePart)));
 			addInputFieldsBySelectionValue(fields, namePart);
-			List<InputFieldOutVO> ordered = new ArrayList<InputFieldOutVO>(fields.values());
-			Map<Long, InputFieldUsage> usages = new HashMap<Long, InputFieldUsage>();
-			for (InputFieldOutVO field : ordered) {
-				usages.put(field.getId(), inputFieldUsage(field.getId()));
-			}
 			StringBuilder result = new StringBuilder();
 			int count = 0;
-			for (InputFieldOutVO field : ordered) {
-				InputFieldUsage usage = usages.get(field.getId());
-				if (!usage.used()) {
-					continue;
-				}
-				if (count++ >= MAX_INPUT_FIELDS) {
-					appendLine(result, "more than " + MAX_INPUT_FIELDS + " fields match, search again with a more specific text");
+			int checked = 0;
+			Iterator<InputFieldOutVO> it = fields.values().iterator();
+			while (it.hasNext()) {
+				// the usage counts cost up to three queries per field, so stop at the first fields in use
+				if (count >= MAX_INPUT_FIELDS || checked >= MAX_CHECKED_INPUT_FIELDS) {
+					appendLine(result, "more fields match, search again with a more specific text");
 					break;
 				}
-				appendLine(result, field.getId() + " | " + field.getName() + " | " + field.getTitle() + " | " + fieldType(field));
-				appendCollectionBindings(result, field, usage);
-				appendSelectionValues(result, field);
+				InputFieldOutVO field = it.next();
+				checked++;
+				if (appendCollectionBindings(result, field)) {
+					appendSelectionValues(result, field);
+					count++;
+				}
 			}
 			return result.length() > 0 ? result.toString() : NO_MATCHES;
 		} catch (AuthenticationException | AuthorisationException | ServiceException | IllegalArgumentException e) {
@@ -244,15 +266,17 @@ public class QueryTextTools {
 		if (CommonUtil.isEmptyString(namePart)) {
 			return;
 		}
+		// the values come sorted by name across all fields, and a learning autocomplete can hold many spellings of the same text,
+		// so take many values to still reach the other fields with a matching option
 		Collection<InputFieldSelectionSetValueOutVO> values = WebUtil.getServiceLocator().getToolsService().completeInputFieldSelectionSetValue(auth, namePart.trim(), null,
-				Integer.valueOf(MAX_SELECTION_VALUES));
+				Integer.valueOf(MAX_OPTION_MATCHES));
 		if (values == null) {
 			return;
 		}
 		Iterator<InputFieldSelectionSetValueOutVO> it = values.iterator();
 		while (it.hasNext()) {
 			InputFieldSelectionSetValueOutVO value = it.next();
-			if (value != null && value.getField() != null) {
+			if (value != null && value.getField() != null && !fields.containsKey(value.getField().getId())) {
 				fields.put(value.getField().getId(), value.getField());
 			}
 		}
@@ -317,8 +341,9 @@ public class QueryTextTools {
 	}
 
 	@Tool(name = SEARCH_PROPERTY_VALUES, value = "Search the values of a property marked with " + SEARCH_PROPERTY_VALUES + " under Properties. "
-			+ "Use this for catalog values and for answers already entered as Text value or Selection input - value on an inquiry, eCRF field or proband list attribute. "
-			+ "For Selection input (inquiry/eCRF/proband list attribute), each hit is field: option, so you learn which Inquiry/eCRF/list-attribute field to constrain. "
+			+ "Use this for catalog values and for answers already entered in the text or selection value properties of inquiries, eCRF fields or proband list attributes. "
+			+ "Pass the full property name as listed, including the collection in parentheses. "
+			+ "For a text or selection value property, the field hints name the fields that offer a matching option, as field: option. "
 			+ "Returns one line per value: the name for the expression format, or id | name for values that JSON gives by id.")
 	public String searchPropertyValues(@P(name = "property", value = "the property as listed under Properties") String property,
 			@P(name = "valuePart", value = "part of the value, case-insensitive") String valuePart) {
@@ -415,7 +440,8 @@ public class QueryTextTools {
 
 	private static void appendSelectionValues(StringBuilder result, InputFieldOutVO field) {
 		Collection<InputFieldSelectionSetValueOutVO> values = field.getSelectionSetValues();
-		if (values == null || values.isEmpty()) {
+		// autocomplete items are only suggestions, its answers are text to look up with the values tool
+		if (values == null || values.isEmpty() || InputFieldType.AUTOCOMPLETE.name().equals(fieldType(field))) {
 			return;
 		}
 		StringBuilder options = new StringBuilder();
