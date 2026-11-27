@@ -22,6 +22,7 @@ import org.phoenixctms.ctsms.enumeration.AuthenticationType;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.service.shared.InputFieldService;
 import org.phoenixctms.ctsms.service.shared.SearchService;
+import org.phoenixctms.ctsms.service.shared.SelectionSetService;
 import org.phoenixctms.ctsms.service.shared.ToolsService;
 import org.phoenixctms.ctsms.service.trial.TrialService;
 import org.phoenixctms.ctsms.util.AuthenticationExceptionCodes;
@@ -82,6 +83,11 @@ public class Authenticator {
 		QUERY_TEXT_METHODS.add(CoreUtil.getServiceMethodName(InputFieldService.class, "getProbandListEntryTagList"));
 		QUERY_TEXT_METHODS.add(CoreUtil.getServiceMethodName(TrialService.class, "getTrialList"));
 		QUERY_TEXT_METHODS.add(CoreUtil.getServiceMethodName(SearchService.class, "parseCriterionText"));
+		// search/{module}/facet: the property names, the options and stored texts matching a term, and the group as JSON
+		QUERY_TEXT_METHODS.add(CoreUtil.getServiceMethodName(SelectionSetService.class, "getCriterionProperties"));
+		QUERY_TEXT_METHODS.add(CoreUtil.getServiceMethodName(ToolsService.class, "completeInputFieldSelectionSetValue"));
+		QUERY_TEXT_METHODS.add(CoreUtil.getServiceMethodName(ToolsService.class, "completeInputFieldTextValue"));
+		QUERY_TEXT_METHODS.add(CoreUtil.getServiceMethodName(SearchService.class, "formatCriterionText"));
 	}
 
 	public String issueJwt(AuthenticationVO auth, Long validityPeriodSecs) throws Exception {
