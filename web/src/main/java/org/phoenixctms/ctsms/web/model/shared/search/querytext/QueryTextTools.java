@@ -46,6 +46,7 @@ public class QueryTextTools {
 	private static final int MAX_CHECKED_INPUT_FIELDS = 100;
 	private static final int MAX_SELECTION_VALUES = 50;
 	private static final int MAX_OPTION_MATCHES = 500;
+	private static final int TEXT_VALUE_PAGES = 5;
 	private static final String TEXT_VALUE_SUFFIX = "stringValue";
 	private static final String SELECTION_VALUE_SUFFIX = "selectionValues.value";
 	private static final String NO_MATCHES = "no matches";
@@ -119,29 +120,48 @@ public class QueryTextTools {
 	 */
 	private enum FieldCollection {
 
-		INQUIRY("proband.inquiryValues.inquiry.field.id", "proband.inquiryValues.value."),
-		ECRF_FIELD("proband.trialParticipations.ecrfValues.ecrfField.field.id", "proband.trialParticipations.ecrfValues.value."),
-		PROBAND_LIST_ATTRIBUTE("proband.trialParticipations.tagValues.tag.field.id", "proband.trialParticipations.tagValues.value.");
+		INQUIRY("proband.inquiryValues.inquiry.field.id", "proband.inquiryValues.value.", "inquiryValues.value.stringValue"),
+		ECRF_FIELD("proband.trialParticipations.ecrfValues.ecrfField.field.id", "proband.trialParticipations.ecrfValues.value.", "fieldValues.value.stringValue"),
+		PROBAND_LIST_ATTRIBUTE("proband.trialParticipations.tagValues.tag.field.id", "proband.trialParticipations.tagValues.value.", "tagValues.value.stringValue");
 
 		private final String fieldProperty;
 		private final String valuePrefix;
+		// the filter of the collection's list on the text of its values
+		private final String textValueFilter;
 
-		private FieldCollection(String fieldProperty, String valuePrefix) {
+		private FieldCollection(String fieldProperty, String valuePrefix, String textValueFilter) {
 			this.fieldProperty = fieldProperty;
 			this.valuePrefix = valuePrefix;
+			this.textValueFilter = textValueFilter;
 		}
 	}
 
 	private long usageCount(FieldCollection collection, long fieldId) throws AuthenticationException, AuthorisationException, ServiceException {
 		PSFVO psf = createCountPsf();
+		return rowCount(listCollection(collection, fieldId, psf), psf);
+	}
+
+	// the inquiries, eCRF fields or proband list attributes, of one input field or of all
+	private Collection<?> listCollection(FieldCollection collection, Long fieldId, PSFVO psf) throws AuthenticationException, AuthorisationException, ServiceException {
 		switch (collection) {
 			case INQUIRY:
-				return rowCount(WebUtil.getServiceLocator().getInputFieldService().getInquiryList(auth, fieldId, psf), psf);
+				return WebUtil.getServiceLocator().getInputFieldService().getInquiryList(auth, fieldId, psf);
 			case ECRF_FIELD:
-				return rowCount(WebUtil.getServiceLocator().getInputFieldService().getEcrfFieldList(auth, fieldId, psf), psf);
+				return WebUtil.getServiceLocator().getInputFieldService().getEcrfFieldList(auth, fieldId, psf);
 			default:
-				return rowCount(WebUtil.getServiceLocator().getInputFieldService().getProbandListEntryTagList(auth, fieldId, psf), psf);
+				return WebUtil.getServiceLocator().getInputFieldService().getProbandListEntryTagList(auth, fieldId, psf);
 		}
+	}
+
+	private static InputFieldOutVO collectionField(Object item) {
+		if (item instanceof InquiryOutVO) {
+			return ((InquiryOutVO) item).getField();
+		} else if (item instanceof ECRFFieldOutVO) {
+			return ((ECRFFieldOutVO) item).getField();
+		} else if (item instanceof ProbandListEntryTagOutVO) {
+			return ((ProbandListEntryTagOutVO) item).getField();
+		}
+		return null;
 	}
 
 	// the value property that holds an answer of this field type
@@ -229,7 +249,7 @@ public class QueryTextTools {
 
 	@Tool(name = SEARCH_INPUT_FIELDS, value = "Search input fields whose name, title or selectable option text contains the given text. "
 			+ "Returns only fields that are stored by an inquiry, eCRF field or proband list attribute. Each match is the line id | name | title | type, "
-			+ "then one indented line per collection that stores the field, such as: <field property> = <field name> ∧ <value property> ..., then the selectable option texts. "
+			+ "then one indented line per collection that stores the field, such as: <field property> = <field name> ∧ <value property> ..., then the selectable options as value (option text): a selection value criterion compares the value. "
 			+ "Each indented line is one branch: copy its two properties, then complete the value criterion with an operator and a value. "
 			+ "Combine the branches of every fitting field and collection with ∪. "
 			+ "Search again with other terms, such as an abbreviation or the full name in another language, to find all fitting fields.")
@@ -346,8 +366,8 @@ public class QueryTextTools {
 	@Tool(name = SEARCH_PROPERTY_VALUES, value = "Search the values of a property marked with " + SEARCH_PROPERTY_VALUES + " under Properties. "
 			+ "Use this for catalog values and for answers already entered in the text or selection value properties of inquiries, eCRF fields or proband list attributes. "
 			+ "Pass the full property name as listed, including the collection in parentheses. "
-			+ "A selection value property lists only options of selection fields and then the fields offering them, as field: option. "
-			+ "A text value property lists the stored texts and then the autocomplete fields suggesting the text, as field: suggestion; compare those fields with their text value. "
+			+ "A selection value property lists only options of selection fields, then the fields offering a matching option, as field: value (option text). "
+			+ "A text value property lists the stored texts, then the fields storing a matching text and the autocomplete fields suggesting it; compare all of them with their text value. "
 			+ "Returns one line per value: the name for the expression format, or id | name for values that JSON gives by id.")
 	public String searchPropertyValues(@P(name = "property", value = "the property as listed under Properties") String property,
 			@P(name = "valuePart", value = "part of the value, case-insensitive") String valuePart) {
@@ -358,29 +378,81 @@ public class QueryTextTools {
 		try {
 			FieldCollection collection = valueCollection(propertyVO);
 			boolean selection = collection != null && propertyVO.getProperty().endsWith(SELECTION_VALUE_SUFFIX);
-			OptionMatches options = collection != null ? matchOptions(collection, valuePart) : null;
+			OptionMatches options = null;
+			if (collection != null) {
+				try {
+					options = matchOptions(collection, valuePart);
+				} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
+					// the hints are optional, the values are still listed
+				}
+			}
 			StringBuilder result = new StringBuilder();
 			boolean ids = QueryTextValues.isEntityLookup(propertyVO);
 			Iterator<QueryTextValues.Value> it = QueryTextValues.lookup(auth, propertyVO, valuePart).iterator();
 			while (it.hasNext()) {
 				QueryTextValues.Value value = it.next();
 				// the plain selection values also hold the learned suggestions of autocomplete fields, which are never selected
-				if (!selection || !options.autocompleteOnly(value.getName())) {
+				if (!selection || options == null || !options.autocompleteOnly(value.getName())) {
 					appendLine(result, ids ? value.getKey() + " | " + value.getName() : value.getName());
 				}
 			}
-			if (options != null) {
-				// the hits do not name the field: options of selection fields for a selection value, suggestions of autocomplete fields for a text value
-				StringBuilder hints = selection ? options.selectionHints : options.autocompleteHints;
-				if (hints.length() > 0) {
-					appendLine(result, selection ? "fields offering a matching option:" : "autocomplete fields suggesting this text (compare their text value):");
-					result.append('\n').append(hints);
-				}
+			// the hits do not name their field
+			if (selection) {
+				appendHints(result, "fields offering a matching option (field: value (option text)):", options == null ? null : options.selectionHints);
+			} else if (collection != null) {
+				appendHints(result, "fields storing a matching text:", textValueFields(collection, valuePart));
+				appendHints(result, "autocomplete fields suggesting the text (compare their text value):", options == null ? null : options.autocompleteHints);
 			}
 			return result.length() > 0 ? result.toString() : NO_MATCHES;
 		} catch (AuthenticationException | AuthorisationException | ServiceException | IllegalArgumentException e) {
 			return errorText(e);
 		}
+	}
+
+	private static void appendHints(StringBuilder result, String header, CharSequence hints) {
+		if (hints != null && hints.length() > 0) {
+			appendLine(result, header);
+			result.append('\n').append(hints);
+		}
+	}
+
+	/**
+	 * The input fields whose stored text in this collection contains the text, so the agent can bind each of them. Empty if the lookup fails.
+	 */
+	private StringBuilder textValueFields(FieldCollection collection, String valuePart) throws AuthenticationException {
+		StringBuilder fields = new StringBuilder();
+		if (CommonUtil.isEmptyString(valuePart)) {
+			return fields;
+		}
+		LinkedHashMap<Long, String> names = new LinkedHashMap<Long, String>();
+		try {
+			// one row per matching value, so page through the rows to reach distinct fields
+			for (int page = 0; page < TEXT_VALUE_PAGES && names.size() < MAX_INPUT_FIELDS; page++) {
+				PSFVO psf = createPsf(collection.textValueFilter, valuePart);
+				psf.setFirst(page * PAGE_SIZE);
+				Collection<?> items = listCollection(collection, null, psf);
+				if (items == null || items.isEmpty()) {
+					break;
+				}
+				Iterator<?> it = items.iterator();
+				while (it.hasNext()) {
+					InputFieldOutVO field = collectionField(it.next());
+					if (field != null && !names.containsKey(field.getId())) {
+						names.put(field.getId(), field.getName());
+					}
+				}
+				if (items.size() < PAGE_SIZE) {
+					break;
+				}
+			}
+		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
+			// the hints are optional
+		}
+		Iterator<String> it = names.values().iterator();
+		while (it.hasNext()) {
+			appendLine(fields, "  " + it.next());
+		}
+		return fields;
 	}
 
 	// the collection of a text or selection value property
@@ -450,7 +522,7 @@ public class QueryTextTools {
 			if (!isStored) {
 				continue;
 			}
-			String hint = "  " + value.getField().getName() + ": " + value.getValue();
+			String hint = "  " + value.getField().getName() + ": " + optionText(value);
 			if (autocomplete && autocompleteHints < MAX_SELECTION_VALUES) {
 				appendLine(matches.autocompleteHints, hint);
 				autocompleteHints++;
@@ -511,13 +583,22 @@ public class QueryTextTools {
 			if (options.length() > 0) {
 				options.append(", ");
 			}
-			options.append(value.getValue());
+			options.append(optionText(value));
 			count++;
 		}
 		if (it.hasNext()) {
 			options.append(", ...");
 		}
 		appendLine(result, "  options: " + options);
+	}
+
+	// the value a selection value criterion compares, with the option text when it says more, e.g. 1 (Diabetes Typ I)
+	private static String optionText(InputFieldSelectionSetValueOutVO value) {
+		String name = value.getName();
+		if (CommonUtil.isEmptyString(name) || name.trim().equalsIgnoreCase(value.getValue() == null ? "" : value.getValue().trim())) {
+			return value.getValue();
+		}
+		return value.getValue() + " (" + name.trim() + ")";
 	}
 
 	private static String fieldName(InputFieldOutVO field) {
