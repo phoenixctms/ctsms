@@ -497,26 +497,46 @@ public abstract class CriterionParser extends ExpressionParser<CriterionInstantV
 			}
 		}
 		try {
-			Collection entities = loadAll(getDao(entityName));
-			if (entities != null) {
-				Iterator it = entities.iterator();
-				while (it.hasNext()) {
-					Long id = entityId(it.next());
-					if (id == null) {
-						continue;
-					}
-					try {
-						String name = getValueObjectCriterionValueString(entityName, id, getNameMethodName);
-						if (value.equalsIgnoreCase(name)) {
-							return id;
-						}
-					} catch (ServiceException ignored) {
-					}
-				}
+			Long id = findEntityIdByName(entityName, findEntityCandidates(entityName, value), value, getNameMethodName);
+			if (id != null) {
+				return id;
 			}
+			// a name that is not the stored key, e.g. a translated one, is only found by converting all
+			return findEntityIdByName(entityName, loadAll(getDao(entityName)), value, getNameMethodName);
 		} catch (ServiceException e) {
 			throw e;
 		} catch (Exception ignored) {
+		}
+		return null;
+	}
+
+	/**
+	 * The entities whose name column contains the name, so a query naming many input fields does not convert every input field for each of them.
+	 * Null if the entity has no such column.
+	 */
+	private Collection findEntityCandidates(String entityName, String value) {
+		if ("InputField".equals(entityName)) {
+			return inputFieldDao.findById(null, createNameFilter("nameL10nKey", value));
+		}
+		return null;
+	}
+
+	private Long findEntityIdByName(String entityName, Collection entities, String value, String getNameMethodName) {
+		if (entities != null) {
+			Iterator it = entities.iterator();
+			while (it.hasNext()) {
+				Long id = entityId(it.next());
+				if (id == null) {
+					continue;
+				}
+				try {
+					String name = getValueObjectCriterionValueString(entityName, id, getNameMethodName);
+					if (value.equalsIgnoreCase(name)) {
+						return id;
+					}
+				} catch (ServiceException ignored) {
+				}
+			}
 		}
 		return null;
 	}
