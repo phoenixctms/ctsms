@@ -78,16 +78,35 @@ function setQueryTextBusy(busy) {
 
 // opening the tab loads the builder's query into the editor, which re-renders the editor panel: the editor is read-only until then,
 // so nothing typed in the meantime gets replaced. The re-rendered editor is editable again
+var queryTextLoading = false;
+var QUERY_TEXT_LOCK_RETRY_MS = 20;
+var QUERY_TEXT_LOCK_RETRIES = 100;
+
 function startLoadQueryText() {
+	queryTextLoading = true;
+	_lockQueryTextEditor(QUERY_TEXT_LOCK_RETRIES);
+	loadQueryText();
+}
+
+// on the first opening of the tab after the page loaded, the editor widget creates its CodeMirror only once the tab shows,
+// after this runs: retry until it is there, as long as the load is going on
+function _lockQueryTextEditor(retries) {
+	if (!queryTextLoading) {
+		return;
+	}
 	if (typeof queryTextEditor !== "undefined" && queryTextEditor && queryTextEditor.instance) {
 		queryTextEditor.instance.setOption("readOnly", "nocursor");
 		jQuery(queryTextEditor.instance.getWrapperElement()).addClass("ctsms-query-text-loading");
+	} else if (retries > 0) {
+		window.setTimeout(function() {
+			_lockQueryTextEditor(retries - 1);
+		}, QUERY_TEXT_LOCK_RETRY_MS);
 	}
-	loadQueryText();
 }
 
 // also after a failed request, which leaves the old editor in place
 function endLoadQueryText() {
+	queryTextLoading = false;
 	if (typeof queryTextEditor !== "undefined" && queryTextEditor && queryTextEditor.instance) {
 		queryTextEditor.instance.setOption("readOnly", false);
 		jQuery(queryTextEditor.instance.getWrapperElement()).removeClass("ctsms-query-text-loading");
