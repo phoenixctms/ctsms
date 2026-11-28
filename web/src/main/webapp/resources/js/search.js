@@ -727,6 +727,10 @@ function stopQueryTextPoll() {
 
 function handleQueryTextGenerateStarted(xhr, status, args) {
 	if (args && args.queryTextRunning && typeof pollQueryText === "function") {
+		// the tab was left while the request to start the run was on its way: stop the run, as leaving the tab does
+		if (searchTabLogicalIndex(oldSearchTabIndex) != 1 && typeof cancelQueryTextRun === "function") {
+			cancelQueryTextRun();
+		}
 		// stays busy until the poll sees the run finish
 		scheduleQueryTextPoll();
 		// the step log may just have appeared, which leaves less room for the editor
@@ -1316,18 +1320,23 @@ function _registerIntermediateSetChartTooltip(maps) {
 		if (svgBb == null || tooltipBb == null) {
 			return;
 		}
-		var left;
-		var top;
-		if (d3.event.clientX > svgBb.left + (svgBb.width / 2.0)) { //right
-			left = d3.event.pageX - tooltipBb.width;
-		} else { //left
-			left = d3.event.pageX;
+		// the side away from the middle of the diagram, unless the tooltip does not fit into the window there
+		var viewportWidth = document.documentElement.clientWidth;
+		var viewportHeight = document.documentElement.clientHeight;
+		var toLeft = d3.event.clientX > svgBb.left + (svgBb.width / 2.0);
+		if (toLeft && d3.event.clientX - tooltipBb.width < 0) {
+			toLeft = false;
+		} else if (!toLeft && d3.event.clientX + tooltipBb.width > viewportWidth && d3.event.clientX - tooltipBb.width >= 0) {
+			toLeft = true;
 		}
-		if (d3.event.clientY > svgBb.top + (svgBb.height / 2.0)) { //bottom
-			top = d3.event.pageY - tooltipBb.height;
-		} else { //top
-			top = d3.event.pageY;
+		var above = d3.event.clientY > svgBb.top + (svgBb.height / 2.0);
+		if (above && d3.event.clientY - tooltipBb.height < 0) {
+			above = false;
+		} else if (!above && d3.event.clientY + tooltipBb.height > viewportHeight && d3.event.clientY - tooltipBb.height >= 0) {
+			above = true;
 		}
+		var left = toLeft ? d3.event.pageX - tooltipBb.width : d3.event.pageX;
+		var top = above ? d3.event.pageY - tooltipBb.height : d3.event.pageY;
 
 		tooltipD3.style("left", left + "px")
 		 .style("top", top + "px");
