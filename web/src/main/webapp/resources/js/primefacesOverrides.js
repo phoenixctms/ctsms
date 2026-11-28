@@ -205,12 +205,12 @@ PrimeFaces.ajax.AjaxUtils.send = function(cfg) {
       portletForms : pForms,
       source : cfg.source,
       beforeSend : function(xhr) {
-        showWaitDialog();
+        // counted once here and released once in complete, which also runs after an error
+        xhr.ctsmsWaitCounted = showWaitDialog();
         xhr.setRequestHeader('Faces-Request', 'partial/ajax');
       },
       error : function(xhr, status, errorThrown) {
 
-        hideWaitDialog();
         resetSessionTimers();
 
         if (cfg.onerror) {
@@ -221,7 +221,6 @@ PrimeFaces.ajax.AjaxUtils.send = function(cfg) {
       },
       success : function(data, status, xhr) {
 
-        hideWaitDialog();
         resetSessionTimers();
 
         PrimeFaces.debug('Response received succesfully.');
@@ -249,7 +248,7 @@ PrimeFaces.ajax.AjaxUtils.send = function(cfg) {
       },
       complete : function(xhr, status) {
 
-        hideWaitDialog();
+        hideWaitDialog(xhr.ctsmsWaitCounted);
         resetSessionTimers();
 
         if (cfg.oncomplete) {
