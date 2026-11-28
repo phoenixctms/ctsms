@@ -1,5 +1,6 @@
 package org.phoenixctms.ctsms.web.model.shared.search.querytext;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.phoenixctms.ctsms.util.CommonUtil;
@@ -13,8 +14,15 @@ public final class QueryTextAnswer {
 	private static final String QUERY_SYMBOLS = "∧∨∩∪∖";
 	private static final Pattern QUERY_COMPARISON = Pattern.compile("\\S\\s+(=|<>|!=|<=|>=|<|>)\\s+\\S");
 
+	// a line naming the query or describing it, also as a comment line of either format, e.g. # Title: Type 1 diabetics on a pump
+	private static final Pattern TITLE_LINE = Pattern.compile("^[ \\t]*(?:#|//)?[ \\t]*(?:Title|Titel)[ \\t]*:[ \\t]*(.*?)[ \\t]*$",
+			Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
+	private static final Pattern DESCRIPTION_LINE = Pattern.compile("^[ \\t]*(?:#|//)?[ \\t]*(?:Description|Beschreibung)[ \\t]*:[ \\t]*(.*?)[ \\t]*$",
+			Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
 	private final String query;
 	private final String note;
+	private String title;
+	private String description;
 
 	private QueryTextAnswer(String query, String note) {
 		this.query = query == null ? "" : query;
@@ -29,8 +37,67 @@ public final class QueryTextAnswer {
 		return note;
 	}
 
+	/**
+	 * The short name the model gave the query, if any.
+	 */
+	public String getTitle() {
+		return title;
+	}
+
+	/**
+	 * The sentence the model wrote on what the query finds, if any.
+	 */
+	public String getDescription() {
+		return description;
+	}
+
+	/**
+	 * The first title line of a text, such as a query text with the # Title: comment line on top. Null if there is none.
+	 */
+	public static String findTitle(String text) {
+		return findLine(TITLE_LINE, text);
+	}
+
+	/**
+	 * The first description line of a text. Null if there is none.
+	 */
+	public static String findDescription(String text) {
+		return findLine(DESCRIPTION_LINE, text);
+	}
+
+	private static String findLine(Pattern pattern, String text) {
+		if (text == null) {
+			return null;
+		}
+		Matcher matcher = pattern.matcher(text);
+		while (matcher.find()) {
+			if (!CommonUtil.isEmptyString(matcher.group(1))) {
+				return matcher.group(1);
+			}
+		}
+		return null;
+	}
+
 	public static QueryTextAnswer parse(String answer) {
+		// the title and description lines go anywhere in the answer, also after a code fence, and must not end up in the query or the note
+		String visible = afterThinking(answer);
+		String title = findTitle(visible);
+		String description = findDescription(visible);
 		String text = stripFence(answer);
+		if (CommonUtil.isEmptyString(text)) {
+			QueryTextAnswer empty = new QueryTextAnswer("", null);
+			empty.title = title;
+			empty.description = description;
+			return empty;
+		}
+		text = DESCRIPTION_LINE.matcher(TITLE_LINE.matcher(text).replaceAll("")).replaceAll("").trim();
+		QueryTextAnswer result = parseQueryAndNote(text);
+		result.title = title;
+		result.description = description;
+		return result;
+	}
+
+	private static QueryTextAnswer parseQueryAndNote(String text) {
 		if (CommonUtil.isEmptyString(text)) {
 			return new QueryTextAnswer("", null);
 		}
@@ -123,16 +190,21 @@ public final class QueryTextAnswer {
 		return i < 0 || text.charAt(i) == '\n' || text.charAt(i) == '\r';
 	}
 
-	private static String stripFence(String text) {
+	// reasoning models may put their thinking before the answer
+	private static String afterThinking(String text) {
 		if (text == null) {
 			return "";
 		}
 		String trimmed = text.trim();
-		// reasoning models may put their thinking before the answer
 		int think = trimmed.lastIndexOf("</think>");
 		if (think >= 0) {
 			trimmed = trimmed.substring(think + "</think>".length()).trim();
 		}
+		return trimmed;
+	}
+
+	private static String stripFence(String text) {
+		String trimmed = afterThinking(text);
 		// take the last fenced block, models tend to wrap the query in prose
 		int end = trimmed.lastIndexOf("```");
 		int start = end > 0 ? trimmed.lastIndexOf("```", end - 1) : -1;
@@ -142,7 +214,8 @@ public final class QueryTextAnswer {
 			if (newline >= 0) {
 				block = block.substring(newline + 1);
 			}
-			String after = trimmed.substring(end + 3).trim();
+			// the title and description lines are taken from the whole answer, so a Note after them still counts
+			String after = DESCRIPTION_LINE.matcher(TITLE_LINE.matcher(trimmed.substring(end + 3)).replaceAll("")).replaceAll("").trim();
 			trimmed = block.trim();
 			// keep a trailing Note / Hinweis that the model put after the fence, but no other prose, which would end up in the query
 			if (!CommonUtil.isEmptyString(after) && startsWithNoteMarker(after)) {
