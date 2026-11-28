@@ -142,10 +142,11 @@ var waitDialogShown = false;
 
 /**
  * Counts a started request, and shows the wait dialog if requests are still running after the delay.
+ * A background request (global="false"), such as a poll, is not counted.
  * Returns whether the request was counted, which its hideWaitDialog call passes back.
  */
-function showWaitDialog() {
-	if (suppressWait || typeof waitDialog === 'undefined') {
+function showWaitDialog(background) {
+	if (suppressWait || background || typeof waitDialog === 'undefined') {
 		return false;
 	}
 	waitDialogPending++;
