@@ -194,6 +194,8 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 	// the query label is a short name; a longer title from a model is cut
 	private static final int QUERY_TEXT_TITLE_MAX_LENGTH = 128;
 	private static final String QUERY_TEXT_EDITOR_CLIENT_ID = "search_form:tabView:query_text";
+	private static final String QUERY_TEXT_PANEL_CLIENT_ID = "search_form:tabView:query_text_panel";
+	private static final String INTERMEDIATE_SETS_PANEL_CLIENT_ID = "search_form:tabView:intermediate_sets_panel";
 	private static final String QUERY_TEXT_INQUIRY_PROPERTY = "proband.inquiryValues.inquiry.id";
 	private static final String QUERY_TEXT_TAG_PROPERTY = "proband.trialParticipations.tagValues.tag.id";
 	private static final String QUERY_TEXT_ECRF_FIELD_PROPERTY = "proband.trialParticipations.ecrfValues.ecrfField.id";
@@ -764,6 +766,35 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		} else {
 			initCriteriaDefaultValues(criteriaIn, criterionsIn, getDBModule(), getCriteriaLabelPreset(), getCriteriaCommentPreset());
 		}
+		resetQueryTabs();
+	}
+
+	/**
+	 * The query agent and intermediate sets tabs show the query that is now loaded, saved or blank: the agent log and the set steps
+	 * of the previous query go, and both panels are rendered again, also when another tab is shown. The shown tab loads its content anew.
+	 */
+	private void resetQueryTabs() {
+		queryTextRun = null;
+		intermediateSetStepRows = null;
+		intermediateSetTotal = null;
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		RequestContext requestContext = RequestContext.getCurrentInstance();
+		if (facesContext == null || requestContext == null || !facesContext.getPartialViewContext().isAjaxRequest()) {
+			return;
+		}
+		SessionScopeBean sessionScopeBean = WebUtil.getSessionScopeBean();
+		if (sessionScopeBean != null && sessionScopeBean.isExperimentalUser() && hasComponent(facesContext, QUERY_TEXT_PANEL_CLIENT_ID)) {
+			refreshQueryText();
+			requestContext.update(QUERY_TEXT_PANEL_CLIENT_ID);
+		}
+		if (!isPicker() && hasComponent(facesContext, INTERMEDIATE_SETS_PANEL_CLIENT_ID)) {
+			requestContext.update(INTERMEDIATE_SETS_PANEL_CLIENT_ID);
+		}
+	}
+
+	// the panels are only there for the search pages, a picker dialog may lack them
+	private static boolean hasComponent(FacesContext facesContext, String clientId) {
+		return facesContext.getViewRoot() != null && facesContext.getViewRoot().findComponent(":" + clientId) != null;
 	}
 
 	private void initSets() {

@@ -785,6 +785,65 @@ function restoreCriterionMenuWidths() {
 	return hidden && menus.length > 0;
 }
 
+// a request that takes longer than this, such as loading a stored query, searching or counting the intermediate sets, covers the page
+// with a loading box. Background requests (global="false"), like the query agent poll, never do.
+var SEARCH_BUSY_DELAY_MS = 600;
+var searchBusyCount = 0;
+var searchBusyTimer = null;
+
+function _getSearchBusyOverlay() {
+	var overlay = document.getElementById('ctsmsSearchBusy');
+	if (overlay == null) {
+		overlay = document.createElement('div');
+		overlay.id = 'ctsmsSearchBusy';
+		overlay.className = 'ctsms-search-busy';
+		var box = document.createElement('div');
+		box.className = 'ctsms-search-busy-box ui-widget ui-widget-content ui-corner-all';
+		var icon = document.createElement('span');
+		icon.className = 'ctsms-field-icon ctsms-icon-loading';
+		box.appendChild(icon);
+		var text = document.createElement('span');
+		text.className = 'ctsms-search-busy-text';
+		text.appendChild(document.createTextNode(typeof searchBusyLabel !== "undefined" ? searchBusyLabel : "..."));
+		box.appendChild(text);
+		overlay.appendChild(box);
+		document.body.appendChild(overlay);
+	}
+	return overlay;
+}
+
+function _showSearchBusy() {
+	searchBusyTimer = null;
+	if (searchBusyCount > 0) {
+		_getSearchBusyOverlay().style.display = 'block';
+	}
+}
+
+function _hideSearchBusy() {
+	if (searchBusyTimer != null) {
+		clearTimeout(searchBusyTimer);
+		searchBusyTimer = null;
+	}
+	var overlay = document.getElementById('ctsmsSearchBusy');
+	if (overlay != null) {
+		overlay.style.display = 'none';
+	}
+}
+
+jQuery(document).ajaxSend(function() {
+	searchBusyCount++;
+	if (searchBusyTimer == null) {
+		searchBusyTimer = setTimeout(_showSearchBusy, SEARCH_BUSY_DELAY_MS);
+	}
+});
+
+jQuery(document).ajaxComplete(function() {
+	searchBusyCount = Math.max(0, searchBusyCount - 1);
+	if (searchBusyCount == 0) {
+		_hideSearchBusy();
+	}
+});
+
 // a run is going on while its poll is scheduled or waiting for its answer
 function isQueryTextRunPolled() {
 	return queryTextPollTimer != null || queryTextPollPending;
