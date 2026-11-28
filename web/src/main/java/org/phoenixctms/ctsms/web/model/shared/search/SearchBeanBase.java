@@ -1714,7 +1714,8 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		if (run.getStatus() == QueryTextRun.Status.FAILED) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, Labels.getMessageLocalized("search_query_text_llm_failed", run.getError()));
 		} else if (run.getStatus() == QueryTextRun.Status.DONE) {
-			applyGeneratedQueryText(run);
+			// the page highlights Apply in query builder while a generated query waits in the editor
+			requestContext.addCallbackParam(JSValues.AJAX_QUERY_TEXT_GENERATED.toString(), applyGeneratedQueryText(run));
 			requestContext.update(QUERY_TEXT_EDITOR_CLIENT_ID);
 		}
 	}
@@ -1756,7 +1757,10 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		}
 	}
 
-	private void applyGeneratedQueryText(QueryTextRun run) {
+	/**
+	 * Puts the generated query into the editor. Returns false if the run gave no query, e.g. only a note.
+	 */
+	private boolean applyGeneratedQueryText(QueryTextRun run) {
 		// the prompt makes the model validate its final query, so the last accepted text is the answer.
 		// it was parsed by the agent already, which can take long when values are looked up by name
 		QueryTextAnswer answer = QueryTextAnswer.parse(run.getAnswer());
@@ -1774,7 +1778,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 			} else {
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, Labels.getStringLocalized("search_query_text_llm_empty"));
 			}
-			return;
+			return false;
 		}
 		Integer maxCriterions = Integer.valueOf(Settings.getInt(SettingCodes.MAX_CRITERIONS, Bundle.SETTINGS, DefaultSettings.MAX_CRITERIONS));
 		queryText = result;
@@ -1824,6 +1828,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 			// after the comment lines are on top, so the line matches the editor
 			markQueryTextErrorLine();
 		}
+		return true;
 	}
 
 	private static String oneLine(String text) {

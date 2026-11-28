@@ -41,7 +41,22 @@ function enableQueryTextButtons(styleClass, enabled) {
 	}
 }
 
+// a generated query waits in the editor: Apply in query builder shows the active color of the theme until it is clicked or a new run starts.
+// PrimeFaces takes ui-state-active off a button on mouseout and mouseup, so the marker class puts it back.
+var QUERY_TEXT_APPLY_READY_CLASS = "ctsms-query-text-apply-ready";
+
+function highlightQueryTextApply(ready) {
+	jQuery(".ctsms-query-text-apply").toggleClass(QUERY_TEXT_APPLY_READY_CLASS + " ui-state-active", ready);
+}
+
+jQuery(document).on("mouseout mouseup", "." + QUERY_TEXT_APPLY_READY_CLASS, function() {
+	jQuery(this).addClass("ui-state-active");
+});
+
 function setQueryTextBusy(busy) {
+	if (busy) {
+		highlightQueryTextApply(false);
+	}
 	if (typeof queryTextEditor !== "undefined" && queryTextEditor && queryTextEditor.instance) {
 		queryTextEditor.instance.setOption("readOnly", busy);
 	}
@@ -751,6 +766,7 @@ function handleQueryTextPollComplete(xhr, status, args) {
 	stopQueryTextPoll();
 	setQueryTextBusy(false);
 	refreshQueryTextEditor();
+	highlightQueryTextApply(args.queryTextGenerated == true);
 	if (args.queryTextErrorLine) {
 		markQueryTextErrorLine(args.queryTextErrorLine);
 	}
