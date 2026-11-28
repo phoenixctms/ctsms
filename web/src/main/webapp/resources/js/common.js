@@ -135,7 +135,7 @@ function dequeueShowDialog() {
 }
 
 // the wait dialog shows only once a request runs longer than this, so quick requests do not flash it
-var WAIT_DIALOG_DELAY_MS = 2000;
+var WAIT_DIALOG_DELAY_MS = 3000;
 var waitDialogPending = 0;
 var waitDialogTimer = null;
 var waitDialogShown = false;
