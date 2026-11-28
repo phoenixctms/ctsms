@@ -79,29 +79,30 @@ function setQueryTextBusy(busy) {
 // opening the tab loads the builder's query into the editor, which re-renders the editor panel: the editor is read-only until then,
 // so nothing typed in the meantime gets replaced. The re-rendered editor is editable again
 var queryTextLoading = false;
-var QUERY_TEXT_LOCK_RETRY_MS = 20;
-var QUERY_TEXT_LOCK_RETRIES = 100;
 
 function startLoadQueryText() {
 	queryTextLoading = true;
-	_lockQueryTextEditor(QUERY_TEXT_LOCK_RETRIES);
+	if (!_lockQueryTextEditor() && typeof searchTabView !== "undefined" && searchTabView && typeof searchTabView.addOnshowHandler === "function") {
+		// an editor in a hidden tab creates its CodeMirror only when the tab shows, in its on-show handler: the tab change that
+		// starts this load comes before that. A handler added now runs after the editor's, in the same tab show, and only once.
+		searchTabView.addOnshowHandler(function() {
+			_lockQueryTextEditor();
+			return true;
+		});
+	}
 	loadQueryText();
 }
 
-// on the first opening of the tab after the page loaded, the editor widget creates its CodeMirror only once the tab shows,
-// after this runs: retry until it is there, as long as the load is going on
-function _lockQueryTextEditor(retries) {
-	if (!queryTextLoading) {
-		return;
+// makes the editor read-only while the load is going on; false if the editor has no CodeMirror yet
+function _lockQueryTextEditor() {
+	if (typeof queryTextEditor === "undefined" || !queryTextEditor || !queryTextEditor.instance) {
+		return false;
 	}
-	if (typeof queryTextEditor !== "undefined" && queryTextEditor && queryTextEditor.instance) {
+	if (queryTextLoading) {
 		queryTextEditor.instance.setOption("readOnly", "nocursor");
 		jQuery(queryTextEditor.instance.getWrapperElement()).addClass("ctsms-query-text-loading");
-	} else if (retries > 0) {
-		window.setTimeout(function() {
-			_lockQueryTextEditor(retries - 1);
-		}, QUERY_TEXT_LOCK_RETRY_MS);
 	}
+	return true;
 }
 
 // also after a failed request, which leaves the old editor in place
