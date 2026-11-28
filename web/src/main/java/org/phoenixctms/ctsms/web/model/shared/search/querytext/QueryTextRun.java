@@ -29,9 +29,25 @@ public class QueryTextRun {
 	private volatile boolean applied;
 	private volatile boolean truncated;
 	private volatile Thread thread;
+	// when the view polled the run last: a run nobody polls any more, e.g. after the page was left, is cancelled
+	private volatile long lastPolledMillis = startMillis;
 
 	public QueryTextRun(String naturalLanguageRequest) {
 		this.naturalLanguageRequest = naturalLanguageRequest;
+	}
+
+	/**
+	 * Notes that the view still polls the run.
+	 */
+	public void touch() {
+		lastPolledMillis = System.currentTimeMillis();
+	}
+
+	/**
+	 * How long the view has not polled the run.
+	 */
+	long getUnpolledMillis() {
+		return System.currentTimeMillis() - lastPolledMillis;
 	}
 
 	public String getNaturalLanguageRequest() {

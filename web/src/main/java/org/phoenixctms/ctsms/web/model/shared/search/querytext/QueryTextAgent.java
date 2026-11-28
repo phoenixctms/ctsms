@@ -44,6 +44,9 @@ public final class QueryTextAgent {
 	private static final int STEP_TEXT_LENGTH = 300;
 	private static final String START_ATTRIBUTE = "start";
 	private static final String THREAD_NAME = "query-text-agent";
+	private static final long WATCHDOG_INTERVAL_MILLIS = 10000L;
+	// the view polls every 2 s, but a poll can wait behind a long search in the ajax queue
+	private static final long UNPOLLED_CANCEL_MILLIS = 120000L;
 	// the tool rounds of one run with their results, well above max tool calls times the calls per round
 	private static final int MAX_MEMORY_MESSAGES = 500;
 
@@ -131,6 +134,11 @@ public final class QueryTextAgent {
 
 		@Override
 		public void onError(ChatModelErrorContext context) {
+			if (run.getStatus() == QueryTextRun.Status.CANCELLED) {
+				// the cancel interrupted the request; the run already says so
+				step("#" + (round + 1) + " " + elapsed(context.attributes()) + ", stopped");
+				return;
+			}
 			step("#" + (round + 1) + " " + elapsed(context.attributes()) + ", failed: " + describeError(context.error()));
 		}
 	}
@@ -241,12 +249,40 @@ public final class QueryTextAgent {
 				}
 				run.done(answer, parsed.getNote(), tools.getLastValidText(), tools.getLastValidCriterions());
 			} catch (Exception e) {
-				logger.warn("query agent failed", e);
-				run.failed(e.getMessage() != null ? e.getMessage() : e.getClass().getName());
+				if (run.getStatus() == QueryTextRun.Status.CANCELLED) {
+					// cancelling interrupts the model request, which is no failure
+					logger.info("query agent cancelled");
+				} else {
+					logger.warn("query agent failed", e);
+					run.failed(e.getMessage() != null ? e.getMessage() : e.getClass().getName());
+				}
 			}
 		}, THREAD_NAME);
 		thread.setDaemon(true);
 		run.setThread(thread);
 		thread.start();
+		startWatchdog(run);
+	}
+
+	/**
+	 * Cancels the run once the view stops polling it, e.g. after the page was closed or left for another one,
+	 * so the model does not go on working for nobody. The grace period covers polls waiting behind a long request in the ajax queue.
+	 */
+	private static void startWatchdog(QueryTextRun run) {
+		Thread watchdog = new Thread(() -> {
+			try {
+				while (run.isRunning()) {
+					Thread.sleep(WATCHDOG_INTERVAL_MILLIS);
+					if (run.isRunning() && run.getUnpolledMillis() > UNPOLLED_CANCEL_MILLIS) {
+						logger.info("query agent run not polled for {} ms, cancelling", run.getUnpolledMillis());
+						run.cancel();
+					}
+				}
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+			}
+		}, THREAD_NAME + " watchdog");
+		watchdog.setDaemon(true);
+		watchdog.start();
 	}
 }
