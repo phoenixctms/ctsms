@@ -785,37 +785,19 @@ function restoreCriterionMenuWidths() {
 	return hidden && menus.length > 0;
 }
 
-// a request that takes longer than this, such as loading a stored query, searching or counting the intermediate sets, covers the page
-// with a loading box. Background requests (global="false"), like the query agent poll, never do.
+// a request that takes longer than this, such as loading a stored query, searching or counting the intermediate sets, shows the
+// wait dialog of the timeline and schedule pages (searchWaitDialog, see waitDialog.xhtml). Background requests (global="false"),
+// like the query agent poll, never do. Unlike there, short requests do not flash it, as editing the query builder rows sends many.
 var SEARCH_BUSY_DELAY_MS = 600;
 var searchBusyCount = 0;
 var searchBusyTimer = null;
-
-function _getSearchBusyOverlay() {
-	var overlay = document.getElementById('ctsmsSearchBusy');
-	if (overlay == null) {
-		overlay = document.createElement('div');
-		overlay.id = 'ctsmsSearchBusy';
-		overlay.className = 'ctsms-search-busy';
-		var box = document.createElement('div');
-		box.className = 'ctsms-search-busy-box ui-widget ui-widget-content ui-corner-all';
-		var icon = document.createElement('span');
-		icon.className = 'ctsms-field-icon ctsms-icon-loading';
-		box.appendChild(icon);
-		var text = document.createElement('span');
-		text.className = 'ctsms-search-busy-text';
-		text.appendChild(document.createTextNode(typeof searchBusyLabel !== "undefined" ? searchBusyLabel : "..."));
-		box.appendChild(text);
-		overlay.appendChild(box);
-		document.body.appendChild(overlay);
-	}
-	return overlay;
-}
+var searchBusyShown = false;
 
 function _showSearchBusy() {
 	searchBusyTimer = null;
-	if (searchBusyCount > 0) {
-		_getSearchBusyOverlay().style.display = 'block';
+	if (searchBusyCount > 0 && typeof searchWaitDialog !== "undefined") {
+		searchWaitDialog.show();
+		searchBusyShown = true;
 	}
 }
 
@@ -824,10 +806,10 @@ function _hideSearchBusy() {
 		clearTimeout(searchBusyTimer);
 		searchBusyTimer = null;
 	}
-	var overlay = document.getElementById('ctsmsSearchBusy');
-	if (overlay != null) {
-		overlay.style.display = 'none';
+	if (searchBusyShown && typeof searchWaitDialog !== "undefined") {
+		searchWaitDialog.hide();
 	}
+	searchBusyShown = false;
 }
 
 jQuery(document).ajaxSend(function() {

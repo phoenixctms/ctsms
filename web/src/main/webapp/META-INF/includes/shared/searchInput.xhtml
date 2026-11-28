@@ -62,9 +62,7 @@
 			oncomplete="handleQueryTextValueHintsLoaded(xhr, status, args)" />
 		<script type="text/javascript">
 		//<![CDATA[
-		searchQueryTextTabVisible = #{sessionScopeBean.experimentalUser};
-		searchBusyLabel = "#{labels.search_busy_label}";
-		// the colors of the result sets, one grade per result set a query of max_criterions can have. A style element here would take a row of the panel grid
+		searchQueryTextTabVisible = #{sessionScopeBean.experimentalUser};		// the colors of the result sets, one grade per result set a query of max_criterions can have. A style element here would take a row of the panel grid
 		if (!document.getElementById("ctsms-criterion-row-colors")) {
 			var criterionRowColors = document.createElement("style");
 			criterionRowColors.id = "ctsms-criterion-row-colors";
