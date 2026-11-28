@@ -788,7 +788,7 @@ function restoreCriterionMenuWidths() {
 // a request that takes longer than this, such as loading a stored query, searching or counting the intermediate sets, shows the
 // wait dialog of the timeline and schedule pages (searchWaitDialog, see waitDialog.xhtml). Background requests (global="false"),
 // like the query agent poll, never do. Unlike there, short requests do not flash it, as editing the query builder rows sends many.
-var SEARCH_BUSY_DELAY_MS = 1000;
+var SEARCH_BUSY_DELAY_MS = 2000;
 var searchBusyCount = 0;
 var searchBusyTimer = null;
 var searchBusyShown = false;

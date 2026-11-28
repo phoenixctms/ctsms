@@ -134,22 +134,53 @@ function dequeueShowDialog() {
 	}
 }
 
+// the wait dialog shows only once a request runs longer than this, so quick requests do not flash it
+var WAIT_DIALOG_DELAY_MS = 2000;
+var waitDialogPending = 0;
+var waitDialogTimer = null;
+var waitDialogShown = false;
+
+/**
+ * Counts a started request, and shows the wait dialog if requests are still running after the delay.
+ * Returns whether the request was counted, which its hideWaitDialog call passes back.
+ */
 function showWaitDialog() {
-	if (!suppressWait) {
-		if (typeof waitDialog !== 'undefined') {
-			showDialogQueue.push('show');
-			dequeueShowDialog();
+	if (suppressWait || typeof waitDialog === 'undefined') {
+		return false;
+	}
+	waitDialogPending++;
+	if (waitDialogTimer == null && !waitDialogShown) {
+		waitDialogTimer = setTimeout(function() {
+			waitDialogTimer = null;
+			if (waitDialogPending > 0) {
+				waitDialogShown = true;
+				showDialogQueue.push('show');
+				dequeueShowDialog();
+			}
+		}, WAIT_DIALOG_DELAY_MS);
+	}
+	return true;
+}
+
+/**
+ * Counts a finished request, and hides the wait dialog when no request is running any more.
+ * counted is false for a request whose showWaitDialog was suppressed.
+ */
+function hideWaitDialog(counted) {
+	if (counted !== false && typeof waitDialog !== 'undefined' && waitDialogPending > 0) {
+		waitDialogPending--;
+		if (waitDialogPending == 0) {
+			if (waitDialogTimer != null) {
+				clearTimeout(waitDialogTimer);
+				waitDialogTimer = null;
+			}
+			if (waitDialogShown) {
+				waitDialogShown = false;
+				showDialogQueue.push('hide');
+				dequeueShowDialog();
+			}
 		}
 	}
-
-}
-function hideWaitDialog() {
-
-	if (typeof waitDialog !== 'undefined') {
-		showDialogQueue.push('hide');
-		dequeueShowDialog();
-	}
-
 	suppressWait = false;
 }
 
