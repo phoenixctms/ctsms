@@ -352,6 +352,30 @@
 								class="ctsms-intermediatesets-chart"></div>
 							<h:panelGroup
 								rendered="#{not empty searchBean.intermediateSetTotal}">
+								<!-- the result sets the steps combine, with their criteria, in the colors of their query builder rows -->
+								<p:dataTable styleClass="ctsms-intermediatesets-steps-table"
+									value="#{searchBean.intermediateSetRows}" var="set"
+									rendered="#{not empty searchBean.intermediateSetRows}">
+									<p:column style="width:60px;">
+										<f:facet name="header">
+											<h:outputText value="#{labels.search_intermediate_set_sets_set_column}" />
+										</f:facet>
+										<span class="ctsms-intermediatesets-set-swatch #{set.colorStyleClass}"></span>
+										<h:outputText value="#{set.label}" />
+									</p:column>
+									<p:column style="width:90px;">
+										<f:facet name="header">
+											<h:outputText value="#{labels.search_intermediate_set_sets_count_column}" />
+										</f:facet>
+										<h:outputText value="#{set.count}" />
+									</p:column>
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="#{labels.search_intermediate_set_sets_criteria_column}" />
+										</f:facet>
+										<h:outputText value="#{set.criteria}" styleClass="ctsms-intermediatesets-set-criteria" />
+									</p:column>
+								</p:dataTable>
 								<p:dataTable styleClass="ctsms-intermediatesets-steps-table"
 									value="#{searchBean.intermediateSetStepRows}" var="step"
 									rendered="#{not empty searchBean.intermediateSetStepRows}"
@@ -372,13 +396,13 @@
 										<f:facet name="header">
 											<h:outputText value="#{labels.search_intermediate_set_steps_a_column}" />
 										</f:facet>
-										<h:outputText value="#{step.a}: #{step.aCount}" />
+										<h:outputText value="#{step.a}: #{step.aCount}" title="#{step.aCriteria}" />
 									</p:column>
 									<p:column>
 										<f:facet name="header">
 											<h:outputText value="#{labels.search_intermediate_set_steps_b_column}" />
 										</f:facet>
-										<h:outputText value="#{step.b}: #{step.bCount}" />
+										<h:outputText value="#{step.b}: #{step.bCount}" title="#{step.bCriteria}" />
 									</p:column>
 									<p:column>
 										<f:facet name="header">
@@ -401,8 +425,13 @@
 										<h:outputText value="#{step.warning}"
 											styleClass="ctsms-intermediatesets-step-warning" />
 									</p:column>
+									<f:facet name="footer">
+										<h:outputText value="#{searchBean.intermediateSetTotal}" />
+									</f:facet>
 								</p:dataTable>
-								<h:outputText value="#{searchBean.intermediateSetTotal}" />
+								<!-- a query without set operator has no steps table, whose footer shows the result -->
+								<h:outputText value="#{searchBean.intermediateSetTotal}"
+									rendered="#{empty searchBean.intermediateSetStepRows}" />
 							</h:panelGroup>
 						</h:panelGrid>
 					</p:panel>

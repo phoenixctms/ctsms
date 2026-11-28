@@ -364,6 +364,30 @@ table.ctsms-criterion-position tr:nth-child(2) {
 	width: 100%;
 }
 
+/* the result of the whole query, whose set expression can be long */
+.ctsms-intermediatesets-steps-table .ui-datatable-footer {
+	text-align: left;
+	white-space: normal;
+	overflow-wrap: anywhere;
+}
+
+/* the color of the result set, as its query builder rows and its diagram circles have it */
+.ctsms-intermediatesets-set-swatch {
+	display: inline-block;
+	width: 12px;
+	height: 12px;
+	margin-right: 6px;
+	vertical-align: middle;
+	border: 1px solid rgba(0, 0, 0, 0.25);
+	border-radius: 2px;
+}
+
+/* the criteria as the query editor prints them, one per line */
+.ctsms-intermediatesets-set-criteria {
+	white-space: pre-wrap;
+	font-family: monospace;
+}
+
 .ctsms-intermediatesets-steps-table-warning {
 	background-color: #fff3cd;
 }

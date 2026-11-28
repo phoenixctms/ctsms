@@ -1355,7 +1355,7 @@ public class QueryTextTools {
 				if (branches.length() > 0) {
 					line.append(" (").append(branches).append(')');
 				}
-				line.append(' ').append(abbreviateExpression(set.getExpression()));
+				line.append(' ').append(abbreviateExpression(set.getCriteriaText()));
 				appendLine(result, line.toString());
 				lines++;
 			}
