@@ -3074,7 +3074,7 @@ public class ProductionDataProvider {
 				"export_inventory_criteria_result",
 				"export_inventory_criteria_result",
 				"{0} -ecr=\"\" -id={1} -auth={4} -jid={5}",
-				true,
+				false, // query result exports are hidden for now
 				false,
 				false,
 				false,
@@ -3087,7 +3087,7 @@ public class ProductionDataProvider {
 				"export_staff_criteria_result",
 				"export_staff_criteria_result",
 				"{0} -ecr=\"\" -id={1} -auth={4} -jid={5}",
-				true,
+				false, // query result exports are hidden for now
 				false,
 				false,
 				false,
@@ -3100,7 +3100,7 @@ public class ProductionDataProvider {
 				"export_course_criteria_result",
 				"export_course_criteria_result",
 				"{0} -ecr=\"\" -id={1} -auth={4} -jid={5}",
-				true,
+				false, // query result exports are hidden for now
 				false,
 				false,
 				false,
@@ -3113,7 +3113,7 @@ public class ProductionDataProvider {
 				"export_trial_criteria_result",
 				"export_trial_criteria_result",
 				"{0} -ecr=\"\" -id={1} -auth={4} -jid={5}",
-				true,
+				false, // query result exports are hidden for now
 				false,
 				false,
 				false,
@@ -3126,7 +3126,7 @@ public class ProductionDataProvider {
 				"export_input_field_criteria_result",
 				"export_input_field_criteria_result",
 				"{0} -ecr=\"\" -id={1} -auth={4} -jid={5}",
-				true,
+				false, // query result exports are hidden for now
 				false,
 				false,
 				false,
@@ -3139,7 +3139,7 @@ public class ProductionDataProvider {
 				"export_proband_criteria_result",
 				"export_proband_criteria_result",
 				"{0} -ecr=\"\" -id={1} -auth={4} -jid={5}",
-				true,
+				false, // query result exports are hidden for now
 				false,
 				false,
 				false,
@@ -3152,7 +3152,7 @@ public class ProductionDataProvider {
 				"export_mass_mail_criteria_result",
 				"export_mass_mail_criteria_result",
 				"{0} -ecr=\"\" -id={1} -auth={4} -jid={5}",
-				true,
+				false, // query result exports are hidden for now
 				false,
 				false,
 				false,
@@ -3165,7 +3165,7 @@ public class ProductionDataProvider {
 				"export_user_criteria_result",
 				"export_user_criteria_result",
 				"{0} -ecr=\"\" -id={1} -auth={4} -jid={5}",
-				true,
+				false, // query result exports are hidden for now
 				false,
 				false,
 				false,
@@ -3178,7 +3178,7 @@ public class ProductionDataProvider {
 				"export_inventory_criteria_result_monthly",
 				"export_inventory_criteria_result_monthly",
 				"{0} -ecr=\"\" -id={1} -auth={4} -jid={5}",
-				true,
+				false, // query result exports are hidden for now
 				false,
 				false,
 				true,
@@ -3191,7 +3191,7 @@ public class ProductionDataProvider {
 				"export_staff_criteria_result_monthly",
 				"export_staff_criteria_result_monthly",
 				"{0} -ecr=\"\" -id={1} -auth={4} -jid={5}",
-				true,
+				false, // query result exports are hidden for now
 				false,
 				false,
 				true,
@@ -3204,7 +3204,7 @@ public class ProductionDataProvider {
 				"export_course_criteria_result_monthly",
 				"export_course_criteria_result_monthly",
 				"{0} -ecr=\"\" -id={1} -auth={4} -jid={5}",
-				true,
+				false, // query result exports are hidden for now
 				false,
 				false,
 				true,
@@ -3217,7 +3217,7 @@ public class ProductionDataProvider {
 				"export_trial_criteria_result_monthly",
 				"export_trial_criteria_result_monthly",
 				"{0} -ecr=\"\" -id={1} -auth={4} -jid={5}",
-				true,
+				false, // query result exports are hidden for now
 				false,
 				false,
 				true,
@@ -3230,7 +3230,7 @@ public class ProductionDataProvider {
 				"export_input_field_criteria_result_monthly",
 				"export_input_field_criteria_result_monthly",
 				"{0} -ecr=\"\" -id={1} -auth={4} -jid={5}",
-				true,
+				false, // query result exports are hidden for now
 				false,
 				false,
 				true,
@@ -3243,7 +3243,7 @@ public class ProductionDataProvider {
 				"export_proband_criteria_result_monthly",
 				"export_proband_criteria_result_monthly",
 				"{0} -ecr=\"\" -id={1} -auth={4} -jid={5}",
-				true,
+				false, // query result exports are hidden for now
 				false,
 				false,
 				true,
@@ -3256,7 +3256,7 @@ public class ProductionDataProvider {
 				"export_mass_mail_criteria_result_monthly",
 				"export_mass_mail_criteria_result_monthly",
 				"{0} -ecr=\"\" -id={1} -auth={4} -jid={5}",
-				true,
+				false, // query result exports are hidden for now
 				false,
 				false,
 				true,
@@ -3269,7 +3269,7 @@ public class ProductionDataProvider {
 				"export_user_criteria_result_monthly",
 				"export_user_criteria_result_monthly",
 				"{0} -ecr=\"\" -id={1} -auth={4} -jid={5}",
-				true,
+				false, // query result exports are hidden for now
 				false,
 				false,
 				true,
