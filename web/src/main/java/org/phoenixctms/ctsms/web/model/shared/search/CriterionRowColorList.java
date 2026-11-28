@@ -73,6 +73,13 @@ public class CriterionRowColorList extends CriterionListBase<String> {
 	}
 
 	/**
+	 * The style class of the result set with the given select index, as its query builder rows have it.
+	 */
+	public static String getSelectColorStyleClass(int selectIndex, Integer selectCount) {
+		return ROW_SELECT_COLOR_STYLECLASS_PREFIX + Integer.toString(getSelectColorGrade(selectIndex, selectCount, getGradeStep()));
+	}
+
+	/**
 	 * Up to 17 result sets keep the 17 former colors. More result sets spread evenly over the whole gradient, so none share a color.
 	 */
 	static int getSelectColorGrade(int selectIndex, Integer selectCount, int gradeStep) {

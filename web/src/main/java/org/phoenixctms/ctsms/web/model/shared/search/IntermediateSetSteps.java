@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.phoenixctms.ctsms.enumeration.CriterionTie;
 import org.phoenixctms.ctsms.util.CommonUtil;
@@ -63,12 +64,41 @@ public class IntermediateSetSteps {
 		private final long count;
 		private final String expression;
 		private final Collection<CriterionInstantVO> criterions;
+		private final Integer selectStatementIndex;
 
 		private ResultSet(String label, long count, CriteriaInstantVO criteria) {
 			this.label = label;
 			this.count = count;
 			this.expression = criteria.getCriterionExpression();
 			this.criterions = criteria.getCriterions();
+			this.selectStatementIndex = firstSelectStatementIndex(criteria.getCriterions());
+		}
+
+		private static Integer firstSelectStatementIndex(Collection<CriterionInstantVO> criterions) {
+			if (criterions != null) {
+				Iterator<CriterionInstantVO> it = criterions.iterator();
+				while (it.hasNext()) {
+					CriterionInstantVO criterion = it.next();
+					if (criterion != null && criterion.getSelectStatementIndex() != null) {
+						return criterion.getSelectStatementIndex();
+					}
+				}
+			}
+			return null;
+		}
+
+		/**
+		 * The index of the SQL select, which picks the color of the result set in the query builder rows and the chart.
+		 */
+		public Integer getSelectStatementIndex() {
+			return selectStatementIndex;
+		}
+
+		/**
+		 * The criteria as the query editor prints them, without its line numbers, such as Year of birth > 1980.
+		 */
+		public String getCriteriaText() {
+			return stripLineNumbers(expression);
 		}
 
 		public String getLabel() {
@@ -237,12 +267,38 @@ public class IntermediateSetSteps {
 
 	// an earlier step as operand is named by its number with this prefix
 	private static final String STEP_OPERAND_PREFIX = "#";
+	// the position number the pretty expression puts at the start of each line, such as 2:
+	private static final Pattern LINE_NUMBER = Pattern.compile("(?m)^([ \\t]*)\\d+:");
+
+	/**
+	 * The pretty expression without the position numbers at the line starts. Values in the lines, such as a time 12:30, stay.
+	 */
+	public static String stripLineNumbers(String expression) {
+		if (expression == null) {
+			return null;
+		}
+		return LINE_NUMBER.matcher(expression).replaceAll("$1").trim();
+	}
+
+	/**
+	 * The result set with the given label, such as A, or null.
+	 */
+	public ResultSet getSet(String label) {
+		return label == null ? null : sets.get(label);
+	}
 	private final ArrayList<Step> steps = new ArrayList<Step>();
 	private final LinkedHashMap<String, ResultSet> sets = new LinkedHashMap<String, ResultSet>();
 	private String expression;
 	private long count;
+	// the number of SQL selects of the whole query
+	private Integer selectStatementCount;
+
+	public Integer getSelectStatementCount() {
+		return selectStatementCount;
+	}
 
 	public IntermediateSetSteps(IntermediateSetSummaryVO summary, Map<Long, CriterionTieVO> ties) {
+		selectStatementCount = summary == null || summary.getParsed() == null ? null : summary.getParsed().getSelectStatementCount();
 		Collection<IntermediateSetDetailVO> details = summary == null ? null : summary.getSets();
 		if (details == null) {
 			return;

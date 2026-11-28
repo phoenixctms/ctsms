@@ -188,6 +188,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 	private String[] criterionIndexes;
 	private String deferredDeleteReason;
 	private ArrayList<HashMap<String, Object>> intermediateSetStepRows;
+	private ArrayList<HashMap<String, Object>> intermediateSetRows;
 	private String intermediateSetTotal;
 	private static final String QUERY_TEXT_FORMAT_EXPRESSION = "EXPRESSION";
 	private static final String QUERY_TEXT_FORMAT_JSON = "JSON";
@@ -776,6 +777,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 	private void resetQueryTabs() {
 		queryTextRun = null;
 		intermediateSetStepRows = null;
+		intermediateSetRows = null;
 		intermediateSetTotal = null;
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		RequestContext requestContext = RequestContext.getCurrentInstance();
@@ -1279,6 +1281,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		parsed = true;
 		Collection<IntermediateSetDetailVO> intermediateSets = null;
 		intermediateSetStepRows = null;
+		intermediateSetRows = null;
 		intermediateSetTotal = null;
 		boolean operationSuccess = false;
 		try {
@@ -1330,6 +1333,9 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 			row.put("expression", step.getExpression());
 			row.put("a", IntermediateSetSteps.operandName(step.getA(), stepReference));
 			row.put("b", IntermediateSetSteps.operandName(step.getB(), stepReference));
+			// the criteria of a single result set, shown when hovering its letter; an earlier step has its own row
+			row.put("aCriteria", setCriteriaText(steps, step.getA()));
+			row.put("bCriteria", setCriteriaText(steps, step.getB()));
 			row.put("tie", step.getTie() == null ? null : step.getTie().name());
 			row.put("aCount", step.getACount());
 			row.put("bCount", step.getBCount());
@@ -1345,8 +1351,20 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 			row.put("warning", warnings.isEmpty() ? null : String.join(", ", warnings));
 			intermediateSetStepRows.add(row);
 		}
+		intermediateSetRows = new ArrayList<HashMap<String, Object>>(steps.getSets().size());
+		Iterator<IntermediateSetSteps.ResultSet> setIt = steps.getSets().iterator();
+		while (setIt.hasNext()) {
+			IntermediateSetSteps.ResultSet set = setIt.next();
+			HashMap<String, Object> row = new HashMap<String, Object>();
+			row.put("label", set.getLabel());
+			row.put("count", set.getCount());
+			row.put("criteria", set.getCriteriaText());
+			row.put("colorStyleClass", set.getSelectStatementIndex() == null ? ""
+					: CriterionRowColorList.getSelectColorStyleClass(set.getSelectStatementIndex().intValue(), steps.getSelectStatementCount()));
+			intermediateSetRows.add(row);
+		}
 		if (!CommonUtil.isEmptyString(steps.getExpression())) {
-			intermediateSetTotal = Labels.getMessageLocalized("search_intermediate_set_steps_total", steps.getExpression(), steps.getCount(), getResultItemLabel());
+			intermediateSetTotal =Labels.getMessageLocalized("search_intermediate_set_steps_total", steps.getExpression(), steps.getCount(), getResultItemLabel());
 		} else {
 			intermediateSetTotal = Labels.getMessageLocalized("search_intermediate_set_steps_total_all", steps.getCount(), getResultItemLabel());
 		}
@@ -1386,8 +1404,20 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		}
 	}
 
+	private static String setCriteriaText(IntermediateSetSteps steps, String operand) {
+		IntermediateSetSteps.ResultSet set = steps.getSet(operand);
+		return set == null ? null : set.getCriteriaText();
+	}
+
 	public List<HashMap<String, Object>> getIntermediateSetStepRows() {
 		return intermediateSetStepRows;
+	}
+
+	/**
+	 * One row per result set (A, B, ...): its count and criteria, in the color of its query builder rows.
+	 */
+	public List<HashMap<String, Object>> getIntermediateSetRows() {
+		return intermediateSetRows;
 	}
 
 	public String getIntermediateSetTotal() {
