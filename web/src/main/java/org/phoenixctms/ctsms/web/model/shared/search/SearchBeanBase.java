@@ -191,6 +191,8 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 	private String intermediateSetTotal;
 	private static final String QUERY_TEXT_FORMAT_EXPRESSION = "EXPRESSION";
 	private static final String QUERY_TEXT_FORMAT_JSON = "JSON";
+	// the query label is a short name; a longer title from a model is cut
+	private static final int QUERY_TEXT_TITLE_MAX_LENGTH = 128;
 	private static final String QUERY_TEXT_EDITOR_CLIENT_ID = "search_form:tabView:query_text";
 	private static final String QUERY_TEXT_INQUIRY_PROPERTY = "proband.inquiryValues.inquiry.id";
 	private static final String QUERY_TEXT_TAG_PROPERTY = "proband.trialParticipations.tagValues.tag.id";
@@ -1380,6 +1382,8 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 			for (int i = 0; i < criterionsIn.size(); i++) {
 				sanitizeCriterionVals(criterionsIn.get(i), i);
 			}
+			// before refreshQueryText, which prints the criteria without the comment lines
+			applyQueryTextTitle();
 			updateInstantCriteria(true);
 			refreshQueryText();
 			markQueryTextErrorLine();
@@ -1728,6 +1732,15 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		if (!CommonUtil.isEmptyString(run.getNaturalLanguageRequest())) {
 			leadingComments.append(commentQueryText(run.getNaturalLanguageRequest(), QUERY_TEXT_FORMAT_JSON.equals(queryTextFormat)));
 		}
+		// Apply in query builder takes the query title and description from these lines
+		if (!CommonUtil.isEmptyString(answer.getTitle())) {
+			leadingComments.append(commentQueryText(Labels.getMessageLocalized("search_query_text_llm_title_comment", oneLine(answer.getTitle())),
+					QUERY_TEXT_FORMAT_JSON.equals(queryTextFormat)));
+		}
+		if (!CommonUtil.isEmptyString(answer.getDescription())) {
+			leadingComments.append(commentQueryText(Labels.getMessageLocalized("search_query_text_llm_description_comment", oneLine(answer.getDescription())),
+					QUERY_TEXT_FORMAT_JSON.equals(queryTextFormat)));
+		}
 		if (!CommonUtil.isEmptyString(note)) {
 			Messages.addMessage(FacesMessage.SEVERITY_WARN, note);
 			leadingComments.append(commentQueryText(Labels.getMessageLocalized("search_query_text_llm_note_comment", note),
@@ -1739,6 +1752,25 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		if (!validated) {
 			// after the comment lines are on top, so the line matches the editor
 			markQueryTextErrorLine();
+		}
+	}
+
+	private static String oneLine(String text) {
+		return text == null ? null : text.replaceAll("\\s+", " ").trim();
+	}
+
+	/**
+	 * Takes the query title and description from the # Title: and # Description: comment lines of the editor text, as the query agent
+	 * or an external model writes them. Keeps the label and comment if the text has no such line.
+	 */
+	private void applyQueryTextTitle() {
+		String title = oneLine(QueryTextAnswer.findTitle(queryText));
+		if (!CommonUtil.isEmptyString(title)) {
+			criteriaIn.setLabel(title.length() > QUERY_TEXT_TITLE_MAX_LENGTH ? title.substring(0, QUERY_TEXT_TITLE_MAX_LENGTH).trim() : title);
+		}
+		String description = oneLine(QueryTextAnswer.findDescription(queryText));
+		if (!CommonUtil.isEmptyString(description)) {
+			criteriaIn.setComment(description);
 		}
 	}
 
