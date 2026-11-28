@@ -697,8 +697,13 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 	protected abstract String getTitle(boolean operationSuccess);
 
 	protected String getTitle(String titleMessageCode, String createNewMessageCode, boolean operationSuccess) {
+		// the label as the form has it, e.g. a title just taken from the query text by Apply in query builder, before it is saved
+		String label = criteriaIn == null ? null : criteriaIn.getLabel();
 		if (out != null) {
-			return Messages.getMessage(out.getDeferredDelete() ? MessageCodes.DELETED_TITLE : titleMessageCode, Long.toString(out.getId()), CommonUtil.criteriaOutVOToString(out));
+			return Messages.getMessage(out.getDeferredDelete() ? MessageCodes.DELETED_TITLE : titleMessageCode, Long.toString(out.getId()),
+					CommonUtil.isEmptyString(label) ? CommonUtil.criteriaOutVOToString(out) : label);
+		} else if (operationSuccess && !CommonUtil.isEmptyString(label) && !label.equals(getCriteriaLabelPreset())) {
+			return Messages.getString(createNewMessageCode) + ": " + label;
 		} else {
 			return Messages.getString(operationSuccess ? createNewMessageCode : MessageCodes.ERROR_LOADING_CRITERIA);
 		}
@@ -746,6 +751,8 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 	}
 
 	protected void initIn() {
+		// loading, saving, deleting or blanking a query leaves the query the agent works on
+		cancelQueryText();
 		if (criteriaIn == null) {
 			criteriaIn = new CriteriaInVO();
 		}
@@ -1631,6 +1638,9 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 
 	public void pollQueryText() {
 		QueryTextRun run = queryTextRun;
+		if (run != null) {
+			run.touch();
+		}
 		if (run != null && run.isRunning()) {
 			return;
 		}

@@ -785,9 +785,19 @@ function restoreCriterionMenuWidths() {
 	return hidden && menus.length > 0;
 }
 
+// a run is going on while its poll is scheduled or waiting for its answer
+function isQueryTextRunPolled() {
+	return queryTextPollTimer != null || queryTextPollPending;
+}
+
 function handleSearchTabChange(index) {
 
 	_deleteIntermediateSetsChartTooltip();
+	// leaving the Query Agent tab stops the agent; the poll goes on until it sees the run end
+	if (searchTabLogicalIndex(oldSearchTabIndex) == 1 && searchTabLogicalIndex(index) != 1 && isQueryTextRunPolled()
+	        && typeof cancelQueryTextRun === "function") {
+		cancelQueryTextRun();
+	}
 	switch (searchTabLogicalIndex(index)) {
 	case 0:
 		// onTabChange runs before the panel is shown, so drop the collapsed widths once it is visible

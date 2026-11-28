@@ -45,6 +45,11 @@
 			actionListener="#{searchBean.pollQueryText}"
 			update=":search_form:tabView:query_text_progress,:search_form:messages"
 			oncomplete="handleQueryTextPollComplete(xhr, status, args)" />
+		<!-- search.js calls it when the Query Agent tab is left while a run is going on -->
+		<p:remoteCommand name="cancelQueryTextRun"
+			rendered="#{sessionScopeBean.experimentalUser}"
+			process="@this" global="false"
+			actionListener="#{searchBean.cancelQueryText}" />
 		<p:remoteCommand name="loadQueryTextHints"
 			rendered="#{sessionScopeBean.experimentalUser}"
 			process="@this" global="false"
