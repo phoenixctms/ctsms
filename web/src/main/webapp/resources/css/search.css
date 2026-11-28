@@ -326,17 +326,16 @@ table.ctsms-criterion-position tr:nth-child(2) {
 }
 
 /* one small diagram per set step, in a grid */
+/* equal columns of at least 260px that share the whole width, however many steps there are */
 .ctsms-intermediatesets-chart-grid {
-	display: flex;
-	flex-wrap: wrap;
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
 	gap: 8px;
 	min-height: 0;
 }
 
 .ctsms-intermediatesets-step {
-	flex: 1 1 260px;
-	max-width: 480px;
-	min-width: 200px;
+	min-width: 0;
 	border: 1px solid #dcdcdc;
 	border-radius: 4px;
 	padding: 4px;
