@@ -968,5 +968,14 @@ if get_database_version() < '010901024' then
 
 end if;
 
+if get_database_version() < '010901025' then
+
+  -- hide the query result export job types (on demand and monthly) for now; set VISIBLE back to true to offer them again:
+  update JOB_TYPE set VISIBLE = false where MODULE like '%\_CRITERIA\_JOB' and TRIAL_FK is null;
+
+  perform set_database_version('010901025');
+
+end if;
+
 end
 $$;
