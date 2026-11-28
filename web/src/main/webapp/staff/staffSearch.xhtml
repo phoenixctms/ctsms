@@ -118,6 +118,9 @@
 					</p:panel>
 				</h:panelGrid>
 			</h:form>
+			<ui:include src="/META-INF/includes/shared/waitDialog.xhtml">
+				<ui:param name="waitDialogVar" value="searchWaitDialog" />
+			</ui:include>
 		</ui:define>
 	</ui:composition>
 </h:body>

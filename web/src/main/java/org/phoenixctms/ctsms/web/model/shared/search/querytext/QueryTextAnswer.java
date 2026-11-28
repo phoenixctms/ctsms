@@ -12,6 +12,7 @@ public final class QueryTextAnswer {
 
 	private static final String[] NOTE_MARKERS = { "Note:", "Hinweis:" };
 	private static final String QUERY_SYMBOLS = "∧∨∩∪∖";
+	private static final Pattern EMPTY_NOTE = Pattern.compile("(?:none|nothing|n/?a|keine[rs]?|nichts|-+)[ .!]*", Pattern.CASE_INSENSITIVE);
 	private static final Pattern QUERY_COMPARISON = Pattern.compile("\\S\\s+(=|<>|!=|<=|>=|<|>)\\s+\\S");
 
 	// a line naming the query or describing it, also as a comment line of either format, e.g. # Title: Type 1 diabetics on a pump
@@ -131,7 +132,8 @@ public final class QueryTextAnswer {
 			}
 		}
 		String note = rest.replaceAll("\\s+", " ").trim();
-		return new QueryTextAnswer(query, CommonUtil.isEmptyString(note) ? null : note);
+		// a note that says there is nothing to note, such as Note: None., is no note
+		return new QueryTextAnswer(query, CommonUtil.isEmptyString(note) || EMPTY_NOTE.matcher(note).matches() ? null : note);
 	}
 
 	private static boolean startsWithNoteMarker(String text) {

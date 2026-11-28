@@ -9,9 +9,11 @@
 </h:head>
 <h:body>
 	<ui:composition>
-		<p:dialog widgetVar="waitDialog" modal="true" closable="false"
+		<!-- waitDialogVar names another widget, e.g. for the search pages, which show it themselves only for slow requests:
+			the ajax override shows waitDialog for every request -->
+		<p:dialog widgetVar="#{empty waitDialogVar ? 'waitDialog' : waitDialogVar}" modal="true" closable="false"
 			onShow="dequeueShowDialog();"
-			onHide="waitDialog.disableModality();dequeueShowDialog();"
+			onHide="#{empty waitDialogVar ? 'waitDialog' : waitDialogVar}.disableModality();dequeueShowDialog();"
 			showEffect="" hideEffect="">
 			<span class="ctsms-field-icon ctsms-icon-loading"></span>
 			<h:outputLabel value="#{labels.wait_message}" />
