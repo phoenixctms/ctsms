@@ -303,7 +303,7 @@
 										process="@this,:search_form:tabView:query_text"
 										actionListener="#{searchBean.applyQueryText}"
 										update=":search_form:tabView:criteria_input,:search_form:tabView:query_text_panel,:search_form:messages"
-										onclick="syncQueryTextEditor()"
+										onclick="highlightQueryTextApply(false);syncQueryTextEditor()"
 										oncomplete="handleQueryTextApplied(xhr, status, args)" />
 								</p:toolbarGroup>
 								<p:toolbarGroup align="right">
