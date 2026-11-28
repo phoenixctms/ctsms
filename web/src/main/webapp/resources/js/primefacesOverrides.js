@@ -205,12 +205,13 @@ PrimeFaces.ajax.AjaxUtils.send = function(cfg) {
       portletForms : pForms,
       source : cfg.source,
       beforeSend : function(xhr) {
-        // counted once here and released once in complete, which also runs after an error
-        xhr.ctsmsWaitCounted = showWaitDialog();
+        // counted here unless it is a background request, released by _releaseAjaxWait before any callback that could throw
+        xhr.ctsmsWaitCounted = showWaitDialog(!xhrOptions.global);
         xhr.setRequestHeader('Faces-Request', 'partial/ajax');
       },
       error : function(xhr, status, errorThrown) {
 
+        _releaseAjaxWait(xhr);
         resetSessionTimers();
 
         if (cfg.onerror) {
@@ -221,6 +222,7 @@ PrimeFaces.ajax.AjaxUtils.send = function(cfg) {
       },
       success : function(data, status, xhr) {
 
+        _releaseAjaxWait(xhr);
         resetSessionTimers();
 
         PrimeFaces.debug('Response received succesfully.');
@@ -248,7 +250,8 @@ PrimeFaces.ajax.AjaxUtils.send = function(cfg) {
       },
       complete : function(xhr, status) {
 
-        hideWaitDialog(xhr.ctsmsWaitCounted);
+        // already released in success or error, unless the request ended otherwise
+        _releaseAjaxWait(xhr);
         resetSessionTimers();
 
         if (cfg.oncomplete) {
@@ -271,6 +274,18 @@ PrimeFaces.ajax.AjaxUtils.send = function(cfg) {
 
   $.ajax(xhrOptions);
 };
+
+/**
+ * Releases the wait dialog count of a request exactly once. Called first thing in success and error: jQuery skips complete
+ * when a callback or the response processing throws, which would leave the request counted and the dialog shown.
+ */
+function _releaseAjaxWait(xhr) {
+  if (xhr == null || xhr.ctsmsWaitReleased) {
+    return;
+  }
+  xhr.ctsmsWaitReleased = true;
+  hideWaitDialog(xhr.ctsmsWaitCounted);
+}
 
 function _serializeArray(jqProcess, cfg) {
   var componentPostParams;

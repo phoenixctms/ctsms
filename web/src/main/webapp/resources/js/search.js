@@ -825,47 +825,6 @@ function restoreCriterionMenuWidths() {
 	return hidden && menus.length > 0;
 }
 
-// a request that takes longer than this, such as loading a stored query, searching or counting the intermediate sets, shows the
-// wait dialog of the timeline and schedule pages (searchWaitDialog, see waitDialog.xhtml). Background requests (global="false"),
-// like the query agent poll, never do. Unlike there, short requests do not flash it, as editing the query builder rows sends many.
-var SEARCH_BUSY_DELAY_MS = 3000;
-var searchBusyCount = 0;
-var searchBusyTimer = null;
-var searchBusyShown = false;
-
-function _showSearchBusy() {
-	searchBusyTimer = null;
-	if (searchBusyCount > 0 && typeof searchWaitDialog !== "undefined") {
-		searchWaitDialog.show();
-		searchBusyShown = true;
-	}
-}
-
-function _hideSearchBusy() {
-	if (searchBusyTimer != null) {
-		clearTimeout(searchBusyTimer);
-		searchBusyTimer = null;
-	}
-	if (searchBusyShown && typeof searchWaitDialog !== "undefined") {
-		searchWaitDialog.hide();
-	}
-	searchBusyShown = false;
-}
-
-jQuery(document).ajaxSend(function() {
-	searchBusyCount++;
-	if (searchBusyTimer == null) {
-		searchBusyTimer = setTimeout(_showSearchBusy, SEARCH_BUSY_DELAY_MS);
-	}
-});
-
-jQuery(document).ajaxComplete(function() {
-	searchBusyCount = Math.max(0, searchBusyCount - 1);
-	if (searchBusyCount == 0) {
-		_hideSearchBusy();
-	}
-});
-
 // a run is going on while its poll is scheduled or waiting for its answer
 function isQueryTextRunPolled() {
 	return queryTextPollTimer != null || queryTextPollPending;
@@ -1373,6 +1332,11 @@ function _registerIntermediateSetChartTooltip(maps) {
 		}
 		var left = toLeft ? d3.event.pageX - tooltipBb.width : d3.event.pageX;
 		var top = above ? d3.event.pageY - tooltipBb.height : d3.event.pageY;
+		// when it fits on neither side, keep it inside the window anyway
+		var scrollX = d3.event.pageX - d3.event.clientX;
+		var scrollY = d3.event.pageY - d3.event.clientY;
+		left = Math.max(scrollX, Math.min(left, scrollX + viewportWidth - tooltipBb.width));
+		top = Math.max(scrollY, Math.min(top, scrollY + viewportHeight - tooltipBb.height));
 
 		tooltipD3.style("left", left + "px")
 		 .style("top", top + "px");
