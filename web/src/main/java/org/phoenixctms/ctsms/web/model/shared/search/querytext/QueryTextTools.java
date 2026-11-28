@@ -11,6 +11,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -628,6 +629,8 @@ public class QueryTextTools {
 		private boolean checked;
 		private String label;
 		private String text;
+		// the parsed criteria of the text, which checkSets finds in the result sets
+		private Collection<CriterionInVO> criterions;
 		private String error;
 
 		private FacetBranch(FieldCollection collection, InputFieldOutVO field) {
@@ -749,7 +752,7 @@ public class QueryTextTools {
 			String text = branchText(branch);
 			try {
 				// a branch that does not parse alone, e.g. a field name that is not unique, would break the whole group
-				WebUtil.getServiceLocator().getSearchService().parseCriterionText(auth, module, text, true, null);
+				branch.criterions = WebUtil.getServiceLocator().getSearchService().parseCriterionText(auth, module, text, true, null);
 				branch.text = text;
 				group.append(group.length() == 0 ? "(\n" : "\n∪\n").append(text);
 			} catch (ServiceException | IllegalArgumentException e) {
@@ -1438,7 +1441,8 @@ public class QueryTextTools {
 		}
 	}
 
-	// the collected facet branches a result set binds, such as F1 B2, F1 B3
+	// the collected facet branches a result set holds, such as F1 B2, F1 B3: all criteria of the branch, not only its field,
+	// so two facets comparing different options of the same field are told apart
 	private String facetBranches(Collection<CriterionInstantVO> criterions) {
 		StringBuilder result = new StringBuilder();
 		Iterator<Facet> facetIt = facets.iterator();
@@ -1447,7 +1451,7 @@ public class QueryTextTools {
 			Iterator<FacetBranch> it = facet.branches.iterator();
 			while (it.hasNext()) {
 				FacetBranch branch = it.next();
-				if (branch.text != null && bindsInstantField(criterions, findProperty(branch.collection.fieldProperty), branch.field)) {
+				if (branch.text != null && containsCriterions(criterions, branch.criterions)) {
 					if (result.length() > 0) {
 						result.append(", ");
 					}
@@ -1458,18 +1462,41 @@ public class QueryTextTools {
 		return result.toString();
 	}
 
-	private static boolean bindsInstantField(Collection<CriterionInstantVO> criterions, CriterionPropertyVO fieldProperty, InputFieldOutVO field) {
-		if (criterions == null || fieldProperty == null) {
+	// whether the result set has a criterion like each property criterion of the branch; ties and parentheses do not count
+	private static boolean containsCriterions(Collection<CriterionInstantVO> criterions, Collection<CriterionInVO> branchCriterions) {
+		if (criterions == null || branchCriterions == null) {
 			return false;
 		}
-		Iterator<CriterionInstantVO> it = criterions.iterator();
-		while (it.hasNext()) {
-			CriterionInstantVO criterion = it.next();
-			if (criterion.getPropertyId() != null && fieldProperty.getId() == criterion.getPropertyId().longValue() && Long.valueOf(field.getId()).equals(criterion.getLongValue())) {
-				return true;
+		boolean any = false;
+		Iterator<CriterionInVO> branchIt = branchCriterions.iterator();
+		while (branchIt.hasNext()) {
+			CriterionInVO branchCriterion = branchIt.next();
+			if (branchCriterion.getPropertyId() == null) {
+				continue;
+			}
+			any = true;
+			boolean found = false;
+			Iterator<CriterionInstantVO> it = criterions.iterator();
+			while (it.hasNext() && !found) {
+				found = sameCriterion(it.next(), branchCriterion);
+			}
+			if (!found) {
+				return false;
 			}
 		}
-		return false;
+		return any;
+	}
+
+	private static boolean sameCriterion(CriterionInstantVO criterion, CriterionInVO branchCriterion) {
+		return Objects.equals(criterion.getPropertyId(), branchCriterion.getPropertyId())
+				&& Objects.equals(criterion.getRestrictionId(), branchCriterion.getRestrictionId())
+				&& Objects.equals(criterion.getStringValue(), branchCriterion.getStringValue())
+				&& Objects.equals(criterion.getLongValue(), branchCriterion.getLongValue())
+				&& Objects.equals(criterion.getFloatValue(), branchCriterion.getFloatValue())
+				&& criterion.isBooleanValue() == branchCriterion.isBooleanValue()
+				&& Objects.equals(criterion.getDateValue(), branchCriterion.getDateValue())
+				&& Objects.equals(criterion.getTimestampValue(), branchCriterion.getTimestampValue())
+				&& Objects.equals(criterion.getTimeValue(), branchCriterion.getTimeValue());
 	}
 
 	private static String abbreviateExpression(String expression) {
