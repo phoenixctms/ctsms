@@ -1323,7 +1323,7 @@ public class QueryTextTools {
 
 	@Tool(name = CHECK_SETS, value = "Count the records of a query the way the Intermediate Sets tab does: each result set (A, B, ...) and each ∪, ∩ or ∖ step "
 			+ "in evaluation order, with warnings for empty sets, an empty ∩, a ∪ branch that adds nothing or a ∖ that removes nothing. "
-			+ "Call it after parseQuery returned ok.")
+			+ "Counting is costly: call it only when the request depends on the counts, such as using another criterion when a set is empty.")
 	public String checkSets(@P(name = "text", value = "the complete query text") String text) {
 		try {
 			String expanded = expandFacets(text == null ? "" : text);
